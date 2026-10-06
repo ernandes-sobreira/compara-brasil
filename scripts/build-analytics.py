@@ -67,6 +67,8 @@ out={
   "themeTotals":Counter(),
   "partyThemeByYear":{},
   "partyTheme":{},
+  "themeVoteByYear":defaultdict(Counter),
+  "themeVoteTotals":Counter(),
   "quality":{"voteEvents":0,"voteEventsLinkedToProp":0,"voteEventsWithoutLinkedProp":0},
   "anomalousRawParties":Counter()
 }
@@ -108,6 +110,9 @@ for path in FILES:
             themes=["Sem tema vinculado"]
 
         approved=str(v.get("aprovacao") or "")=="1"
+        for theme in themes:
+            out["themeVoteByYear"][str(year)][theme]+=1
+            out["themeVoteTotals"][theme]+=1
         for raw_party,x in (v.get("partidos") or {}).items():
             party=canon(raw_party)
             out["aliases"][party][raw_party]+=1
@@ -142,6 +147,8 @@ out["partyTheme"]=agg
 out["aliases"]={p:dict(c.most_common()) for p,c in out["aliases"].items()}
 out["partyTotals"]={p:dict(v) for p,v in out["partyTotals"].items()}
 out["themeTotals"]=dict(out["themeTotals"].most_common())
+out["themeVoteTotals"]=dict(out["themeVoteTotals"].most_common())
+out["themeVoteByYear"]={y:dict(c) for y,c in out["themeVoteByYear"].items()}
 
 # principais = pelo menos 25 proposições OU 100 eventos de votação
 out["mainParties"]=sorted([
