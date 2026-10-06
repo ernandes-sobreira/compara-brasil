@@ -542,11 +542,12 @@ function uniqById(arr){
 // ESTADO — base oficial anual + carregamento sob demanda
 // ══════════════════════════════════════════════
 const ST={
-  summary:null, analytics:null, legacySummary:null, sourceMode:null,
+  summary:null, analytics:null, insights:null, legacySummary:null, sourceMode:null,
   proj:[],vots:[],yearData:null,
   pFil:[],vFil:[], pPg:1,vPg:1,PS:15,
   pSort:{c:'numero',d:'asc'},CH:{},
   loadedPropYear:null,loadedVoteYear:null,
+  votePropMap:{},partyAliasMap:{},
   cache:{}
 };
 let START_YEAR=2003,END_YEAR=2026,ANOS=[];
@@ -572,6 +573,60 @@ function votePartyMajority(v,p){
   const x=v?.partidos?.[p]; if(!x)return null;
   const s=Number(x.S||0),n=Number(x.N||0);
   if(s>n)return 'S'; if(n>s)return 'N'; return 'D';
+}
+
+function partyKey(s){
+  return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+}
+const PARTY_FALLBACK={
+  PMDB:'MDB',MBD:'MDB',PR:'PL',PFL:'DEM',PPB:'PP',
+  PRB:'Republicanos',REPUBLIC:'Republicanos',REPUB:'Republicanos',REPUBLICA:'Republicanos',PMR:'Republicanos',
+  PTN:'Podemos',PODE:'Podemos',PPS:'Cidadania',PTDOB:'Avante',PEN:'Patriota',
+  SD:'Solidariedade',SOLIDARI:'Solidariedade',PCDOB:'PCdoB',PCDB:'PCdoB',
+  PSBD:'PSDB',PSBB:'PSDB',UNIAO:'UNIÃO',SPART:'Sem partido',SPARTIDO:'Sem partido',SEMPARTIDO:'Sem partido'
+};
+function buildPartyAliases(){
+  ST.partyAliasMap={};
+  const aliases=ST.insights?.aliases||{};
+  Object.entries(aliases).forEach(([canon,raws])=>{
+    ST.partyAliasMap[partyKey(canon)]=canon;
+    Object.keys(raws||{}).forEach(raw=>{ST.partyAliasMap[partyKey(raw)]=canon;});
+  });
+}
+function canonParty(raw){
+  const k=partyKey(raw);
+  if(!k)return 'Sem partido';
+  return ST.partyAliasMap[k]||PARTY_FALLBACK[k]||String(raw||'').trim().toUpperCase();
+}
+function voteCanonicalParties(v){
+  const out={};
+  Object.entries(v?.partidos||{}).forEach(([raw,x])=>{
+    const p=canonParty(raw);
+    if(!out[p])out[p]={S:0,N:0,A:0,O:0,outros:0,total:0};
+    ['S','N','A','O','outros','total'].forEach(k=>out[p][k]+=Number(x?.[k]||0));
+  });
+  return out;
+}
+function votePartyMajorityCanon(v,p){
+  const x=voteCanonicalParties(v)?.[p];if(!x)return null;
+  const s=Number(x.S||0),n=Number(x.N||0);
+  if(s>n)return 'S';if(n>s)return 'N';return 'D';
+}
+function linkedProp(v){
+  let pid=String(v?.idProposicao||'').trim();
+  if(!ST.votePropMap[pid]){
+    const pref=String(v?.id||'').split('-')[0];
+    if(ST.votePropMap[pref])pid=pref;
+  }
+  return ST.votePropMap[pid]||null;
+}
+function plainEmenta(text){
+  let s=String(text||'').replace(/\s+/g,' ').trim();
+  s=s.replace(/\s+e dá outras providências\.?$/i,'');
+  s=s.replace(/^Dispõe sobre\s+/i,'Trata de ');
+  s=s.replace(/^Institui\s+/i,'Cria ');
+  s=s.replace(/^Estabelece\s+/i,'Define ');
+  return s;
 }
 function setOptions(id,values,first='Todos'){
   const s=document.getElementById(id);if(!s)return;
@@ -618,6 +673,7 @@ async function initApp(){
       ST.sourceMode='official';
       try{ST.legacySummary=await fetchJSON('dados/resumo-completo.json');}catch(_){}
       try{ST.analytics=await fetchJSON('dados/oficial/analitica.json');}catch(_){}
+      try{ST.insights=await fetchJSON('dados/oficial/insights.json');}catch(e){console.warn('insights ainda indisponível',e);}
     }catch(e){
       console.warn('Base oficial ainda não publicada; usando resumo legado',e);
       ST.summary=await fetchJSON('dados/resumo-completo.json');
@@ -626,9 +682,17 @@ async function initApp(){
     START_YEAR=Number(ST.summary?.period?.start||2003);
     END_YEAR=Number(ST.summary?.period?.end||2025);
     popYears();syncPeriodUI();
-    setOptions('gTema',Object.keys(ST.summary?.themes||{}),'Todos');
+    buildPartyAliases();
+    const insightThemes=Object.keys(ST.insights?.themeTotals||ST.summary?.themes||{});
+    const mainParties=ST.insights?.mainParties||Object.keys(ST.summary?.parties||{});
+    setOptions('gTema',insightThemes,'Todos');
+    setOptions('gPartido',mainParties,'Todos os principais');
+    setOptions('partyFocus',mainParties,'Escolha um partido');
+    setOptions('partyThemeFocus',insightThemes,'Todos os temas');
+    const py=document.getElementById('partyYearFocus');
+    if(py){py.innerHTML='<option value="">2003–2026</option>';ANOS.forEach(a=>{const o=document.createElement('option');o.value=o.textContent=a;py.appendChild(o);});}
     setDB(ST.sourceMode==='official'?'ok':'warn',`${fmt(ST.summary.totals.proposicoes)} proposições · ${fmt(ST.summary.totals.votacoes)} votações`);
-    renderPainel();renderTabProj();renderTabVots();renderPart();renderAuditoria();
+    renderPainel();renderTabProj();renderTabVots();renderPartyExplorer();renderAuditoria();
   }catch(e){
     console.error(e);setDB('warn','erro ao abrir');
     mostraErro('painelConteudo','Não foi possível abrir a base legislativa',e.message);
