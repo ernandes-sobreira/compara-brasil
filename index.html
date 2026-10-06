@@ -897,165 +897,273 @@ async function loadFullPropData(id){
 // ══════════════════════════════════════════════
 async function mudaAnoVot(){
   const year=Number(gv('vAno'));
-  if(!year){ST.vots=[];ST.vFil=[];ST.loadedVoteYear=null;renderTabVots();return;}
+  if(!year){ST.vots=[];ST.vFil=[];ST.loadedVoteYear=null;ST.votePropMap={};renderTabVots();return;}
   const cont=document.getElementById('votsConteudo');
   cont.innerHTML=`<div class="ldg"><div class="spin"></div><div class="ldg-t">Carregando votações de ${year}...</div></div>`;
   try{
     if(ST.sourceMode==='official'){
-      const d=await loadYearOfficial(year);ST.vots=[...(d.votacoes||[])];
+      const d=await loadYearOfficial(year);
+      ST.vots=[...(d.votacoes||[])];
+      ST.votePropMap=Object.fromEntries((d.proposicoes||[]).map(p=>[String(p.id),p]));
     }else{
-      const snap=await window._db.collection('votacoes').where('ano','==',year).get();ST.vots=snap.docs.map(d=>({id:d.id,...d.data(),ano:year}));
+      const snap=await window._db.collection('votacoes').where('ano','==',year).get();
+      ST.vots=snap.docs.map(d=>({id:d.id,...d.data(),ano:year}));
+      ST.votePropMap={};
     }
-    ST.loadedVoteYear=year;ST.vPg=1;refreshVotePartyFilters();fVots();
+    ST.loadedVoteYear=year;ST.vPg=1;refreshVoteFilters();fVots();
   }catch(e){mostraErro('votsConteudo','Erro ao carregar votações de '+year,e.message);}
 }
-function refreshVotePartyFilters(){
-  const parts=ST.vots.flatMap(v=>Object.keys(v.partidos||v.votos||{}));
-  setOptions('vSim',parts,'Qualquer');setOptions('vNao',parts,'Qualquer');
+function refreshVoteFilters(){
+  const parts=[...new Set(ST.vots.flatMap(v=>Object.keys(voteCanonicalParties(v))))];
+  const themes=[...new Set(ST.vots.flatMap(v=>propThemes(linkedProp(v))))];
+  setOptions('vPartido',parts,'Qualquer');
+  setOptions('vTema',themes,'Todos');
 }
 function fVots(){
   if(!ST.loadedVoteYear){renderTabVots();return;}
-  const kw=(document.getElementById('vk')?.value||'').toLowerCase(),res=gv('vRes'),psim=gv('vSim'),pnao=gv('vNao');
+  const kw=(document.getElementById('vk')?.value||'').toLowerCase().trim();
+  const tm=gv('vTema'),res=gv('vRes'),party=gv('vPartido'),pos=gv('vPosicao');
   ST.vFil=ST.vots.filter(v=>{
-    if(kw&&!String(v.descricao||v.id||'').toLowerCase().includes(kw))return false;
-    if(res&&String(v.aprovacao??'')!==res && String(v.resultado||'')!==res)return false;
-    if(psim&&votePartyMajority(v,psim)!=='S')return false;
-    if(pnao&&votePartyMajority(v,pnao)!=='N')return false;
+    const p=linkedProp(v),themes=propThemes(p);
+    const hay=[v.descricao,propLabel(p),p?.ementa,p?.ementaDetalhada,themes.join(' ')].join(' ').toLowerCase();
+    if(kw&&!hay.includes(kw))return false;
+    if(tm&&!themes.includes(tm))return false;
+    if(res&&String(v.aprovacao??'')!==res)return false;
+    if(party&&!voteCanonicalParties(v)[party])return false;
+    if(party&&pos&&votePartyMajorityCanon(v,party)!==pos)return false;
     return true;
   });
   ST.vPg=1;renderTabVots();
 }
-function resetVots(){['vk','vRes','vSim','vNao'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});if(ST.loadedVoteYear){ST.vFil=[...ST.vots];ST.vPg=1;renderTabVots();}}
+function resetVots(){
+  ['vk','vTema','vRes','vPartido','vPosicao'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  if(ST.loadedVoteYear){ST.vFil=[...ST.vots];ST.vPg=1;renderTabVots();}
+}
+function voteOutcome(v){
+  return String(v?.aprovacao)==='1'?'Aprovada':String(v?.aprovacao)==='0'?'Não aprovada':'Resultado não marcado';
+}
+function voteSubjectText(v){
+  const p=linkedProp(v);
+  if(p?.ementa)return plainEmenta(p.ementa);
+  return plainEmenta(v?.descricao||'Votação sem proposição vinculada no arquivo anual.');
+}
 function renderTabVots(){
   const cont=document.getElementById('votsConteudo');if(!ST.summary)return;
   if(!ST.loadedVoteYear){
     const rows=Object.entries(ST.summary.years||{}).filter(([,v])=>Number(v.votacoes||0)>0).sort((a,b)=>Number(b[0])-Number(a[0]));
-    cont.innerHTML=`<div class="al al-i"><span>📅</span><div><strong>Escolha um ano.</strong> A base resume ${fmt(ST.summary.totals.votacoes)} votações oficiais no período disponível.</div></div><div class="tw"><table><thead><tr><th>Ano</th><th>Votações</th></tr></thead><tbody>${rows.map(([y,v])=>`<tr><td><button class="lnk" onclick="document.getElementById('vAno').value='${y}';mudaAnoVot()">${y}</button></td><td><strong>${fmt(v.votacoes)}</strong></td></tr>`).join('')}</tbody></table></div>`;document.getElementById('votsPg').innerHTML='';return;
+    cont.innerHTML=`<div class="al al-i"><span>📅</span><div><strong>Escolha um ano.</strong> Depois você poderá filtrar por tema, partido, resultado e posição agregada dos deputados.</div></div>
+    <div class="tw"><table><thead><tr><th>Ano</th><th>Votações nominais</th></tr></thead><tbody>${rows.map(([y,v])=>`<tr><td><button class="lnk" onclick="document.getElementById('vAno').value='${y}';mudaAnoVot()">${y}</button></td><td><strong>${fmt(v.votacoes)}</strong></td></tr>`).join('')}</tbody></table></div>`;
+    document.getElementById('votsPg').innerHTML='';return;
   }
-  const sl=ST.vFil.slice((ST.vPg-1)*ST.PS,ST.vPg*ST.PS);
-  if(!sl.length){cont.innerHTML='<div class="al al-i"><span>ℹ️</span><div>Nenhuma votação encontrada.</div></div>';document.getElementById('votsPg').innerHTML='';return;}
-  cont.innerHTML=`<div class="al al-g"><span>✅</span><div><strong>${fmt(ST.vots.length)}</strong> votações de ${ST.loadedVoteYear}; ${fmt(ST.vFil.length)} após os filtros.</div></div><div class="tw"><table><thead><tr><th>Votação</th><th>Data</th><th>Órgão</th><th>Resultado</th><th>SIM</th><th>NÃO</th><th>Outros</th><th>Orientações</th></tr></thead><tbody>${sl.map(v=>`<tr><td><button onclick="abrirVot('${h(v.id)}')" style="background:none;border:none;color:var(--azul2);font-weight:700;text-align:left;cursor:pointer;max-width:320px">${h((v.descricao||v.id).slice(0,100))}</button></td><td>${h(v.data||'—')}</td><td>${h(v.orgao||'—')}</td><td><span class="sts">${String(v.aprovacao)==='1'?'Aprovada':String(v.aprovacao)==='0'?'Não aprovada':'—'}</span></td><td>${fmt(v.votosSim)}</td><td>${fmt(v.votosNao)}</td><td>${fmt(v.votosOutros)}</td><td>${(v.orientacoes||[]).length}</td></tr>`).join('')}</tbody></table></div>`;
-  mkPag('votsPg',ST.vPg,ST.vFil.length,ST.PS,p=>{ST.vPg=p;renderTabVots();});
+  const pageSize=10,sl=ST.vFil.slice((ST.vPg-1)*pageSize,ST.vPg*pageSize),party=gv('vPartido');
+  if(!sl.length){cont.innerHTML='<div class="al al-i"><span>ℹ️</span><div>Nenhuma votação encontrada com estes filtros.</div></div>';document.getElementById('votsPg').innerHTML='';return;}
+  cont.innerHTML=`<div class="al al-g"><span>✅</span><div><strong>${fmt(ST.vots.length)}</strong> votações nominais em ${ST.loadedVoteYear}; <strong>${fmt(ST.vFil.length)}</strong> após os filtros.</div></div>
+  <div class="vote-cards">${sl.map(v=>{
+    const p=linkedProp(v),themes=propThemes(p),outcome=voteOutcome(v),cp=voteCanonicalParties(v),px=party?cp[party]:null;
+    const partyLine=px?`<div class="small-note" style="margin-top:8px"><strong>${h(party)}</strong>: ${votePartyMajorityCanon(v,party)==='S'?'maioria SIM':votePartyMajorityCanon(v,party)==='N'?'maioria NÃO':'votos equilibrados'} · ${fmt(px.S)} sim · ${fmt(px.N)} não</div>`:'';
+    return `<div class="vote-card">
+      <div class="vtop"><div><div class="vlabel">${h(v.data||'—')} · ${h(v.orgao||'—')}</div><h3>${h(p?propLabel(p):'Votação nominal')}</h3></div><span class="sts ${String(v.aprovacao)==='1'?'badge-ok':'badge-no'}">${h(outcome)}</span></div>
+      <div class="plain"><strong>Sobre o que é:</strong><br>${h(voteSubjectText(v))}</div>
+      ${themes.length?`<div>${themes.slice(0,3).map(t=>`<span class="tag" style="margin:2px">${h(t)}</span>`).join('')}</div>`:''}
+      <div class="motion"><strong>O que foi votado nesta rodada:</strong> ${h((v.descricao||'—').slice(0,240))}</div>
+      <div class="vnums"><span class="vnum">SIM ${fmt(v.votosSim)}</span><span class="vnum">NÃO ${fmt(v.votosNao)}</span><span class="vnum">OUTROS ${fmt(v.votosOutros)}</span><span class="vnum">ORIENTAÇÕES ${(v.orientacoes||[]).length}</span></div>
+      ${partyLine}
+      <div class="inline-actions"><button class="btn btn-p" onclick="abrirVot('${h(v.id)}')">Entender esta votação</button>${p?`<button class="btn btn-s" onclick="abrirProjFromVote('${h(p.id)}')">Ver projeto</button>`:''}</div>
+    </div>`;
+  }).join('')}</div>`;
+  mkPag('votsPg',ST.vPg,ST.vFil.length,pageSize,p=>{ST.vPg=p;renderTabVots();});
+}
+function abrirProjFromVote(id){
+  const p=ST.votePropMap[String(id)];if(!p)return;
+  const old=ST.proj;ST.proj=Object.values(ST.votePropMap);abrirProj(String(id));ST.proj=old;
 }
 function abrirVot(id){
   const v=ST.vots.find(x=>String(x.id)===String(id));if(!v)return;
-  const parts=Object.entries(v.partidos||{}).sort((a,b)=>(b[1].total||0)-(a[1].total||0));
+  const p=linkedProp(v),parts=Object.entries(voteCanonicalParties(v)).sort((a,b)=>a[0].localeCompare(b[0],'pt-BR'));
   document.getElementById('mBd').innerHTML=`
     <div style="margin-bottom:14px">
       <div style="font-family:var(--fc);font-size:9px;color:var(--cin)">${h(v.data||'—')} · ${h(v.orgao||'—')}</div>
-      <h2 style="font-size:16px;line-height:1.45;margin-top:6px">${h(v.descricao||v.id)}</h2>
+      <h2 style="font-size:18px;line-height:1.4;margin-top:6px">${h(p?propLabel(p):'Votação nominal')}</h2>
+      <div class="plain" style="margin-top:10px"><strong>Sobre o que é:</strong><br>${h(voteSubjectText(v))}</div>
+      <div class="small-note"><strong>Decisão desta rodada:</strong> ${h(v.descricao||'—')}</div>
     </div>
-    <div class="sg">
-      <div class="sc vd"><div class="sc-l">SIM</div><div class="sc-v">${fmt(v.votosSim)}</div></div>
-      <div class="sc vm"><div class="sc-l">NÃO</div><div class="sc-v">${fmt(v.votosNao)}</div></div>
-      <div class="sc am"><div class="sc-l">OUTROS</div><div class="sc-v">${fmt(v.votosOutros)}</div></div>
-    </div>
-
-    <div class="bx" style="padding:14px">
-      <div class="bxh">🏛 Orientação oficial de bancada</div>
-      ${(v.orientacoes||[]).length
-        ?(v.orientacoes||[]).map(o=>`<div style="padding:6px 0;border-bottom:1px solid var(--brd)"><strong>${h(o.bancada||'—')}</strong>: ${h(o.orientacao||'—')}</div>`).join('')
-        :'<div class="al al-i"><span>ℹ️</span><div>Sem orientação registrada para esta votação.</div></div>'}
-    </div>
-
-    <div class="bx" style="padding:14px">
-      <div class="bxh">👥 Votos individuais agregados por partido</div>
-      ${parts.length
-        ?`<div class="tw"><table><thead><tr><th>Partido</th><th>Sim</th><th>Não</th><th>Abst.</th><th>Obstr.</th><th>Total</th></tr></thead><tbody>${parts.map(([p,x])=>`<tr><td><strong>${h(p)}</strong></td><td>${fmt(x.S)}</td><td>${fmt(x.N)}</td><td>${fmt(x.A)}</td><td>${fmt(x.O)}</td><td>${fmt(x.total)}</td></tr>`).join('')}</tbody></table></div>`
-        :'—'}
-    </div>
-
-    <div class="bx" style="padding:14px">
-      <div class="bxh">🧑‍⚖️ Como cada deputado votou</div>
-      <div id="votosInd-${h(v.id)}">
-        <button class="btn btn-p" onclick="loadIndividualVotes('${h(v.id)}')">Carregar votos individuais oficiais</button>
-        <div style="font-size:10px;color:var(--cin);margin-top:6px">Consulta feita sob demanda diretamente na API da Câmara.</div>
-      </div>
-    </div>
-  `;
+    <div class="sg"><div class="sc vd"><div class="sc-l">SIM</div><div class="sc-v">${fmt(v.votosSim)}</div></div><div class="sc vm"><div class="sc-l">NÃO</div><div class="sc-v">${fmt(v.votosNao)}</div></div><div class="sc am"><div class="sc-l">OUTROS</div><div class="sc-v">${fmt(v.votosOutros)}</div></div></div>
+    <div class="bx" style="padding:14px"><div class="bxh">🏛 Orientação oficial de bancada</div>${(v.orientacoes||[]).length?(v.orientacoes||[]).map(o=>`<div style="padding:6px 0;border-bottom:1px solid var(--brd)"><strong>${h(o.bancada||'—')}</strong>: ${h(o.orientacao||'—')}</div>`).join(''):'<div class="small-note">Sem orientação registrada para esta votação.</div>'}</div>
+    <div class="bx" style="padding:14px"><div class="bxh">👥 Votos individuais agregados por partido</div>${parts.length?`<div class="tw"><table><thead><tr><th>Partido</th><th>Sim</th><th>Não</th><th>Abst.</th><th>Obstr.</th><th>Total</th></tr></thead><tbody>${parts.map(([pa,x])=>`<tr><td><strong>${h(pa)}</strong></td><td>${fmt(x.S)}</td><td>${fmt(x.N)}</td><td>${fmt(x.A)}</td><td>${fmt(x.O)}</td><td>${fmt(x.total)}</td></tr>`).join('')}</tbody></table></div>`:'—'}</div>
+    <div class="bx" style="padding:14px"><div class="bxh">🧑‍⚖️ Como cada deputado votou</div><div id="votosInd-${h(v.id)}"><button class="btn btn-p" onclick="loadIndividualVotes('${h(v.id)}')">Carregar votos individuais oficiais</button></div></div>`;
   abrirModal();
 }
-
 async function fetchAllCamaraPages(baseUrl){
   const all=[];
   for(let page=1;page<=20;page++){
-    const sep=baseUrl.includes('?')?'&':'?';
-    const url=`${baseUrl}${sep}pagina=${page}&itens=100`;
-    const r=await fetch(url,{headers:{Accept:'application/json'}});
-    if(!r.ok)throw new Error(`API da Câmara respondeu ${r.status}`);
-    const j=await r.json();
-    const data=Array.isArray(j?.dados)?j.dados:[];
-    all.push(...data);
-    if(data.length<100)break;
+    const sep=baseUrl.includes('?')?'&':'?',url=`${baseUrl}${sep}pagina=${page}&itens=100`;
+    const r=await fetch(url,{headers:{Accept:'application/json'}});if(!r.ok)throw new Error(`API da Câmara respondeu ${r.status}`);
+    const j=await r.json(),data=Array.isArray(j?.dados)?j.dados:[];all.push(...data);if(data.length<100)break;
   }
   return all;
 }
-
 async function loadIndividualVotes(id){
   const box=document.getElementById('votosInd-'+id);if(!box)return;
-  box.innerHTML='<div class="ldg" style="padding:24px"><div class="spin"></div><div class="ldg-t">Buscando votos individuais oficiais...</div></div>';
+  box.innerHTML='<div class="ldg" style="padding:24px"><div class="spin"></div><div class="ldg-t">Buscando votos individuais...</div></div>';
   try{
-    const url=`https://dadosabertos.camara.leg.br/api/v2/votacoes/${encodeURIComponent(id)}/votos`;
-    const rows=await fetchAllCamaraPages(url);
-    if(!rows.length){
-      box.innerHTML='<div class="al al-i"><span>ℹ️</span><div>Não há votos individuais disponíveis para esta votação na API.</div></div>';
-      return;
+    const rows=await fetchAllCamaraPages(`https://dadosabertos.camara.leg.br/api/v2/votacoes/${encodeURIComponent(id)}/votos`);
+    box.innerHTML=rows.length?`<div class="al al-g"><span>✅</span><div><strong>${fmt(rows.length)} votos individuais oficiais</strong></div></div><div class="tw"><table><thead><tr><th>Deputado(a)</th><th>Partido</th><th>UF</th><th>Voto</th></tr></thead><tbody>${rows.map(r=>{const d=r.deputado||{};return `<tr><td><strong>${h(d.nome||'—')}</strong></td><td>${h(canonParty(d.siglaPartido||'—'))}</td><td>${h(d.siglaUf||'—')}</td><td><span class="sts">${h(r.voto||'—')}</span></td></tr>`;}).join('')}</tbody></table></div>`:'<div class="small-note">Sem votos individuais disponíveis.</div>';
+  }catch(e){box.innerHTML=`<div class="erro"><p>${h(e.message)}</p><button class="btn btn-s" onclick="loadIndividualVotes('${h(id)}')">Tentar novamente</button></div>`;}
+}
+
+
+// PARTIDOS & TEMAS
+// ══════════════════════════════════════════════
+function insightThemesFor(party,year){
+  if(!ST.insights)return {};
+  if(year)return ST.insights.partyThemeByYear?.[String(year)]?.[party]||{};
+  return ST.insights.partyTheme?.[party]||{};
+}
+function insightMetric(party,theme,year){
+  return insightThemesFor(party,year)?.[theme]||{propostas:0,votacoes:0,sim:0,nao:0,abst:0,obstr:0,outros:0,maioriaSim:0,maioriaNao:0,equilibrado:0,aprovadas:0,maioriaSimEmAprovadas:0};
+}
+function openThemeShortcut(theme){
+  const s=document.getElementById('partyThemeFocus');if(s)s.value=theme;renderPartyExplorer();
+}
+function focusPartyTheme(party,theme){
+  const p=document.getElementById('partyFocus'),t=document.getElementById('partyThemeFocus');
+  if(p)p.value=party;if(t)t.value=theme;renderPartyExplorer();
+}
+function explorerToVotes(){
+  const year=gv('partyYearFocus'),theme=gv('partyThemeFocus'),party=gv('partyFocus');
+  showSec('votacoes',document.querySelector('[onclick*="votacoes"]'));
+  if(year){
+    document.getElementById('vAno').value=year;
+    mudaAnoVot().then(()=>{
+      if(theme&&[...document.getElementById('vTema').options].some(o=>o.value===theme))document.getElementById('vTema').value=theme;
+      if(party&&[...document.getElementById('vPartido').options].some(o=>o.value===party))document.getElementById('vPartido').value=party;
+      fVots();
+    });
+  }
+}
+function explorerToProps(){
+  const year=gv('partyYearFocus'),theme=gv('partyThemeFocus'),party=gv('partyFocus');
+  showSec('proposicoes',document.querySelector('[onclick*="proposicoes"]'));
+  if(year){
+    document.getElementById('pAno').value=year;
+    mudaAnoProj().then(()=>{
+      if(theme&&[...document.getElementById('pTema').options].some(o=>o.value===theme))document.getElementById('pTema').value=theme;
+      const rawOpt=[...document.getElementById('pPart').options].find(o=>canonParty(o.value)===party);
+      if(rawOpt)document.getElementById('pPart').value=rawOpt.value;
+      fProj();
+    });
+  }
+}
+function renderPartyExplorer(){
+  const box=document.getElementById('partyDashboard');if(!box)return;
+  if(!ST.insights){box.innerHTML='<div class="al al-w"><span>⏳</span><div>Preparando o cruzamento Partido × Tema × Votação. Recarregue em instantes se esta mensagem persistir.</div></div>';return;}
+  const party=gv('partyFocus'),theme=gv('partyThemeFocus'),year=gv('partyYearFocus');
+  const parties=ST.insights.mainParties||[];
+  const themes=Object.keys(ST.insights.themeTotals||{});
+  if(!party&&!theme){
+    const shortcuts=['Meio Ambiente e Desenvolvimento Sustentável','Trabalho e Emprego','Saúde','Educação','Economia','Defesa e Segurança'].filter(t=>themes.includes(t));
+    box.innerHTML=`<div class="bx"><div class="bxh">Comece por uma pergunta</div><div class="qgrid">${shortcuts.map(t=>`<div class="qcard" onclick="openThemeShortcut('${h(t)}')"><strong>${h(t)}</strong><span>Compare, em ordem alfabética, quantas propostas e votações aparecem para cada partido neste tema.</span></div>`).join('')}</div></div>
+      <div class="bx"><div class="bxh">Como ler este painel</div><div class="al al-i"><span>1</span><div><strong>Propostas</strong> = proposições com autoria principal do partido naquele tema.</div></div><div class="al al-i"><span>2</span><div><strong>Votações</strong> = eventos nominais ligados a proposições daquele tema em que houve votos de deputados do partido.</div></div><div class="al al-i"><span>3</span><div><strong>Maioria SIM/NÃO</strong> compara apenas os votos individuais registrados dos deputados do partido naquela votação; orientação oficial é mostrada separadamente no detalhe.</div></div></div>`;
+    return;
+  }
+
+  let html='';
+  if(theme){
+    const rows=parties.map(p=>[p,insightMetric(p,theme,year)]).filter(([,m])=>m.propostas||m.votacoes);
+    const maxP=Math.max(1,...rows.map(([,m])=>m.propostas)),maxV=Math.max(1,...rows.map(([,m])=>m.votacoes));
+    html+=`<div class="bx"><div class="bxh">🔎 Comparar partidos no tema: ${h(theme)}</div><div class="small-note" style="margin-bottom:10px">Partidos em ordem alfabética. As barras mostram magnitude, sem atribuir nota ou vencedor.</div><div class="tw"><table class="compare-table"><thead><tr><th>Partido</th><th>Propostas</th><th>Votações</th><th>Maioria SIM</th><th>Maioria NÃO</th><th>Aprovadas com maioria SIM</th></tr></thead><tbody>${rows.map(([p,m])=>`<tr><td><button class="lnk" onclick="focusPartyTheme('${h(p)}','${h(theme)}')">${h(p)}</button></td><td>${fmt(m.propostas)}<div class="mini-bar"><i style="width:${m.propostas/maxP*100}%"></i></div></td><td>${fmt(m.votacoes)}<div class="mini-bar"><i style="width:${m.votacoes/maxV*100}%"></i></div></td><td>${fmt(m.maioriaSim)}</td><td>${fmt(m.maioriaNao)}</td><td>${fmt(m.maioriaSimEmAprovadas)}</td></tr>`).join('')}</tbody></table></div></div>`;
+  }
+  if(party){
+    const metrics=insightThemesFor(party,year),entries=Object.entries(metrics).filter(([,m])=>m.propostas||m.votacoes).sort((a,b)=>(b[1].propostas+b[1].votacoes)-(a[1].propostas+a[1].votacoes));
+    const totals=ST.insights.partyTotals?.[party]||{};
+    html+=`<div class="bx"><div class="party-dashboard-grid"><div class="party-summary"><div class="kicker">PARTIDO SELECIONADO</div><h2>${h(party)}</h2><div class="sub">${year?'Ano '+h(year):'Período completo'}${theme?' · '+h(theme):''}</div>
+      ${theme?(()=>{const m=insightMetric(party,theme,year);return `<div class="metric-grid"><div class="metric"><b>${fmt(m.propostas)}</b><span>propostas no tema</span></div><div class="metric"><b>${fmt(m.votacoes)}</b><span>votações nominais</span></div><div class="metric"><b>${fmt(m.maioriaSim)}</b><span>maioria SIM</span></div><div class="metric"><b>${fmt(m.maioriaNao)}</b><span>maioria NÃO</span></div><div class="metric"><b>${fmt(m.maioriaSimEmAprovadas)}</b><span>aprovadas com maioria SIM</span></div></div>`;})():`<div class="metric-grid"><div class="metric"><b>${fmt(totals.propostas)}</b><span>propostas no período</span></div><div class="metric"><b>${fmt(totals.votacoes)}</b><span>participações em votações</span></div><div class="metric"><b>${fmt(totals.sim)}</b><span>votos individuais SIM</span></div><div class="metric"><b>${fmt(totals.nao)}</b><span>votos individuais NÃO</span></div></div>`}
+      <div class="inline-actions">${year?'<button class="btn btn-p" onclick="explorerToVotes()">Ver votações explicadas</button><button class="btn btn-s" onclick="explorerToProps()">Ver propostas</button>':'<span class="small-note">Escolha um ano para abrir os documentos e votações individuais.</span>'}</div></div>
+      <div class="theme-compare"><div class="bxh">📁 Perfil temático do partido</div><div class="topic-list">${entries.slice(0,18).map(([t,m])=>`<div class="topic-row" onclick="focusPartyTheme('${h(party)}','${h(t)}')"><div class="topic-name">${h(t)}</div><div class="topic-stats"><span><b>${fmt(m.propostas)}</b>propostas</span><span><b>${fmt(m.votacoes)}</b>votações</span><span><b>${fmt(m.maioriaSimEmAprovadas)}</b>aprovadas c/ maioria SIM</span></div></div>`).join('')}</div></div></div></div>`;
+  }
+  box.innerHTML=html||'<div class="al al-i"><span>ℹ️</span><div>Sem dados para esta combinação.</div></div>';
+}
+function renderPart(){renderPartyExplorer();}
+
+
+// GRÁFICOS
+// ══════════════════════════════════════════════
+function graphInsightMetric(party,theme,year){
+  return insightMetric(party,theme,year);
+}
+function render3D(){
+  const el=document.getElementById('g3d');if(!el||!ST.insights||typeof Plotly==='undefined')return;
+  const year=gv('gAno'),themeFilter=gv('gTema'),partyFilter=gv('gPartido');
+  let parties=partyFilter?[partyFilter]:(ST.insights.mainParties||[]);
+  let themes=themeFilter?[themeFilter]:Object.keys(ST.insights.themeTotals||{}).filter(t=>t!=='Sem tema vinculado'&&t!=='Sem tema oficial');
+  // keep mobile usable: show themes with some activity under current filter
+  if(!themeFilter){
+    themes=themes.filter(t=>parties.some(p=>{const m=graphInsightMetric(p,t,year);return m.votacoes||m.propostas;}));
+  }
+  const points=[];
+  parties.forEach((p,pi)=>themes.forEach((t,ti)=>{
+    const m=graphInsightMetric(p,t,year);
+    if(!(m.votacoes||m.propostas))return;
+    points.push({p,t,pi,ti,m});
+  }));
+  const trace={
+    type:'scatter3d',mode:'markers',
+    x:points.map(x=>x.pi),y:points.map(x=>x.ti),z:points.map(x=>Number(x.m.votacoes||0)),
+    text:points.map(x=>`<b>${x.p}</b><br>${x.t}<br>Propostas: ${fmt(x.m.propostas)}<br>Votações: ${fmt(x.m.votacoes)}<br>Maioria SIM: ${fmt(x.m.maioriaSim)}<br>Maioria NÃO: ${fmt(x.m.maioriaNao)}`),
+    customdata:points.map(x=>[x.p,x.t,x.m.propostas,x.m.votacoes,x.m.maioriaSim,x.m.maioriaNao,x.m.maioriaSimEmAprovadas,x.m.sim,x.m.nao]),
+    hoverinfo:'text',
+    marker:{size:points.map(x=>Math.max(4,Math.min(16,4+Math.sqrt(Number(x.m.propostas||0))))),opacity:.78,color:points.map(x=>Number(x.m.propostas||0)),colorscale:'Viridis',showscale:true,colorbar:{title:'Propostas'}}
+  };
+  const layout={
+    margin:{l:0,r:0,b:0,t:10},
+    paper_bgcolor:'#fff',plot_bgcolor:'#fff',
+    scene:{
+      xaxis:{title:'Partido',tickmode:'array',tickvals:parties.map((_,i)=>i),ticktext:parties,tickfont:{size:9}},
+      yaxis:{title:'Tema oficial',tickmode:'array',tickvals:themes.map((_,i)=>i),ticktext:themes.map(t=>t.length>28?t.slice(0,27)+'…':t),tickfont:{size:8}},
+      zaxis:{title:'Votações nominais'},
+      camera:{eye:{x:1.55,y:1.55,z:1.15}}
     }
-    box.innerHTML=`<div class="al al-g"><span>✅</span><div><strong>${fmt(rows.length)} votos individuais oficiais</strong> carregados diretamente da Câmara.</div></div>
-      <div class="tw"><table><thead><tr><th>Deputado(a)</th><th>Partido</th><th>UF</th><th>Voto</th><th>Data/hora</th></tr></thead><tbody>
-      ${rows.map(r=>{
-        const d=r.deputado||{};
-        return `<tr><td><strong>${h(d.nome||'—')}</strong></td><td>${h(d.siglaPartido||'—')}</td><td>${h(d.siglaUf||'—')}</td><td><span class="sts">${h(r.voto||'—')}</span></td><td style="font-size:10px">${h(r.dataHoraVoto||'—')}</td></tr>`;
-      }).join('')}
-      </tbody></table></div>`;
-  }catch(e){
-    console.error(e);
-    box.innerHTML=`<div class="erro"><h3>⚠️ Não foi possível carregar os votos individuais</h3><p>${h(e.message)}</p><button class="btn btn-s" onclick="loadIndividualVotes('${h(id)}')">Tentar novamente</button></div>`;
+  };
+  Plotly.react(el,[trace],layout,{responsive:true,displaylogo:false,modeBarButtonsToRemove:['toImage']});
+  el.on('plotly_click',ev=>{
+    const d=ev?.points?.[0]?.customdata;if(!d)return;
+    const [p,t,props,vots,ms,mn,ap,sim,nao]=d;
+    const box=document.getElementById('g3dDetail');
+    box.innerHTML=`<strong>${h(p)} · ${h(t)}</strong><div class="metric-grid" style="margin-bottom:4px"><div class="metric"><b>${fmt(props)}</b><span>propostas</span></div><div class="metric"><b>${fmt(vots)}</b><span>votações</span></div><div class="metric"><b>${fmt(ms)}</b><span>maioria SIM</span></div><div class="metric"><b>${fmt(mn)}</b><span>maioria NÃO</span></div><div class="metric"><b>${fmt(ap)}</b><span>aprovadas c/ maioria SIM</span></div></div><div class="small-note">Votos individuais somados no recorte: ${fmt(sim)} SIM · ${fmt(nao)} NÃO.</div>`;
+  });
+}
+function renderGraf(){
+  const cont=document.getElementById('grafConteudo');if(!ST.summary)return;
+  render3D();
+  const s=ST.summary,tm=gv('gTema'),an=gv('gAno'),party=gv('gPartido');
+  const years=Object.entries(s.years||{}).sort((a,b)=>Number(a[0])-Number(b[0]));
+  let annualProps=[],annualVotes=[];
+  if(ST.insights&&(party||tm)){
+    annualProps=years.map(([y])=>{
+      if(party&&tm)return insightMetric(party,tm,y).propostas;
+      if(party)return Object.values(insightThemesFor(party,y)).reduce((a,m)=>a+Number(m.propostas||0),0);
+      return Object.entries(ST.insights.partyThemeByYear?.[y]||{}).reduce((a,[,ths])=>a+Number(ths?.[tm]?.propostas||0),0);
+    });
+    annualVotes=years.map(([y])=>{
+      if(party&&tm)return insightMetric(party,tm,y).votacoes;
+      if(party)return Object.values(insightThemesFor(party,y)).reduce((a,m)=>a+Number(m.votacoes||0),0);
+      return Object.entries(ST.insights.partyThemeByYear?.[y]||{}).reduce((a,[,ths])=>a+Number(ths?.[tm]?.votacoes||0),0);
+    });
+  }else{
+    annualProps=years.map(([,v])=>Number(v.proposicoes||0));
+    annualVotes=years.map(([,v])=>Number(v.votacoes||0));
+  }
+  const caption=[party,tm,an&&('ano '+an)].filter(Boolean).join(' · ')||`período ${START_YEAR}–${END_YEAR}`;
+  cont.innerHTML=`<div class="bx"><div class="bxh">📅 Evolução no tempo</div><div class="al al-g"><span>✅</span><div>Recorte: <strong>${h(caption)}</strong>. Propostas e votações são mostradas separadamente porque representam ações diferentes.</div></div><canvas id="gEvol" height="300"></canvas></div>
+    ${party?`<div class="bx"><div class="bxh">📁 Temas de ${h(party)}</div><div id="gPartyTopics"></div></div>`:''}`;
+  mkCMulti('gEvol',years.map(x=>x[0]),[{label:'Propostas',data:annualProps,borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,.08)'},{label:'Votações',data:annualVotes,borderColor:'#7c3aed',backgroundColor:'rgba(124,58,237,.08)'}]);
+  if(party){
+    const metrics=insightThemesFor(party,an),entries=Object.entries(metrics).filter(([,m])=>m.propostas||m.votacoes).sort((a,b)=>(b[1].propostas+b[1].votacoes)-(a[1].propostas+a[1].votacoes)).slice(0,18);
+    document.getElementById('gPartyTopics').innerHTML=`<div class="topic-list">${entries.map(([t,m])=>`<div class="topic-row" onclick="document.getElementById('gTema').value='${h(t)}';renderGraf()"><div class="topic-name">${h(t)}</div><div class="topic-stats"><span><b>${fmt(m.propostas)}</b>propostas</span><span><b>${fmt(m.votacoes)}</b>votações</span><span><b>${fmt(m.maioriaSimEmAprovadas)}</b>aprovadas c/ maioria SIM</span></div></div>`).join('')}</div>`;
   }
 }
 
-// ══════════════════════════════════════════════
-// PARTIDOS
-// ══════════════════════════════════════════════
-function fPart(){
-  if(!ST.summary)return;
-  const q=(gv('pFsq')||'').toLowerCase();
-  const authors=ST.analytics?.partidosAutores||ST.summary?.parties||{};
-  const votes=ST.analytics?.votosPartidos||ST.summary?.partyVotes||{};
-  const all=[...new Set([...Object.keys(authors),...Object.keys(votes)])].filter(p=>p.toLowerCase().includes(q));
-  renderPartGrid(all.map(p=>[p,{autorias:Number(authors[p]||0),votos:votes[p]||null}]).sort((a,b)=>b[1].autorias-a[1].autorias));
-}
-function renderPart(){fPart();}
-function renderPartGrid(list){
-  const g=document.getElementById('partGrid');if(!g)return;
-  g.innerHTML=list.map(([p,x])=>`<div class="pcard" onclick="abrirPartido('${h(p)}')"><div class="pc-top" style="background:#64748b"></div><div class="pc-sig">${h(p)}</div><div class="pc-nm">${fmt(x.autorias)} proposições com autoria principal</div>${x.votos?`<div class="pc-bar"><div class="pc-row"><span style="min-width:65px">SIM</span><strong>${fmt(x.votos.S)}</strong></div><div class="pc-row"><span style="min-width:65px">NÃO</span><strong>${fmt(x.votos.N)}</strong></div></div>`:''}</div>`).join('')||'<div class="al al-i" style="grid-column:1/-1"><span>ℹ️</span><div>Nenhum partido encontrado.</div></div>';
-}
-function abrirPartido(p){
-  const authors=ST.analytics?.partidosAutores||ST.summary?.parties||{},votes=ST.analytics?.votosPartidos||ST.summary?.partyVotes||{},ori=ST.analytics?.orientacoesBancadas||ST.summary?.orientations||{};
-  const years=Object.entries(ST.summary?.years||{}).map(([y,v])=>[y,Number((v.partidosAutores||v.partidos||{})[p]||0)]).filter(x=>x[1]>0);
-  document.getElementById('mBd').innerHTML=`<h2 style="font-family:var(--ff);font-size:30px;margin-bottom:6px">${h(p)}</h2><div class="al al-i"><span>ℹ️</span><div>Dados descritivos dos arquivos oficiais. Não constituem avaliação, ranking ou recomendação.</div></div><div class="sg"><div class="sc az"><div class="sc-l">Autoria principal</div><div class="sc-v">${fmt(authors[p])}</div></div><div class="sc vd"><div class="sc-l">Votos SIM</div><div class="sc-v">${fmt(votes[p]?.S)}</div></div><div class="sc vm"><div class="sc-l">Votos NÃO</div><div class="sc-v">${fmt(votes[p]?.N)}</div></div></div>${years.length?`<div class="bx" style="padding:14px"><div class="bxh">📅 Proposições por ano</div>${years.map(([y,n])=>`<div class="tb-row"><span class="tb-l">${y}</span><div class="tb-bar"><div class="tb-fill" style="width:${Math.min(100,n/Math.max(...years.map(z=>z[1]))*100)}%;background:#64748b"></div></div><strong>${n}</strong></div>`).join('')}</div>`:''}${ori[p]?`<div class="bx" style="padding:14px"><div class="bxh">🏛 Orientações registradas</div>${Object.entries(ori[p]).sort((a,b)=>b[1]-a[1]).map(([o,n])=>`<div style="padding:6px 0;border-bottom:1px solid var(--brd)"><strong>${h(o)}</strong>: ${fmt(n)}</div>`).join('')}</div>`:''}`;abrirModal();
-}
 
-// ══════════════════════════════════════════════
-// GRÁFICOS
-// ══════════════════════════════════════════════
-function renderGraf(){
-  const cont=document.getElementById('grafConteudo');if(!ST.summary)return;
-  const s=ST.summary,tm=gv('gTema'),an=gv('gAno');
-  const years=Object.entries(s.years||{}).sort((a,b)=>Number(a[0])-Number(b[0]));
-  const annual=years.map(([y,v])=>tm?Number(v.temas?.[tm]||0):Number(v.proposicoes||0));
-  const selected=an?(s.years?.[an]||{}):s;
-  const themes=Object.entries(selected.temas||selected.themes||{}).sort((a,b)=>b[1]-a[1]).slice(0,15);
-  const parties=Object.entries(selected.partidosAutores||selected.partidos||selected.parties||{}).sort((a,b)=>b[1]-a[1]).slice(0,15);
-  const statuses=Object.entries(selected.status||{}).sort((a,b)=>b[1]-a[1]).slice(0,15);
-  cont.innerHTML=`<div class="bx" style="border-color:var(--verde2)"><div class="bxh">📊 Universo da análise</div><div class="al al-g"><span>✅</span><div>${an?'Ano '+h(an):`Período ${START_YEAR}–${END_YEAR}`}${tm?' · tema oficial: '+h(tm):''}. O gráfico temporal usa o mesmo filtro de tema em todos os anos.</div></div></div><div class="cgrd"><div class="cc"><div class="ct">📅 Proposições por ano</div><canvas id="gAnos" height="300"></canvas></div><div class="cc"><div class="ct">🏛 Autoria principal por partido</div><canvas id="gPart" height="300"></canvas></div><div class="cc"><div class="ct">📁 Temas oficiais</div><canvas id="gTemas" height="300"></canvas></div><div class="cc"><div class="ct">📌 Situação mais recente</div><canvas id="gSit" height="300"></canvas></div></div>`;
-  mkC('gAnos','line',years.map(x=>x[0]),annual,['#2563eb'],{plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}}},y:{beginAtZero:true}},extra:{borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,.08)',tension:.2,fill:true,pointRadius:3}});
-  if(parties.length)mkC('gPart','bar',parties.map(x=>x[0]),parties.map(x=>x[1]),parties.map(()=> '#64748b'),{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}});
-  if(themes.length)mkC('gTemas','bar',themes.map(x=>x[0]),themes.map(x=>x[1]),themes.map(()=> '#16a34a'),{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}});
-  if(statuses.length)mkC('gSit','bar',statuses.map(x=>x[0]),statuses.map(x=>x[1]),statuses.map(()=> '#7c3aed'),{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}});
-}
-
-// ══════════════════════════════════════════════
 // AUDITORIA
 // ══════════════════════════════════════════════
 function renderAuditoria(){
@@ -1134,7 +1242,7 @@ function showSec(id,el){
   document.getElementById('sec-'+id)?.classList.add('on');if(el)el.classList.add('on');
   if(id==='proposicoes')renderTabProj();
   if(id==='votacoes')renderTabVots();
-  if(id==='partidos')renderPart();
+  if(id==='partidos')renderPartyExplorer();
   if(id==='graficos')setTimeout(renderGraf,60);
   if(id==='auditoria')renderAuditoria();
 }
