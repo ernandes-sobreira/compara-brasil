@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>COMPARA BRASIL — Câmara dos Deputados 2003–2026</title>
+<title>COMPARA BRASIL — propostas e votações por partido</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700;1,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
@@ -309,8 +309,8 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
 
 <div class="hero">
   <div class="hi">
-    <h1>O que a Câmara<br><em>registrou e votou</em><br>— 2003 a 2026</h1>
-    <p class="hero-sub">Proposições legislativas e votações disponíveis na base do projeto, com rastreabilidade para a Câmara dos Deputados. O painel distingue dado oficial, classificação derivada e cobertura incompleta.</p>
+    <h1>O que os partidos<br><em>propõem e como votam</em><br>— 2003 a 2026</h1>
+    <p class="hero-sub">Veja o assunto por trás de cada projeto e votação, quem apresentou, como os deputados de cada partido votaram e quais temas aparecem com mais frequência. Dados oficiais da Câmara, explicados para leitura cidadã.</p>
     <div class="pills">
       <span class="pill p1">⚖️ APARTIDÁRIO</span>
       <span class="pill p1">🚫 NÃO SUGERE VOTO</span>
@@ -641,9 +641,9 @@ function setOptions(id,values,first='Todos'){
   if([...s.options].some(o=>o.value===cur))s.value=cur;
 }
 function syncPeriodUI(){
-  document.title=`COMPARA BRASIL — Câmara dos Deputados ${START_YEAR}–${END_YEAR}`;
+  document.title=`COMPARA BRASIL — propostas e votações por partido`;
   const tag=document.querySelector('.logo-tg'); if(tag)tag.textContent=`Auditoria Legislativa ${START_YEAR}–${END_YEAR}`;
-  const h1=document.querySelector('.hero h1');if(h1)h1.innerHTML=`O que a Câmara<br><em>registrou e votou</em><br>— ${START_YEAR} a ${END_YEAR}`;
+  const h1=document.querySelector('.hero h1');if(h1)h1.innerHTML=`O que os partidos<br><em>propõem e como votam</em><br>— ${START_YEAR} a ${END_YEAR}`;
   const g=document.getElementById('gAno');if(g&&g.options[0])g.options[0].textContent=`Todos (${START_YEAR}–${END_YEAR})`;
 }
 function popYears(){
@@ -743,6 +743,15 @@ function renderPainel(){
       <div class="sc lr"><div class="sc-l">Partido identificado</div><div class="sc-v">${fmt(q.total-q.missingParty)}</div><div class="sc-s">${pct(q.total-q.missingParty,q.total)}%</div></div>
       <div class="sc am"><div class="sc-l">Com tema oficial</div><div class="sc-v">${fmt(q.total-q.missingTheme)}</div><div class="sc-s">${pct(q.total-q.missingTheme,q.total)}%</div></div>
       <div class="sc vm"><div class="sc-l">Com situação oficial</div><div class="sc-v">${fmt(q.total-q.missingStatus)}</div><div class="sc-s">${pct(q.total-q.missingStatus,q.total)}%</div></div>
+    </div>
+    <div class="bx">
+      <div class="kicker">COMECE POR AQUI</div>
+      <div class="bxh">O que você quer entender?</div>
+      <div class="qgrid">
+        <div class="qcard" onclick="showSec('votacoes',document.querySelector('[onclick*=votacoes]'))"><strong>🗳 O que foi votado?</strong><span>Leia o assunto da votação, o resultado, a orientação de bancada e como cada deputado votou.</span></div>
+        <div class="qcard" onclick="showSec('partidos',document.querySelector('[onclick*=partidos]'))"><strong>🏛 O que cada partido puxa?</strong><span>Compare temas, propostas, votações e aprovações em um painel compacto.</span></div>
+        <div class="qcard" onclick="showSec('graficos',document.querySelector('[onclick*=graficos]'))"><strong>🧊 Ver em 3D</strong><span>Partido no eixo X, tema no Y e votações no eixo Z.</span></div>
+      </div>
     </div>
     <div class="bx"><div class="bxh">📅 Proposições e votações por ano</div><canvas id="cAnoFull" height="260"></canvas></div>
     <div class="cgrd">
@@ -1026,6 +1035,11 @@ function insightThemesFor(party,year){
 function insightMetric(party,theme,year){
   return insightThemesFor(party,year)?.[theme]||{propostas:0,votacoes:0,sim:0,nao:0,abst:0,obstr:0,outros:0,maioriaSim:0,maioriaNao:0,equilibrado:0,aprovadas:0,maioriaSimEmAprovadas:0};
 }
+function partyTotalsFor(party,year){
+  if(!ST.insights)return {};
+  if(year)return ST.insights.partyTotalsByYear?.[String(year)]?.[party]||{};
+  return ST.insights.partyTotals?.[party]||{};
+}
 function openThemeShortcut(theme){
   const s=document.getElementById('partyThemeFocus');if(s)s.value=theme;renderPartyExplorer();
 }
@@ -1079,7 +1093,7 @@ function renderPartyExplorer(){
   }
   if(party){
     const metrics=insightThemesFor(party,year),entries=Object.entries(metrics).filter(([,m])=>m.propostas||m.votacoes).sort((a,b)=>(b[1].propostas+b[1].votacoes)-(a[1].propostas+a[1].votacoes));
-    const totals=ST.insights.partyTotals?.[party]||{};
+    const totals=partyTotalsFor(party,year);
     html+=`<div class="bx"><div class="party-dashboard-grid"><div class="party-summary"><div class="kicker">PARTIDO SELECIONADO</div><h2>${h(party)}</h2><div class="sub">${year?'Ano '+h(year):'Período completo'}${theme?' · '+h(theme):''}</div>
       ${theme?(()=>{const m=insightMetric(party,theme,year);return `<div class="metric-grid"><div class="metric"><b>${fmt(m.propostas)}</b><span>propostas no tema</span></div><div class="metric"><b>${fmt(m.votacoes)}</b><span>votações nominais</span></div><div class="metric"><b>${fmt(m.maioriaSim)}</b><span>maioria SIM</span></div><div class="metric"><b>${fmt(m.maioriaNao)}</b><span>maioria NÃO</span></div><div class="metric"><b>${fmt(m.maioriaSimEmAprovadas)}</b><span>aprovadas com maioria SIM</span></div></div>`;})():`<div class="metric-grid"><div class="metric"><b>${fmt(totals.propostas)}</b><span>propostas no período</span></div><div class="metric"><b>${fmt(totals.votacoes)}</b><span>participações em votações</span></div><div class="metric"><b>${fmt(totals.sim)}</b><span>votos individuais SIM</span></div><div class="metric"><b>${fmt(totals.nao)}</b><span>votos individuais NÃO</span></div></div>`}
       <div class="inline-actions">${year?'<button class="btn btn-p" onclick="explorerToVotes()">Ver votações explicadas</button><button class="btn btn-s" onclick="explorerToProps()">Ver propostas</button>':'<span class="small-note">Escolha um ano para abrir os documentos e votações individuais.</span>'}</div></div>
@@ -1145,12 +1159,12 @@ function renderGraf(){
   if(ST.insights&&(party||tm)){
     annualProps=years.map(([y])=>{
       if(party&&tm)return insightMetric(party,tm,y).propostas;
-      if(party)return Object.values(insightThemesFor(party,y)).reduce((a,m)=>a+Number(m.propostas||0),0);
+      if(party)return Number(ST.insights.partyTotalsByYear?.[String(y)]?.[party]?.propostas||0);
       return Object.entries(ST.insights.partyThemeByYear?.[y]||{}).reduce((a,[,ths])=>a+Number(ths?.[tm]?.propostas||0),0);
     });
     annualVotes=years.map(([y])=>{
       if(party&&tm)return insightMetric(party,tm,y).votacoes;
-      if(party)return Object.values(insightThemesFor(party,y)).reduce((a,m)=>a+Number(m.votacoes||0),0);
+      if(party)return Number(ST.insights.partyTotalsByYear?.[String(y)]?.[party]?.votacoes||0);
       return Number(ST.insights.themeVoteByYear?.[String(y)]?.[tm]||0);
     });
   }else{
