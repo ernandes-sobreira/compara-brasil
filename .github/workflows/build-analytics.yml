@@ -1,0 +1,32 @@
+name: Build official analytics
+
+on:
+  push:
+    paths:
+      - "dados/oficial/dados-*.json"
+      - "scripts/build-analytics.py"
+      - ".github/workflows/build-analytics.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  analytics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/build-analytics.py
+      - name: Commit analytics
+        run: |
+          test -f dados/oficial/analitica.json || exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dados/oficial/analitica.json
+          git commit -m "Update official analytics" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
