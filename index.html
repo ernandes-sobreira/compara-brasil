@@ -251,8 +251,8 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
   <div id="painelConteudo">
     <div class="ldg">
       <div class="spin"></div>
-      <div class="ldg-t">Conectando ao banco de dados...</div>
-      <div class="ldg-s">Carregando dados reais da Câmara dos Deputados</div>
+      <div class="ldg-t">Abrindo o painel...</div>
+      <div class="ldg-s">Conectando à base legislativa…</div>
     </div>
   </div>
 </div>
@@ -484,6 +484,12 @@ ANOS.forEach(a=>{
   });
 });
 
+function setDB(estado,msg){
+  const d=document.getElementById('dot');
+  const s=document.getElementById('dbst');
+  if(d) d.className='dot '+(estado||'');
+  if(s) s.textContent=msg||'';
+}
 
 // ══════════════════════════════════════════════
 // INIT
