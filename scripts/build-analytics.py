@@ -99,9 +99,10 @@ for path in FILES:
             pref=str(v.get("id") or "").split("-")[0]
             if pref in pmap: pid=pref
         prop=pmap.get(pid)
-        if prop:
+        subject=prop or (v.get("assunto") or None)
+        if subject:
             out["quality"]["voteEventsLinkedToProp"]+=1
-            themes=[(x.get("tema") or "").strip() for x in (prop.get("temas") or []) if (x.get("tema") or "").strip()] or ["Sem tema oficial"]
+            themes=[(x.get("tema") or "").strip() for x in (subject.get("temas") or []) if (x.get("tema") or "").strip()] or ["Sem tema oficial"]
         else:
             out["quality"]["voteEventsWithoutLinkedProp"]+=1
             themes=["Sem tema vinculado"]
@@ -145,7 +146,7 @@ out["themeTotals"]=dict(out["themeTotals"].most_common())
 # principais = pelo menos 25 proposições OU 100 eventos de votação
 out["mainParties"]=sorted([
     p for p,v in out["partyTotals"].items()
-    if int(v.get("propostas",0))>=25 or int(v.get("votacoes",0))>=100
+    if p!="Sem partido" and (int(v.get("propostas",0))>=25 or int(v.get("votacoes",0))>=100)
 ],key=lambda x:x.upper())
 
 # valores crus muito raros para auditoria, sem poluir a interface
