@@ -1,0 +1,31 @@
+name: Probe Camara bulk files
+
+on:
+  push:
+    paths:
+      - ".github/workflows/probe-camara.yml"
+      - "scripts/probe-camara.py"
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - run: python scripts/probe-camara.py
+      - name: Commit probe
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add audit/camara-headers.json
+          git commit -m "Probe Camara bulk schemas" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
