@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>COMPARA BRASIL — Congresso 2003–2025</title>
+<title>COMPARA BRASIL — Câmara dos Deputados 2003–2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700;1,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -215,16 +215,16 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
       <div class="logo-ic">CB</div>
       <div>
         <div class="logo-nm">COMPARA BRASIL</div>
-        <span class="logo-tg">Auditoria Legislativa 2003–2025</span>
+        <span class="logo-tg">Auditoria Legislativa 2003–2026</span>
       </div>
     </a>
     <nav class="hnav">
       <button class="nb on" onclick="showSec('painel',this)">📊 Painel</button>
-      <button class="nb" onclick="showSec('proposicoes',this)">📋 Projetos</button>
+      <button class="nb" onclick="showSec('proposicoes',this)">📋 Proposições</button>
       <button class="nb" onclick="showSec('votacoes',this)">🗳 Votações</button>
       <button class="nb" onclick="showSec('partidos',this)">🏛 Partidos</button>
       <button class="nb" onclick="showSec('graficos',this)">📈 Gráficos</button>
-      <button class="nb" onclick="showSec('sobre',this)">ℹ️ Sobre</button>
+      <button class="nb" onclick="showSec('auditoria',this)">🧪 Auditoria</button><button class="nb" onclick="showSec('sobre',this)">ℹ️ Sobre</button>
     </nav>
     <div class="hdot"><div class="dot" id="dot"></div><span id="dbst">conectando...</span></div>
   </div>
@@ -232,14 +232,14 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
 
 <div class="hero">
   <div class="hi">
-    <h1>O que o Congresso<br><em>realmente fez</em><br>— 2003 a 2025</h1>
-    <p class="hero-sub">Todos os projetos de lei, como cada partido votou, quem propôs e o que virou lei. Dados diretos da API oficial da Câmara dos Deputados. Para educação, debate e cidadania.</p>
+    <h1>O que a Câmara<br><em>registrou e votou</em><br>— 2003 a 2026</h1>
+    <p class="hero-sub">Proposições legislativas e votações disponíveis na base do projeto, com rastreabilidade para a Câmara dos Deputados. O painel distingue dado oficial, classificação derivada e cobertura incompleta.</p>
     <div class="pills">
       <span class="pill p1">⚖️ APARTIDÁRIO</span>
       <span class="pill p1">🚫 NÃO SUGERE VOTO</span>
       <span class="pill p2">✅ API OFICIAL CÂMARA</span>
       <span class="pill p3">🏫 USO EDUCACIONAL LIVRE</span>
-      <span class="pill p1">📅 2003–2025</span>
+      <span class="pill p1">📅 2003–2026</span>
     </div>
   </div>
 </div>
@@ -277,12 +277,6 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
         <option value="Arquivada">Arquivada</option>
         <option value="Em tramitação">Tramitando</option>
       </select></div>
-      <div class="fg"><label>Eixo do Autor</label><select id="pEixo" onchange="fProj()"><option value="">Todos</option>
-        <option value="ee">Ext. Esquerda</option><option value="e">Esquerda</option>
-        <option value="ce">Centro-Esquerda</option><option value="c">Centro</option>
-        <option value="cd">Centro-Direita</option><option value="d">Direita</option>
-        <option value="ed">Ext. Direita</option>
-      </select></div>
       <div class="fg"><label>Partido</label><select id="pPart" onchange="fProj()"><option value="">Todos</option></select></div>
       <button class="btn btn-s" onclick="resetProj()">Limpar</button>
     </div>
@@ -316,15 +310,9 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
 <!-- PARTIDOS -->
 <div id="sec-partidos" class="sec">
   <div class="bx">
-    <div class="bxh">🏛 Partidos — Classificação e Histórico de Votações</div>
-    <div class="al al-i"><span>ℹ️</span><div>Classificação baseada em Power & Zucco (2021) / IUPERJ. Os dados de votações e proposições são reais — vêm direto do Firebase. Clique em qualquer partido para ver o histórico completo.</div></div>
+    <div class="bxh">🏛 Partidos — Registros de Autoria e Votações</div>
+    <div class="al al-i"><span>ℹ️</span><div>Esta versão auditada não atribui posição ideológica aos partidos. Ela mostra somente registros de autoria e o comportamento agregado armazenado para as votações disponíveis.</div></div>
     <div class="fr">
-      <div class="fg"><label>Eixo</label><select id="pEixoF" onchange="fPart()"><option value="">Todos</option>
-        <option value="ee">Ext. Esquerda</option><option value="e">Esquerda</option>
-        <option value="ce">Centro-Esquerda</option><option value="c">Centro</option>
-        <option value="cd">Centro-Direita</option><option value="d">Direita</option>
-        <option value="ed">Ext. Direita</option>
-      </select></div>
       <div class="fg"><label>Buscar</label><input type="text" id="pFsq" placeholder="Sigla ou nome..." oninput="fPart()"></div>
     </div>
     <div class="pgrd" id="partGrid">
@@ -337,9 +325,9 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
 <div id="sec-graficos" class="sec">
   <div class="bx">
     <div class="bxh">📈 Análise Visual — Dados Reais</div>
-    <div class="al al-i"><span>ℹ️</span><div>Todos os gráficos são calculados a partir dos dados reais do Firebase. Apenas o que foi coletado da API da Câmara é exibido.</div></div>
+    <div class="al al-i"><span>ℹ️</span><div>Os gráficos usam somente os registros efetivamente carregados do banco. Eles não são apresentados como censo completo quando a cobertura histórica estiver incompleta.</div></div>
     <div class="fr">
-      <div class="fg"><label>Período</label><select id="gAno" onchange="renderGraf()"><option value="">Todos (2003–2025)</option></select></div>
+      <div class="fg"><label>Período</label><select id="gAno" onchange="renderGraf()"><option value="">Todos (2003–2026)</option></select></div>
       <div class="fg"><label>Tema</label><select id="gTema" onchange="renderGraf()"><option value="">Todos</option>
         <option>Trabalho</option><option>Economia</option><option>Meio Ambiente</option>
         <option>Saúde</option><option>Direitos</option><option>Social</option><option>Segurança</option>
@@ -351,17 +339,25 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
   </div>
 </div>
 
+<!-- AUDITORIA -->
+<div id="sec-auditoria" class="sec">
+  <div class="bx">
+    <div class="bxh">🧪 Auditoria de cobertura e consistência</div>
+    <div class="al al-i"><span>ℹ️</span><div>Esta área verifica o que realmente está carregado no banco antes de qualquer interpretação. Quantidades abaixo são da base disponível nesta sessão, não uma afirmação de total histórico da Câmara.</div></div>
+    <div id="auditConteudo"><div class="ldg"><div class="spin"></div><div class="ldg-t">Auditando os registros...</div></div></div>
+  </div>
+</div>
+
 <!-- SOBRE -->
 <div id="sec-sobre" class="sec">
   <div class="bx">
     <div class="bxh">ℹ️ Sobre o COMPARA BRASIL</div>
-    <p style="font-size:13px;line-height:1.85;margin-bottom:14px">Plataforma educacional e apartidária que consolida dados legislativos reais do Congresso Nacional, disponibilizados pela API pública da Câmara dos Deputados (dadosabertos.camara.leg.br). Nenhum dado é inventado — apenas o que a API retorna é exibido.</p>
-    <p style="font-size:13px;line-height:1.85;margin-bottom:14px"><strong>Classificação ideológica:</strong> Power, T. J., & Zucco, C. Jr. (2021). "The Ideological Preferences of Brazilian Political Parties (1990–2019)". <em>Brazilian Political Science Review</em>, 15(1). DOI: 10.1590/1981-3821202100010001</p>
-    <div class="al al-w"><span>⚠️</span><div>Esta plataforma <strong>não sugere voto</strong> e não emite opiniões políticas. Apresenta dados públicos organizados para análise cidadã independente.</div></div>
+    <p style="font-size:13px;line-height:1.85;margin-bottom:14px">Plataforma educacional para explorar registros legislativos da <strong>Câmara dos Deputados</strong>. Nesta versão, “proposição” é tratada como a categoria legislativa ampla usada pela Câmara — não como sinônimo automático de projeto de lei.</p>
+    <p style="font-size:13px;line-height:1.85;margin-bottom:14px">A interface mostra apenas o que está presente no banco conectado. Quando a coleção estiver incompleta, o sistema sinaliza a limitação e evita apresentar a amostra como uma série histórica completa.</p>
+    <div class="al al-w"><span>⚠️</span><div><strong>Sem ranking político e sem recomendação de voto.</strong> A antiga classificação ideológica foi desativada nesta versão porque a tabela e a referência usadas não estavam suficientemente auditadas para sustentar comparações responsáveis.</div></div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:18px">
-      <div style="border:2px solid var(--brd);border-radius:12px;padding:16px"><div style="font-weight:800;margin-bottom:7px;color:var(--azul2)">🏛 Câmara dos Deputados</div><p style="font-size:11px;color:var(--cin);margin-bottom:9px">API pública com proposições, votações e deputados desde 2003.</p><a href="https://dadosabertos.camara.leg.br/api/v2" target="_blank" class="lnk">↗ dadosabertos.camara.leg.br</a></div>
-      <div style="border:2px solid var(--brd);border-radius:12px;padding:16px"><div style="font-weight:800;margin-bottom:7px;color:var(--azul2)">🏛 Senado Federal</div><p style="font-size:11px;color:var(--cin);margin-bottom:9px">Dados abertos com matérias e votações do Senado Federal.</p><a href="https://legis.senado.leg.br/dadosabertos/" target="_blank" class="lnk">↗ legis.senado.leg.br</a></div>
-      <div style="border:2px solid var(--brd);border-radius:12px;padding:16px"><div style="font-weight:800;margin-bottom:7px;color:var(--amar)">📚 Power & Zucco (2021)</div><p style="font-size:11px;color:var(--cin);margin-bottom:9px">Classificação ideológica dos partidos brasileiros 1990–2019.</p><a href="https://doi.org/10.1590/1981-3821202100010001" target="_blank" class="lnk">↗ Ver artigo</a></div>
+      <div style="border:2px solid var(--brd);border-radius:12px;padding:16px"><div style="font-weight:800;margin-bottom:7px;color:var(--azul2)">🏛 Fonte oficial</div><p style="font-size:11px;color:var(--cin);margin-bottom:9px">Dados Abertos da Câmara dos Deputados: proposições, tramitações, temas, votações, votos e orientações.</p><a href="https://dadosabertos.camara.leg.br/api/v2" target="_blank" class="lnk">↗ API da Câmara</a></div>
+      <div style="border:2px solid var(--brd);border-radius:12px;padding:16px"><div style="font-weight:800;margin-bottom:7px;color:var(--verde)">🧪 Método</div><p style="font-size:11px;color:var(--cin);margin-bottom:9px">Cobertura, campos ausentes, classificações heurísticas e eventuais truncamentos são exibidos na aba Auditoria.</p><button class="btn btn-s" onclick="showSec('auditoria',document.querySelector('[onclick*=auditoria]'))">Abrir auditoria</button></div>
     </div>
   </div>
 </div>
@@ -373,10 +369,7 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
 </div>
 
 <footer>
-  COMPARA BRASIL — Auditoria Legislativa &nbsp;|&nbsp;
-  Dados: API Câmara dos Deputados (dadosabertos.camara.leg.br) &nbsp;|&nbsp;
-  Classificação: Power &amp; Zucco (2021) / IUPERJ &nbsp;|&nbsp;
-  Apartidário — não sugere voto &nbsp;|&nbsp; Uso educacional livre
+  COMPARA BRASIL — Auditoria Legislativa &nbsp;|&nbsp; Dados: Câmara dos Deputados &nbsp;|&nbsp; Cobertura declarada na aba Auditoria &nbsp;|&nbsp; Uso educacional livre
 </footer>
 
 <script>
@@ -402,38 +395,35 @@ try {
 
 <script>
 // ══════════════════════════════════════════════
-// CLASSIFICAÇÃO — Power & Zucco (2021) / IUPERJ
+// CLASSIFICAÇÃO — camada ideológica desativada
 // Esta é a ÚNICA parte não oriunda do Firebase:
 // é uma tabela acadêmica publicada.
 // ══════════════════════════════════════════════
 const EP = {
-  'PSOL':  {e:'ee',c:'#7f1d1d',n:'Partido Socialismo e Liberdade',f:2004,s:0.8},
-  'PCdoB': {e:'ee',c:'#991b1b',n:'Partido Comunista do Brasil',f:1922,s:1.0},
-  'PCB':   {e:'ee',c:'#b91c1c',n:'Partido Comunista Brasileiro',f:1922,s:0.5},
-  'PT':    {e:'e', c:'#dc2626',n:'Partido dos Trabalhadores',f:1980,s:2.1},
-  'PDT':   {e:'e', c:'#ef4444',n:'Partido Democrático Trabalhista',f:1980,s:2.8},
-  'PV':    {e:'e', c:'#16a34a',n:'Partido Verde',f:1986,s:2.5},
-  'Rede':  {e:'e', c:'#15803d',n:'Rede Sustentabilidade',f:2013,s:2.7},
-  'PSDB':  {e:'e', c:'#0284c7',n:'Partido da Social Democracia Bras.',f:1988,s:3.2},
-  'PSB':   {e:'ce',c:'#f97316',n:'Partido Socialista Brasileiro',f:1947,s:3.6},
-  'Cidadania':{e:'ce',c:'#fb923c',n:'Cidadania',f:2017,s:4.0},
-  'Avante':{e:'ce',c:'#f59e0b',n:'Avante',f:2016,s:4.1},
-  'MDB':   {e:'c', c:'#0ea5e9',n:'Movimento Democrático Brasileiro',f:1966,s:5.1},
-  'Podemos':{e:'c',c:'#64748b',n:'Podemos',f:2016,s:5.2},
-  'Solidariedade':{e:'c',c:'#94a3b8',n:'Solidariedade',f:2012,s:5.0},
-  'PSD':   {e:'cd',c:'#3b82f6',n:'Partido Social Democrático',f:2011,s:5.8},
-  'PP':    {e:'cd',c:'#2563eb',n:'Progressistas',f:1993,s:6.5},
-  'Republicanos':{e:'cd',c:'#1d4ed8',n:'Republicanos',f:2005,s:6.3},
-  'União Brasil':{e:'cd',c:'#1e40af',n:'União Brasil',f:2022,s:6.4},
-  'DEM':   {e:'cd',c:'#1e3a8a',n:'Democratas',f:1985,s:6.6},
-  'PL':    {e:'d', c:'#312e81',n:'Partido Liberal',f:1985,s:7.8},
-  'Novo':  {e:'d', c:'#d97706',n:'Partido Novo',f:2011,s:8.2},
-  'PTB':   {e:'d', c:'#78716c',n:'Partido Trabalhista Brasileiro',f:1980,s:7.2},
-  'PSL':   {e:'ed',c:'#1e1b4b',n:'PSL (histórico)',f:1994,s:9.2},
+  'PSOL':{c:'#7f1d1d',n:'Partido Socialismo e Liberdade'},
+  'PCdoB':{c:'#991b1b',n:'Partido Comunista do Brasil'},
+  'PCB':{c:'#b91c1c',n:'Partido Comunista Brasileiro'},
+  'PT':{c:'#dc2626',n:'Partido dos Trabalhadores'},
+  'PDT':{c:'#ef4444',n:'Partido Democrático Trabalhista'},
+  'PV':{c:'#16a34a',n:'Partido Verde'},
+  'Rede':{c:'#15803d',n:'Rede Sustentabilidade'},
+  'PSDB':{c:'#0284c7',n:'Partido da Social Democracia Brasileira'},
+  'PSB':{c:'#f97316',n:'Partido Socialista Brasileiro'},
+  'Cidadania':{c:'#fb923c',n:'Cidadania'},
+  'Avante':{c:'#f59e0b',n:'Avante'},
+  'MDB':{c:'#0ea5e9',n:'Movimento Democrático Brasileiro'},
+  'Podemos':{c:'#64748b',n:'Podemos'},
+  'Solidariedade':{c:'#94a3b8',n:'Solidariedade'},
+  'PSD':{c:'#3b82f6',n:'Partido Social Democrático'},
+  'PP':{c:'#2563eb',n:'Progressistas'},
+  'Republicanos':{c:'#1d4ed8',n:'Republicanos'},
+  'União Brasil':{c:'#1e40af',n:'União Brasil'},
+  'DEM':{c:'#1e3a8a',n:'Democratas'},
+  'PL':{c:'#312e81',n:'Partido Liberal'},
+  'Novo':{c:'#d97706',n:'Partido Novo'},
+  'PTB':{c:'#78716c',n:'Partido Trabalhista Brasileiro'},
+  'PSL':{c:'#1e1b4b',n:'PSL (histórico)'}
 };
-const CE={ee:'#7f1d1d',e:'#dc2626',ce:'#f97316',c:'#64748b',cd:'#3b82f6',d:'#1e40af',ed:'#1e1b4b'};
-const LE={ee:'Ext. Esquerda',e:'Esquerda',ce:'Centro-Esquerda',c:'Centro',cd:'Centro-Direita',d:'Direita',ed:'Ext. Direita'};
-const LEF={ee:'Extrema Esquerda',e:'Esquerda',ce:'Centro-Esquerda',c:'Centro',cd:'Centro-Direita',d:'Direita',ed:'Extrema Direita'};
 
 const TK={
   'Trabalho':['trabalhista','trabalhadores','clt','emprego','salário','jornada','sindicato','previdência','aposentadoria','inss','fgts'],
@@ -444,7 +434,7 @@ const TK={
   'Social':['social','pobreza','bolsa','benefício','assistência','moradia','saneamento','fome'],
   'Segurança':['segurança','crime','pena','prisão','armamento','droga','tráfico','homicídio','penal'],
   'Educação':['educação','escola','ensino','universidade','professor','enem','cotas','mec'],
-  'Infraestrutura':['infraestrutura','rodovia','energia','petróleo','gás','transporte','ferrovia'],
+  'Infraestrutura':['infraestrutura','rodovia','energia','petróleo','gás','transporte','ferrovia']
 };
 
 function temaEmenta(e){
@@ -453,17 +443,24 @@ function temaEmenta(e){
   for(const [tm,kws] of Object.entries(TK)) if(kws.some(k=>t.includes(k))) return tm;
   return 'Outro';
 }
-function infoEixo(s){
-  if(!s) return {e:'c',c:'#64748b',n:s||'—'};
-  for(const [k,v] of Object.entries(EP))
-    if(k.toLowerCase()===String(s).toLowerCase()) return v;
-  return {e:'c',c:'#64748b',n:s};
+function infoPartido(s){
+  const k=Object.keys(EP).find(k=>k.toLowerCase()===String(s||'').toLowerCase());
+  return k?{sigla:k,...EP[k]}:{sigla:s||'—',c:'#64748b',n:s||'Não identificado'};
 }
 function tagKey(t){
-  return (t||'outro').toLowerCase()
-    .replace(/ /g,'-')
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  return (t||'outro').toLowerCase().replace(/ /g,'-').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 }
+function statusGroup(p){
+  const raw=String(p?.status||p?.lei||'').toLowerCase();
+  if(/transformad|convertid|sancion|promulg|virou lei|lei nº|lei n|emenda constitucional/.test(raw)) return 'Transformada em norma';
+  if(/arquiv|rejeitad|prejudicad|retirad/.test(raw)) return 'Arquivada/encerrada';
+  if(/tramita|aguard|comiss|plen|pronta|apensad|encaminhad|recebid/.test(raw)) return 'Em tramitação';
+  return 'Outra / não classificada';
+}
+function uniqById(arr){
+  const m=new Map(); arr.forEach(x=>m.set(String(x.id),x)); return [...m.values()];
+}
+
 
 // ══════════════════════════════════════════════
 // ESTADO — só dados reais
@@ -475,8 +472,11 @@ const ST={
   pSort:{c:'ano',d:'desc'},
   CH:{},
   carregado:false,
+  loadMeta:{projTrunc:false,votTrunc:false}
 };
-const ANOS=Array.from({length:23},(_,i)=>2025-i);
+const START_YEAR=2003;
+const CURRENT_YEAR=new Date().getFullYear();
+const ANOS=Array.from({length:CURRENT_YEAR-START_YEAR+1},(_,i)=>CURRENT_YEAR-i);
 ANOS.forEach(a=>{
   ['pAno','vAno','gAno'].forEach(id=>{
     const s=document.getElementById(id);
@@ -484,174 +484,125 @@ ANOS.forEach(a=>{
   });
 });
 
-function setDB(estado,msg){
-  const d=document.getElementById('dot');
-  const s=document.getElementById('dbst');
-  if(d) d.className='dot '+estado;
-  if(s) s.textContent=msg;
-}
 
 // ══════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════
+async function carregarColecaoCompleta(db,nome,campo='ano',maxDocs=10000,batch=750){
+  let out=[],last=null,truncated=false;
+  while(out.length<maxDocs){
+    let q=db.collection(nome).orderBy(campo,'desc').limit(Math.min(batch,maxDocs-out.length));
+    if(last) q=q.startAfter(last);
+    const snap=await q.get();
+    if(snap.empty) break;
+    out.push(...snap.docs.map(d=>({id:d.id,...d.data()})));
+    last=snap.docs[snap.docs.length-1];
+    if(snap.size<batch) break;
+  }
+  if(out.length>=maxDocs) truncated=true;
+  return {docs:uniqById(out),truncated};
+}
+
 window.addEventListener('load',async()=>{
   if(!window._fbOk){
     setDB('warn','Firebase não configurado');
     mostraErro('painelConteudo','Firebase não configurado','Verifique as credenciais do Firebase no arquivo index.html.');
     return;
   }
-  setDB('','carregando...');
-  try {
+  setDB('','auditando banco...');
+  try{
     const db=window._db;
-    // Stats
-    const sdoc=await db.collection('estatisticas').doc('geral').get();
+    const [sdoc,vr,pr]=await Promise.all([
+      db.collection('estatisticas').doc('geral').get(),
+      carregarColecaoCompleta(db,'votacoes','ano',10000,750),
+      carregarColecaoCompleta(db,'proposicoes','ano',10000,750)
+    ]);
     if(sdoc.exists) ST.stats=sdoc.data();
-
-    // Votações
-    const vs=await db.collection('votacoes').orderBy('ano','desc').limit(2000).get();
-    ST.vots=vs.docs.map(d=>({id:d.id,...d.data()}));
-    ST.vFil=[...ST.vots];
-
-    // Proposições
-    const ps=await db.collection('proposicoes').orderBy('ano','desc').limit(500).get();
-    ST.proj=ps.docs.map(d=>{
-      const x={id:d.id,...d.data()};
-      // Classificar tema se não tiver
-      if(!x.tema||x.tema==='Outro') x.tema=temaEmenta(x.ementa);
-      // Eixo do autor
-      if(!x.eixo&&x.partido) x.eixo=infoEixo(x.partido).e;
-      return x;
+    ST.vots=vr.docs;
+    ST.loadMeta.votTrunc=vr.truncated;
+    ST.proj=pr.docs.map(x=>{
+      const y={...x};
+      if(!y.tema||y.tema==='Outro'){
+        const t=temaEmenta(y.ementa);
+        y.tema=t;
+        y.temaOrigem=t==='Outro'?'não classificado':'heurística por palavras-chave';
+      }else{
+        y.temaOrigem=y.temaOrigem||'campo armazenado';
+      }
+      return y;
     });
-    ST.pFil=[...ST.proj];
-    ST.carregado=true;
-
-    setDB('ok',`${(ST.stats.total_proj||ST.proj.length).toLocaleString('pt-BR')} proposições · ${ST.vots.length.toLocaleString('pt-BR')} votações`);
-    renderPainel();
-    renderTabProj();
-    renderTabVots();
-    renderPart();
-    popSelects();
-
-  } catch(e){
+    ST.loadMeta.projTrunc=pr.truncated;
+    ST.pFil=[...ST.proj]; ST.vFil=[...ST.vots]; ST.carregado=true;
+    const avisos=auditarDados().warnings.length;
+    setDB(avisos?'warn':'ok',`${ST.proj.length.toLocaleString('pt-BR')} proposições · ${ST.vots.length.toLocaleString('pt-BR')} votações · ${avisos} alerta(s)`);
+    renderPainel(); renderTabProj(); renderTabVots(); renderPart(); popSelects(); renderAuditoria();
+  }catch(e){
     console.error('Erro Firebase:',e);
     setDB('warn','erro de conexão');
-    mostraErro('painelConteudo','Erro ao conectar ao Firebase',`${e.message}. Verifique sua conexão e as configurações do Firebase.`);
+    mostraErro('painelConteudo','Erro ao conectar ao Firebase',`${e.message}. Verifique conexão, índices e regras do Firestore.`);
   }
 });
 
 function mostraErro(containerId,titulo,msg){
   const el=document.getElementById(containerId);
-  if(el) el.innerHTML=`
-    <div class="erro">
-      <h3>⚠️ ${h(titulo)}</h3>
-      <p>${h(msg)}</p>
-      <p style="margin-top:10px;font-size:11px">Verifique: (1) Regras do Firestore permitem leitura pública? (2) Credenciais corretas? (3) Conexão com internet?</p>
-    </div>`;
+  if(el) el.innerHTML=`<div class="erro"><h3>⚠️ ${h(titulo)}</h3><p>${h(msg)}</p></div>`;
 }
 
-// ══════════════════════════════════════════════
+
 // PAINEL
 // ══════════════════════════════════════════════
 function renderPainel(){
   const cont=document.getElementById('painelConteudo');
-  if(!ST.carregado){
-    cont.innerHTML='<div class="ldg"><div class="spin"></div><div class="ldg-t">Carregando...</div></div>';
-    return;
-  }
-  const s=ST.stats;
-  const f=n=>n?parseInt(n).toLocaleString('pt-BR'):'—';
-
-  // Contagens reais dos dados carregados
-  const eixos={ee:0,e:0,ce:0,c:0,cd:0,d:0,ed:0};
-  const temas={},sits={};
+  if(!ST.carregado){cont.innerHTML='<div class="ldg"><div class="spin"></div><div class="ldg-t">Carregando...</div></div>';return;}
+  const a=auditarDados(), temas={},partidos={},sits={};
   ST.proj.forEach(p=>{
-    const ei=p.eixo||'c';
-    if(eixos[ei]!==undefined) eixos[ei]++;
-    const t=p.tema||'Outro';
-    temas[t]=(temas[t]||0)+1;
-    const r=p.status?.includes('Lei')?'Virou Lei':p.status?.includes('Arquiv')?'Arquivada':'Tramitando';
-    sits[r]=(sits[r]||0)+1;
+    const t=p.tema||'Outro'; temas[t]=(temas[t]||0)+1;
+    const pt=p.partido||'Não identificado'; partidos[pt]=(partidos[pt]||0)+1;
+    const sg=statusGroup(p); sits[sg]=(sits[sg]||0)+1;
   });
-
-  const totalEixo=Object.values(eixos).reduce((a,b)=>a+b,0)||1;
-
+  const topPart=Object.entries(partidos).sort((x,y)=>y[1]-x[1]).slice(0,12);
   cont.innerHTML=`
-    <div class="disc"><strong>⚖️ Plataforma apartidária.</strong> Não sugere voto. Todos os dados vêm diretamente do Firebase, coletados da API oficial da Câmara dos Deputados. Nenhum dado é fabricado — se o campo não existe na API, aparece como "—".</div>
-
+    <div class="disc"><strong>🧪 Versão auditada.</strong> Os números abaixo descrevem os registros carregados do banco desta aplicação. Se houver lacuna histórica, truncamento ou campo derivado, a aba Auditoria mostra isso explicitamente.</div>
+    ${a.warnings.length?`<div class="al al-w"><span>⚠️</span><div><strong>${a.warnings.length} alerta(s) de cobertura.</strong> ${h(a.warnings[0])} <button class="btn btn-s" style="margin-left:8px;padding:4px 8px" onclick="showSec('auditoria',document.querySelector('[onclick*=auditoria]'))">ver auditoria</button></div></div>`:''}
     <div class="sg">
-      <div class="sc az"><div class="sc-l">Proposições (API)</div><div class="sc-v">${f(s.total_proj)}</div><div class="sc-s">total 2003–2025</div></div>
-      <div class="sc vd"><div class="sc-l">Viraram Lei</div><div class="sc-v">${f(s.total_leis)}</div><div class="sc-s">sancionadas</div></div>
-      <div class="sc vm"><div class="sc-l">Arquivadas</div><div class="sc-v">${f(s.total_rej)}</div><div class="sc-s">não avançaram</div></div>
-      <div class="sc lr"><div class="sc-l">Tramitando</div><div class="sc-v">${f(s.total_trm)}</div><div class="sc-s">em andamento</div></div>
-      <div class="sc rx"><div class="sc-l">Votações</div><div class="sc-v">${ST.vots.length.toLocaleString('pt-BR')}</div><div class="sc-s">com posição dos partidos</div></div>
-      <div class="sc am"><div class="sc-l">Proposições carregadas</div><div class="sc-v">${ST.proj.length.toLocaleString('pt-BR')}</div><div class="sc-s">exibidas nesta sessão</div></div>
+      <div class="sc az"><div class="sc-l">Proposições carregadas</div><div class="sc-v">${ST.proj.length.toLocaleString('pt-BR')}</div><div class="sc-s">registros disponíveis</div></div>
+      <div class="sc rx"><div class="sc-l">Votações carregadas</div><div class="sc-v">${ST.vots.length.toLocaleString('pt-BR')}</div><div class="sc-s">registros disponíveis</div></div>
+      <div class="sc vd"><div class="sc-l">Anos com proposições</div><div class="sc-v">${a.yearsWithProps}</div><div class="sc-s">${a.minYear||'—'} a ${a.maxYear||'—'}</div></div>
+      <div class="sc lr"><div class="sc-l">Tema por heurística</div><div class="sc-v">${a.heuristicTheme.toLocaleString('pt-BR')}</div><div class="sc-s">não é tema oficial confirmado</div></div>
+      <div class="sc am"><div class="sc-l">Partido ausente</div><div class="sc-v">${a.missingParty.toLocaleString('pt-BR')}</div><div class="sc-s">não vira “centro”</div></div>
+      <div class="sc vm"><div class="sc-l">Status não classificado</div><div class="sc-v">${a.otherStatus.toLocaleString('pt-BR')}</div><div class="sc-s">não vira “tramitando” automaticamente</div></div>
     </div>
-
-    <!-- BUSCA -->
     <div class="bx">
-      <div class="bxh">🔎 Busca Rápida</div>
-      <div class="fr">
-        <div class="fg" style="flex:1"><label>Buscar projeto, partido, tema, número ou lei</label>
-          <input type="text" id="gs" class="si" placeholder="Ex: trabalho, PT, PEC, saúde, enfermagem..." oninput="debS()">
-        </div>
-        <button class="btn btn-s" onclick="limpaS()">✕</button>
-      </div>
+      <div class="bxh">🔎 Busca rápida</div>
+      <div class="fr"><div class="fg" style="flex:1"><label>Buscar proposição, partido, tema, número ou norma</label><input type="text" id="gs" class="si" placeholder="Ex: Pantanal, PL, saúde, partido..." oninput="debS()"></div><button class="btn btn-s" onclick="limpaS()">✕</button></div>
       <div id="sRes"></div>
     </div>
-
-    <!-- EIXO IDEOLÓGICO — dados reais das proposições carregadas -->
-    <div class="bx" style="border-color:var(--verde2)">
-      <div class="bxh">🧭 Quem mais legislou? — por Eixo Ideológico</div>
-      <div class="al al-i"><span>ℹ️</span><div>Baseado nas <strong>${ST.proj.length} proposições carregadas</strong>. Eixo calculado a partir do partido do autor, classificado segundo Power & Zucco (2021). Proposições sem partido identificado estão em "Centro".</div></div>
-      ${Object.values(eixos).every(v=>v===0)?
-        '<p style="color:var(--cin);font-family:var(--fc);font-size:11px">Nenhuma proposição com partido identificado carregada.</p>':
-        ['ee','e','ce','c','cd','d','ed'].map(e=>eixos[e]>0?`
-        <div class="eixo-barra">
-          <div class="eb-label">
-            <span style="color:${CE[e]};font-weight:700">${LEF[e]}</span>
-            <span style="font-family:var(--fc);font-size:10px;color:var(--cin)">${eixos[e].toLocaleString('pt-BR')} projetos · ${(eixos[e]/totalEixo*100).toFixed(1)}%</span>
-          </div>
-          <div class="eb-track"><div class="eb-fill" style="width:${(eixos[e]/totalEixo*100).toFixed(1)}%;background:${CE[e]}"></div></div>
-        </div>`:'').join('')
-      }
+    <div class="bx">
+      <div class="bxh">🏛 Proposições disponíveis por partido</div>
+      <div class="al al-i"><span>ℹ️</span><div>Contagem dos registros presentes no banco, sem classificação ideológica e sem transformar autoria desconhecida em categoria política.</div></div>
+      ${topPart.map(([p,n])=>`<div class="tb-row"><span class="tb-l">${h(p)}</span><div class="tb-bar"><div class="tb-fill" style="width:${(n/(topPart[0]?.[1]||1)*100).toFixed(1)}%;background:${infoPartido(p).c}"></div></div><span style="font-family:var(--fc);font-size:10px;min-width:32px;font-weight:700">${n}</span></div>`).join('')}
     </div>
-
-    <!-- CHARTS -->
     <div class="cgrd">
-      <div class="cc"><div class="ct">📁 Projetos por Tema (${ST.proj.length} carregados)</div><canvas id="cTema" height="260"></canvas></div>
-      <div class="cc"><div class="ct">🧭 Por Eixo Ideológico</div><canvas id="cEixo" height="260"></canvas></div>
-      <div class="cc"><div class="ct">📊 Situação das Proposições</div><canvas id="cSit" height="260"></canvas></div>
-    </div>
-  `;
-
-  // Renderizar charts
+      <div class="cc"><div class="ct">📁 Temas nos registros</div><canvas id="cTema" height="260"></canvas></div>
+      <div class="cc"><div class="ct">📊 Situação agrupada</div><canvas id="cSit" height="260"></canvas></div>
+    </div>`;
   const TC={'Trabalho':'#ea580c','Economia':'#d97706','Meio Ambiente':'#16a34a','Saúde':'#2563eb','Direitos':'#7c3aed','Social':'#db2777','Segurança':'#dc2626','Educação':'#5b21b6','Infraestrutura':'#0369a1','Outro':'#94a3b8'};
-  const SC={'Virou Lei':'#00875a','Arquivada':'#dc2626','Tramitando':'#7c3aed'};
-
-  if(Object.keys(temas).length)
-    mkC('cTema','doughnut',Object.keys(temas),Object.values(temas),Object.keys(temas).map(k=>TC[k]||'#94a3b8'),{cutout:'60%'});
-
-  const eoList=['ee','e','ce','c','cd','d','ed'].filter(e=>eixos[e]>0);
-  if(eoList.length)
-    mkC('cEixo','bar',eoList.map(e=>LE[e]),eoList.map(e=>eixos[e]),eoList.map(e=>CE[e]),{plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}}},y:{ticks:{font:{size:9}},beginAtZero:true}}});
-
-  if(Object.keys(sits).length)
-    mkC('cSit','pie',Object.keys(sits),Object.values(sits),Object.keys(sits).map(k=>SC[k]||'#94a3b8'),{});
+  if(Object.keys(temas).length) mkC('cTema','doughnut',Object.keys(temas),Object.values(temas),Object.keys(temas).map(k=>TC[k]||'#94a3b8'),{cutout:'60%'});
+  if(Object.keys(sits).length) mkC('cSit','pie',Object.keys(sits),Object.values(sits),['#00875a','#dc2626','#7c3aed','#94a3b8'],{});
 }
 
-// ══════════════════════════════════════════════
+
 // PROPOSIÇÕES
 // ══════════════════════════════════════════════
 function fProj(){
   const kw=(document.getElementById('pk')?.value||'').toLowerCase();
-  const ano=gv('pAno'),tp=gv('pTipo'),tm=gv('pTema'),st=gv('pSit'),ei=gv('pEixo'),pt=gv('pPart');
+  const ano=gv('pAno'),tp=gv('pTipo'),tm=gv('pTema'),st=gv('pSit'),pt=gv('pPart');
   ST.pFil=ST.proj.filter(p=>{
     if(kw&&![p.ementa,p.numero,p.autor,p.partido,p.lei||''].join(' ').toLowerCase().includes(kw)) return false;
     if(ano&&String(p.ano)!==ano) return false;
     if(tp&&!(p.numero||'').startsWith(tp)) return false;
     if(tm&&(p.tema||'Outro')!==tm) return false;
-    if(st&&p.status!==st) return false;
-    if(ei&&(p.eixo||'c')!==ei) return false;
+    if(st&&String(p.status||'')!==st) return false;
     if(pt&&p.partido!==pt) return false;
     return true;
   });
@@ -668,83 +619,47 @@ function sortProj(col){
   renderTabProj();
 }
 function resetProj(){
-  ['pk','pAno','pTipo','pTema','pSit','pEixo','pPart'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  ['pk','pAno','pTipo','pTema','pSit','pPart'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
   ST.pFil=[...ST.proj];ST.pPg=1;renderTabProj();
 }
 function renderTabProj(){
   const cont=document.getElementById('projConteudo');
   if(!ST.carregado){cont.innerHTML='<div class="ldg"><div class="spin"></div><div class="ldg-t">Aguardando dados...</div></div>';return;}
   const sl=ST.pFil.slice((ST.pPg-1)*ST.PS,ST.pPg*ST.PS);
-  if(!sl.length){
-    cont.innerHTML='<div class="tw"><table><thead><tr><th colspan="9">Nenhuma proposição encontrada.</th></tr></thead></table></div>';
-    document.getElementById('projPg').innerHTML='';return;
-  }
-  cont.innerHTML=`<div class="tw"><table>
-    <thead><tr>
-      <th onclick="sortProj('numero')">Número ↕</th>
-      <th>Ementa / Projeto</th>
-      <th onclick="sortProj('ano')">Ano ↕</th>
-      <th>Autor</th>
-      <th>Partido</th>
-      <th>Eixo</th>
-      <th>Tema</th>
-      <th>Situação</th>
-      <th>Fonte</th>
-    </tr></thead>
-    <tbody>${sl.map(p=>{
-      const ei=infoEixo(p.partido);
-      const tema=p.tema||'Outro';
-      const stCls=p.status?.includes('Lei')?'s-lei':p.status?.includes('Arquiv')?'s-arq':'s-trm';
-      const stTxt=p.status?.includes('Lei')?'Virou Lei':p.status?.includes('Arquiv')?'Arquivada':'Tramitando';
-      return `<tr>
-        <td style="font-family:var(--fc);font-size:9px;color:var(--cin);white-space:nowrap">${h(p.numero||'—')}</td>
-        <td><button onclick="abrirProj('${p.id}')" style="background:none;border:none;color:var(--azul2);font-family:var(--fg);font-size:12px;text-align:left;cursor:pointer;font-weight:700;line-height:1.4;max-width:280px">${h((p.ementa||'—').slice(0,62)+(p.ementa?.length>62?'…':''))}</button></td>
-        <td style="font-family:var(--fc);font-size:10px;font-weight:700">${p.ano||'—'}</td>
-        <td style="font-size:11px;max-width:110px">${h((p.autor||'—').slice(0,22))}</td>
-        <td><span style="font-family:var(--fc);font-weight:700;font-size:11px;color:${ei.c}">${h(p.partido||'—')}</span></td>
-        <td><span class="ei ei-${ei.e}">${LE[ei.e]||'—'}</span></td>
-        <td><span class="tag t-${tagKey(tema)}">${h(tema)}</span></td>
-        <td><span class="sts ${stCls}">${stTxt}</span></td>
-        <td>${p.link?`<a href="${h(p.link)}" target="_blank" class="lnk">↗</a>`:p.uri_camara?`<a href="${h(p.uri_camara)}" target="_blank" class="lnk">↗</a>`:'—'}</td>
-      </tr>`;
-    }).join('')}</tbody></table></div>`;
+  if(!sl.length){cont.innerHTML='<div class="al al-i"><span>ℹ️</span><div>Nenhuma proposição encontrada.</div></div>';document.getElementById('projPg').innerHTML='';return;}
+  cont.innerHTML=`<div class="tw"><table><thead><tr>
+    <th onclick="sortProj('numero')">Número ↕</th><th>Ementa</th><th onclick="sortProj('ano')">Ano ↕</th><th>Autor</th><th>Partido</th><th>Tema</th><th>Situação</th><th>Fonte</th>
+  </tr></thead><tbody>${sl.map(p=>{
+    const tema=p.tema||'Outro', sg=statusGroup(p);
+    const stCls=sg==='Transformada em norma'?'s-lei':sg==='Arquivada/encerrada'?'s-arq':sg==='Em tramitação'?'s-trm':'';
+    return `<tr>
+      <td style="font-family:var(--fc);font-size:9px;white-space:nowrap">${h(p.numero||'—')}</td>
+      <td><button onclick="abrirProj('${p.id}')" style="background:none;border:none;color:var(--azul2);font-family:var(--fg);font-size:12px;text-align:left;cursor:pointer;font-weight:700;line-height:1.4;max-width:300px">${h((p.ementa||'—').slice(0,75)+(p.ementa?.length>75?'…':''))}</button></td>
+      <td style="font-family:var(--fc);font-size:10px;font-weight:700">${p.ano||'—'}</td>
+      <td style="font-size:11px;max-width:130px">${h((p.autor||'—').slice(0,28))}</td>
+      <td><span style="font-family:var(--fc);font-weight:700;font-size:11px;color:${infoPartido(p.partido).c}">${h(p.partido||'—')}</span></td>
+      <td><span class="tag t-${tagKey(tema)}">${h(tema)}</span>${p.temaOrigem?.includes('heurística')?'<div style="font-size:8px;color:var(--amar)">heurística</div>':''}</td>
+      <td><span class="sts ${stCls}">${h(sg)}</span></td>
+      <td>${p.link?`<a href="${h(p.link)}" target="_blank" class="lnk">↗</a>`:p.uri_camara?`<a href="${h(p.uri_camara)}" target="_blank" class="lnk">↗</a>`:'—'}</td>
+    </tr>`;
+  }).join('')}</tbody></table></div>`;
   mkPag('projPg',ST.pPg,ST.pFil.length,ST.PS,p=>{ST.pPg=p;renderTabProj();});
 }
-
 function abrirProj(id){
   const p=ST.proj.find(x=>x.id===id);if(!p)return;
-  const ei=infoEixo(p.partido);
-  const tema=p.tema||'Outro';
-  const stCls=p.status?.includes('Lei')?'s-lei':p.status?.includes('Arquiv')?'s-arq':'s-trm';
-  const stTxt=p.status?.includes('Lei')?'Virou Lei':p.status?.includes('Arquiv')?'Arquivada':'Tramitando';
+  const tema=p.tema||'Outro', sg=statusGroup(p);
   const link=p.link||p.uri_camara||(p.id?`https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=${p.id}`:'');
   document.getElementById('mBd').innerHTML=`
-    <div style="margin-bottom:16px">
-      <div style="font-family:var(--fc);font-size:9px;color:var(--cin);margin-bottom:5px;font-weight:700">${h(p.numero||p.tipo||'—')} · ${p.ano||'—'}</div>
-      <h2 style="font-family:var(--fg);font-size:16px;font-weight:800;line-height:1.4;margin-bottom:10px">${h(p.ementa||'Sem ementa disponível')}</h2>
-      <div style="display:flex;flex-wrap:wrap;gap:6px">
-        <span class="tag t-${tagKey(tema)}">${h(tema)}</span>
-        <span class="sts ${stCls}">${stTxt}</span>
-        ${p.partido?`<span style="font-family:var(--fc);font-weight:700;font-size:11px;color:${ei.c}">${h(p.partido)}</span><span class="ei ei-${ei.e}">${LE[ei.e]}</span>`:''}
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
-      <div style="background:var(--cbg);border-radius:10px;padding:13px">
-        <div style="font-family:var(--fc);font-size:9px;color:var(--cin);text-transform:uppercase;font-weight:700;margin-bottom:4px">Autor</div>
-        <div style="font-size:13px;font-weight:800">${h(p.autor||'Não identificado na API')}</div>
-      </div>
-      <div style="background:var(--cbg);border-radius:10px;padding:13px">
-        <div style="font-family:var(--fc);font-size:9px;color:var(--cin);text-transform:uppercase;font-weight:700;margin-bottom:4px">Situação / Lei</div>
-        <div style="font-size:12px;font-weight:700">${h(p.lei||p.status||'—')}</div>
-      </div>
-    </div>
-    <div class="al al-w"><span>⚠️</span><div><strong>PROPOSTO ≠ APROVADO ≠ SANCIONADO.</strong> Verifique o status atual na fonte oficial. Campos "—" indicam que a API não retornou esse dado para esta proposição.</div></div>
-    ${link?`<a href="${h(link)}" target="_blank" class="btn btn-p" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:12px">↗ Ver na Câmara dos Deputados</a>`:''}
-  `;
+    <div style="margin-bottom:16px"><div style="font-family:var(--fc);font-size:9px;color:var(--cin);margin-bottom:5px;font-weight:700">${h(p.numero||p.tipo||'—')} · ${p.ano||'—'}</div><h2 style="font-family:var(--fg);font-size:16px;font-weight:800;line-height:1.4;margin-bottom:10px">${h(p.ementa||'Sem ementa disponível')}</h2></div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px"><span class="tag t-${tagKey(tema)}">${h(tema)}</span><span class="sts">${h(sg)}</span><span style="font-family:var(--fc);font-size:10px;color:${infoPartido(p.partido).c};font-weight:700">${h(p.partido||'Partido não identificado')}</span></div>
+    <div class="al al-i"><span>🧾</span><div><strong>Origem do tema:</strong> ${h(p.temaOrigem||'campo armazenado no banco')}.</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px"><div style="background:var(--cbg);border-radius:10px;padding:13px"><div style="font-family:var(--fc);font-size:9px;color:var(--cin);text-transform:uppercase;font-weight:700;margin-bottom:4px">Autor</div><div style="font-size:13px;font-weight:800">${h(p.autor||'Não identificado')}</div></div><div style="background:var(--cbg);border-radius:10px;padding:13px"><div style="font-family:var(--fc);font-size:9px;color:var(--cin);text-transform:uppercase;font-weight:700;margin-bottom:4px">Status bruto / norma</div><div style="font-size:12px;font-weight:700">${h(p.lei||p.status||'—')}</div></div></div>
+    <div class="al al-w"><span>⚠️</span><div><strong>Proposição ≠ aprovação ≠ sanção.</strong> O agrupamento de status acima é apenas uma síntese visual; confira a tramitação oficial para a situação jurídica exata.</div></div>
+    ${link?`<a href="${h(link)}" target="_blank" class="btn btn-p" style="text-decoration:none;display:inline-flex">↗ Ver na Câmara</a>`:''}`;
   abrirModal();
 }
 
-// ══════════════════════════════════════════════
+
 // VOTAÇÕES
 // ══════════════════════════════════════════════
 function fVots(){
@@ -758,307 +673,149 @@ function fVots(){
     if(psim&&v.votos?.[psim]!=='S') return false;
     if(pnao&&v.votos?.[pnao]!=='N') return false;
     return true;
-  });
-  ST.vPg=1;renderTabVots();
+  }); ST.vPg=1; renderTabVots();
 }
-function sortVots(col){
-  ST.vots.sort((a,b)=>b[col]-a[col]);
-  ST.vFil=[...ST.vots];
-  renderTabVots();
-}
-function resetVots(){
-  ['vk','vAno','vRes','vSim','vNao'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  ST.vFil=[...ST.vots];ST.vPg=1;renderTabVots();
-}
+function sortVots(col){ST.vFil.sort((a,b)=>(b[col]||0)-(a[col]||0));renderTabVots();}
+function resetVots(){['vk','vAno','vRes','vSim','vNao'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});ST.vFil=[...ST.vots];ST.vPg=1;renderTabVots();}
 function renderTabVots(){
   const cont=document.getElementById('votsConteudo');
   if(!ST.carregado){cont.innerHTML='<div class="ldg"><div class="spin"></div><div class="ldg-t">Aguardando dados...</div></div>';return;}
   const sl=ST.vFil.slice((ST.vPg-1)*ST.PS,ST.vPg*ST.PS);
-  if(!sl.length){
-    cont.innerHTML='<div class="al al-i"><span>ℹ️</span><div>Nenhuma votação encontrada com esses filtros.</div></div>';
-    document.getElementById('votsPg').innerHTML='';return;
-  }
-  cont.innerHTML=`<div class="tw"><table>
-    <thead><tr>
-      <th>Votação / Projeto</th>
-      <th onclick="sortVots('ano')">Ano ↕</th>
-      <th>Resultado</th>
-      <th>Partidos A FAVOR</th>
-      <th>Partidos CONTRA</th>
-      <th>Divididos</th>
-    </tr></thead>
-    <tbody>${sl.map(v=>{
-      const desc=v.descricao&&v.descricao!==v.id?v.descricao:`Votação ${v.data?.slice(0,10)||v.ano||v.id}`;
-      const simP=Object.entries(v.votos||{}).filter(([,x])=>x==='S').map(([p])=>p);
-      const naoP=Object.entries(v.votos||{}).filter(([,x])=>x==='N').map(([p])=>p);
-      const divP=Object.entries(v.votos||{}).filter(([,x])=>x==='D').map(([p])=>p);
-      const mk=(ps,cls)=>ps.slice(0,3).map(p=>`<span class="vc ${cls}">${h(p)}</span>`).join('')+(ps.length>3?`<span style="font-size:9px;color:var(--cin);font-family:var(--fc)"> +${ps.length-3}</span>`:'');
-      const rCls=v.resultado==='Aprovado'?'s-lei':v.resultado==='Rejeitado'?'s-arq':'s-trm';
-      return `<tr>
-        <td><button onclick="abrirVot('${v.id}')" style="background:none;border:none;color:var(--azul2);font-family:var(--fg);font-size:12px;text-align:left;cursor:pointer;font-weight:700;max-width:260px;line-height:1.4">${h(desc.slice(0,65)+(desc.length>65?'…':''))}</button>
-        ${v.data?`<div style="font-family:var(--fc);font-size:9px;color:var(--cin)">${v.data.slice(0,10)}</div>`:''}</td>
-        <td style="font-family:var(--fc);font-size:10px;font-weight:700">${v.ano||'—'}</td>
-        <td><span class="sts ${rCls}">${h(v.resultado||'—')}</span></td>
-        <td>${mk(simP,'vc-s')}</td>
-        <td>${mk(naoP,'vc-n')}</td>
-        <td>${mk(divP,'vc-d')}</td>
-      </tr>`;
-    }).join('')}</tbody></table></div>`;
+  if(!sl.length){cont.innerHTML='<div class="al al-i"><span>ℹ️</span><div>Nenhuma votação encontrada.</div></div>';document.getElementById('votsPg').innerHTML='';return;}
+  cont.innerHTML=`<div class="al al-w"><span>⚠️</span><div><strong>Importante:</strong> S/N/D abaixo são posições agregadas armazenadas pelo projeto a partir dos votos individuais; não devem ser confundidas com a orientação oficial da liderança partidária.</div></div><div class="tw"><table><thead><tr><th>Votação</th><th onclick="sortVots('ano')">Ano ↕</th><th>Resultado</th><th>Maioria SIM</th><th>Maioria NÃO</th><th>Sem maioria</th></tr></thead><tbody>${sl.map(v=>{
+    const desc=v.descricao&&v.descricao!==v.id?v.descricao:`Votação ${v.data?.slice(0,10)||v.ano||v.id}`;
+    const simP=Object.entries(v.votos||{}).filter(([,x])=>x==='S').map(([p])=>p), naoP=Object.entries(v.votos||{}).filter(([,x])=>x==='N').map(([p])=>p), divP=Object.entries(v.votos||{}).filter(([,x])=>x==='D').map(([p])=>p);
+    const mk=(ps,cls)=>ps.slice(0,3).map(p=>`<span class="vc ${cls}">${h(p)}</span>`).join('')+(ps.length>3?`<span style="font-size:9px;color:var(--cin)"> +${ps.length-3}</span>`:'');
+    return `<tr><td><button onclick="abrirVot('${v.id}')" style="background:none;border:none;color:var(--azul2);font-family:var(--fg);font-size:12px;text-align:left;cursor:pointer;font-weight:700;max-width:300px">${h(desc.slice(0,75)+(desc.length>75?'…':''))}</button>${v.data?`<div style="font-family:var(--fc);font-size:9px;color:var(--cin)">${v.data.slice(0,10)}</div>`:''}</td><td>${v.ano||'—'}</td><td><span class="sts">${h(v.resultado||'—')}</span></td><td>${mk(simP,'vc-s')}</td><td>${mk(naoP,'vc-n')}</td><td>${mk(divP,'vc-d')}</td></tr>`;
+  }).join('')}</tbody></table></div>`;
   mkPag('votsPg',ST.vPg,ST.vFil.length,ST.PS,p=>{ST.vPg=p;renderTabVots();});
 }
-
+function blocoOrientacoes(v){
+  const o=v.orientacoes;
+  if(!o) return '';
+  if(Array.isArray(o)&&o.length) return `<div class="al al-i"><span>🏛</span><div><strong>Orientações oficiais armazenadas:</strong> ${o.map(x=>h(typeof x==='string'?x:(x.siglaPartidoBloco+': '+x.orientacaoVoto))).join(' · ')}</div></div>`;
+  if(typeof o==='object'&&Object.keys(o).length) return `<div class="al al-i"><span>🏛</span><div><strong>Orientações oficiais armazenadas:</strong> ${Object.entries(o).map(([k,val])=>h(k+': '+val)).join(' · ')}</div></div>`;
+  return '';
+}
 function abrirVot(id){
   const v=ST.vots.find(x=>x.id===id);if(!v)return;
   const desc=v.descricao&&v.descricao!==v.id?v.descricao:`Votação ${v.data?.slice(0,10)||v.ano||v.id}`;
-  const rCls=v.resultado==='Aprovado'?'s-lei':v.resultado==='Rejeitado'?'s-arq':'s-trm';
-  document.getElementById('mBd').innerHTML=`
-    <div style="margin-bottom:16px">
-      <div style="font-family:var(--fc);font-size:9px;color:var(--cin);margin-bottom:5px;font-weight:700">Votação · ${v.data?.slice(0,10)||v.ano||'—'}</div>
-      <h2 style="font-family:var(--fg);font-size:16px;font-weight:800;line-height:1.4;margin-bottom:10px">${h(desc)}</h2>
-      <span class="sts ${rCls}">${h(v.resultado||'—')}</span>
-      ${v.proposicao_uri?`<a href="${h(v.proposicao_uri)}" target="_blank" class="lnk" style="margin-left:7px">↗ Proposição na Câmara</a>`:''}
-    </div>
-    ${blocoVotos(v)}
-    <div class="al al-w" style="margin-top:12px"><span>⚠️</span><div>Os votos por partido são calculados a partir dos votos individuais dos deputados. Partido "dividido" = margem inferior a 70% numa direção.</div></div>
-  `;
+  document.getElementById('mBd').innerHTML=`<div style="margin-bottom:16px"><div style="font-family:var(--fc);font-size:9px;color:var(--cin);margin-bottom:5px;font-weight:700">Votação · ${v.data?.slice(0,10)||v.ano||'—'}</div><h2 style="font-family:var(--fg);font-size:16px;font-weight:800;line-height:1.4;margin-bottom:10px">${h(desc)}</h2><span class="sts">${h(v.resultado||'—')}</span></div>${blocoOrientacoes(v)}${blocoVotos(v)}<div class="al al-w" style="margin-top:12px"><span>⚠️</span><div>O bloco agregado abaixo descreve a regra armazenada na base do projeto. Para “orientação da bancada”, use o dado oficial de orientação quando ele estiver disponível.</div></div>`;
   abrirModal();
 }
-
 function blocoVotos(v){
-  if(!v.votos||!Object.keys(v.votos).length)
-    return '<div class="al al-i"><span>ℹ️</span><div>Dados de votação por partido não disponíveis para esta votação.</div></div>';
-  const grps={S:[],N:[],D:[],A:[]};
-  Object.entries(v.votos).forEach(([p,vt])=>{if(grps[vt])grps[vt].push(p);});
-  const lbl={S:'✅ Votaram A FAVOR',N:'❌ Votaram CONTRA',D:'⚡ Bancada Dividida',A:'◦ Abstiveram-se'};
-  const bg={S:'var(--vbg)',N:'var(--rbg)',D:'var(--ybg)',A:'var(--cbg)'};
+  if(!v.votos||!Object.keys(v.votos).length) return '<div class="al al-i"><span>ℹ️</span><div>Sem agregação partidária armazenada para esta votação.</div></div>';
+  const grps={S:[],N:[],D:[],A:[]}; Object.entries(v.votos).forEach(([p,vt])=>{if(grps[vt])grps[vt].push(p);});
+  const lbl={S:'✅ Maioria dos votos registrados: SIM',N:'❌ Maioria dos votos registrados: NÃO',D:'⚡ Sem maioria direcional na regra do projeto',A:'◦ Abstenção / outro agregado'};
   const cls={S:'vc-s',N:'vc-n',D:'vc-d',A:'vc-a'};
-  return `<div style="font-family:var(--fc);font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--cin);font-weight:700;margin-bottom:10px">Como cada partido votou</div>`+
-  ['S','N','D','A'].filter(k=>grps[k].length).map(k=>`
-    <div style="margin-bottom:12px">
-      <div style="font-family:var(--fc);font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--cin);margin-bottom:7px;font-weight:700">${lbl[k]} — ${grps[k].length} ${grps[k].length===1?'partido':'partidos'}</div>
-      <div style="display:flex;flex-wrap:wrap;gap:5px;padding:11px;background:${bg[k]};border-radius:10px">
-        ${grps[k].map(p=>`<span class="vc ${cls[k]}" style="color:${infoEixo(p).c}">${h(p)}</span>`).join('')}
-      </div>
-    </div>`).join('');
+  return ['S','N','D','A'].filter(k=>grps[k].length).map(k=>`<div style="margin-bottom:12px"><div style="font-family:var(--fc);font-size:9px;text-transform:uppercase;color:var(--cin);margin-bottom:7px;font-weight:700">${lbl[k]} — ${grps[k].length}</div><div style="display:flex;flex-wrap:wrap;gap:5px;padding:11px;background:var(--cbg);border-radius:10px">${grps[k].map(p=>`<span class="vc ${cls[k]}">${h(p)}</span>`).join('')}</div></div>`).join('');
 }
 
-// ══════════════════════════════════════════════
+
 // PARTIDOS
 // ══════════════════════════════════════════════
 function fPart(){
-  const ei=gv('pEixoF'),q=(gv('pFsq')||'').toLowerCase();
-  const list=Object.entries(EP).filter(([s,i])=>{
-    if(ei&&i.e!==ei) return false;
-    if(q&&!s.toLowerCase().includes(q)&&!i.n.toLowerCase().includes(q)) return false;
-    return true;
-  });
-  renderPartGrid(list);
+  const q=(gv('pFsq')||'').toLowerCase();
+  const parts=[...new Set([...Object.keys(EP),...ST.proj.map(p=>p.partido).filter(Boolean),...ST.vots.flatMap(v=>Object.keys(v.votos||{}))])];
+  renderPartGrid(parts.filter(s=>s.toLowerCase().includes(q)||(infoPartido(s).n||'').toLowerCase().includes(q)).sort());
 }
 function renderPart(){fPart();}
 function renderPartGrid(list){
   const g=document.getElementById('partGrid');if(!g)return;
-  if(!ST.carregado){g.innerHTML='<div class="ldg" style="grid-column:1/-1"><div class="spin"></div><div class="ldg-t">Aguardando dados...</div></div>';return;}
-  g.innerHTML=list.map(([sigla,info])=>{
-    const vps=ST.vots.map(v=>({v,vt:v.votos?.[sigla]})).filter(x=>x.vt);
-    const sim=vps.filter(x=>x.vt==='S').length;
-    const nao=vps.filter(x=>x.vt==='N').length;
-    const div=vps.filter(x=>x.vt==='D').length;
-    const tot=Math.max(sim+nao+div,1);
+  if(!ST.carregado){g.innerHTML='<div class="ldg"><div class="spin"></div><div class="ldg-t">Aguardando dados...</div></div>';return;}
+  g.innerHTML=list.map(sigla=>{
+    const info=infoPartido(sigla), vps=ST.vots.map(v=>({v,vt:v.votos?.[sigla]})).filter(x=>x.vt);
+    const sim=vps.filter(x=>x.vt==='S').length, nao=vps.filter(x=>x.vt==='N').length, div=vps.filter(x=>x.vt==='D').length;
     const propCount=ST.proj.filter(p=>(p.partido||'').toUpperCase()===sigla.toUpperCase()).length;
-    return `<div class="pcard" onclick="abrirPartido('${sigla}')">
-      <div class="pc-top" style="background:${info.c}"></div>
-      <div class="pc-sig" style="color:${info.c}">${h(sigla)}</div>
-      <div class="pc-nm">${h(info.n)}</div>
-      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:4px">
-        <span class="ei ei-${info.e}">${LEF[info.e]}</span>
-        ${propCount?`<span style="font-family:var(--fc);font-size:9px;background:var(--cbg);padding:2px 7px;border-radius:5px;color:var(--cin);font-weight:600">${propCount} proposições</span>`:''}
-      </div>
-      <div class="pc-bar">
-        <div class="pc-bl">Posição nas votações (${vps.length} registradas)</div>
-        ${vps.length?`
-        <div class="pc-row"><span style="min-width:55px;font-size:10px;font-weight:700;color:var(--verde2)">A Favor</span><div class="sbar"><div class="sf sf-g" style="width:${(sim/tot*100).toFixed(0)}%"></div></div><span style="font-family:var(--fc);font-size:10px;min-width:22px;font-weight:700">${sim}</span></div>
-        <div class="pc-row"><span style="min-width:55px;font-size:10px;font-weight:700;color:var(--verm)">Contra</span><div class="sbar"><div class="sf sf-r" style="width:${(nao/tot*100).toFixed(0)}%"></div></div><span style="font-family:var(--fc);font-size:10px;min-width:22px;font-weight:700">${nao}</span></div>
-        ${div?`<div class="pc-row"><span style="min-width:55px;font-size:10px;font-weight:700;color:var(--amar)">Dividido</span><div class="sbar"><div class="sf sf-a" style="width:${(div/tot*100).toFixed(0)}%"></div></div><span style="font-family:var(--fc);font-size:10px;min-width:22px;font-weight:700">${div}</span></div>`:''}
-        `:'<p style="font-size:10px;color:var(--cin)">Sem votações registradas para este partido.</p>'}
-      </div>
-    </div>`;
-  }).join('')||'<p style="color:var(--cin);text-align:center;padding:24px;font-family:var(--fc);font-size:11px;grid-column:1/-1">Nenhum partido encontrado.</p>';
+    return `<div class="pcard" onclick="abrirPartido('${h(sigla)}')"><div class="pc-top" style="background:${info.c}"></div><div class="pc-sig" style="color:${info.c}">${h(sigla)}</div><div class="pc-nm">${h(info.n)}</div><div style="font-family:var(--fc);font-size:9px;color:var(--cin);margin:6px 0">${propCount} proposições disponíveis · ${vps.length} votações agregadas</div><div class="pc-bar"><div class="pc-row"><span style="min-width:70px;font-size:10px">Maioria SIM</span><strong>${sim}</strong></div><div class="pc-row"><span style="min-width:70px;font-size:10px">Maioria NÃO</span><strong>${nao}</strong></div><div class="pc-row"><span style="min-width:70px;font-size:10px">Sem maioria</span><strong>${div}</strong></div></div></div>`;
+  }).join('')||'<p style="color:var(--cin);padding:24px">Nenhum partido encontrado.</p>';
 }
-
 function abrirPartido(sigla){
-  const info=EP[sigla];if(!info)return;
-  const vps=ST.vots.map(v=>({v,vt:v.votos?.[sigla]})).filter(x=>x.vt);
-  const sim=vps.filter(x=>x.vt==='S');
-  const nao=vps.filter(x=>x.vt==='N');
-  const div=vps.filter(x=>x.vt==='D');
-  const props=ST.proj.filter(p=>(p.partido||'').toUpperCase()===sigla.toUpperCase());
-  const temasSim={};
-  sim.forEach(x=>{const t=x.v.tema||'Outro';temasSim[t]=(temasSim[t]||0)+1;});
-  const maxT=Math.max(...Object.values(temasSim),1);
-
-  document.getElementById('mBd').innerHTML=`
-    <div style="margin-bottom:16px">
-      <div style="font-family:var(--ff);font-size:32px;font-style:italic;font-weight:900;color:${info.c};margin-bottom:2px">${h(sigla)}</div>
-      <div style="font-size:12px;color:var(--cin);margin-bottom:9px">${h(info.n)} · Fundado em ${info.f}</div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px">
-        <span class="ei ei-${info.e}">${LEF[info.e]}</span>
-        <span style="font-family:var(--fc);font-size:9px;background:var(--cbg);padding:3px 9px;border-radius:5px;color:var(--cin);font-weight:600">Score Power & Zucco (2021): ${info.s}/10</span>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
-      <div style="background:var(--vbg);border-radius:10px;padding:13px;text-align:center"><div style="font-family:var(--fc);font-size:9px;color:var(--verde);text-transform:uppercase;font-weight:700;margin-bottom:3px">A Favor</div><div style="font-family:var(--ff);font-size:28px;font-style:italic;font-weight:900;color:var(--verde2)">${sim.length}</div></div>
-      <div style="background:var(--rbg);border-radius:10px;padding:13px;text-align:center"><div style="font-family:var(--fc);font-size:9px;color:var(--verm);text-transform:uppercase;font-weight:700;margin-bottom:3px">Contra</div><div style="font-family:var(--ff);font-size:28px;font-style:italic;font-weight:900;color:var(--verm)">${nao.length}</div></div>
-      <div style="background:var(--ybg);border-radius:10px;padding:13px;text-align:center"><div style="font-family:var(--fc);font-size:9px;color:var(--amar);text-transform:uppercase;font-weight:700;margin-bottom:3px">Dividido</div><div style="font-family:var(--ff);font-size:28px;font-style:italic;font-weight:900;color:var(--amar)">${div.length}</div></div>
-    </div>
-    ${Object.keys(temasSim).length?`
-    <div style="margin-bottom:14px">
-      <div style="font-family:var(--fc);font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--cin);margin-bottom:8px;font-weight:700">Temas dos projetos que apoiou</div>
-      ${Object.entries(temasSim).sort((a,b)=>b[1]-a[1]).map(([t,c])=>`
-        <div class="tb-row"><span class="tb-l">${h(t)}</span>
-        <div class="tb-bar"><div class="tb-fill" style="width:${(c/maxT*100).toFixed(0)}%;background:${info.c}"></div></div>
-        <span style="font-family:var(--fc);font-size:10px;min-width:20px;font-weight:700">${c}</span></div>`).join('')}
-    </div>`:''}
-    ${sim.length?`<div style="margin-bottom:11px">
-      <div style="font-family:var(--fc);font-size:9px;color:var(--verde);text-transform:uppercase;font-weight:700;margin-bottom:6px">✅ Votou A FAVOR em (${sim.length} votações):</div>
-      ${sim.slice(0,6).map(x=>`<div style="padding:6px 10px;background:var(--vbg);border-radius:7px;margin-bottom:3px;font-size:11px;display:flex;gap:9px">
-        <span style="font-family:var(--fc);font-size:9px;color:var(--cin);min-width:32px;font-weight:700">${x.v.ano}</span>
-        <span style="flex:1;font-weight:600">${h((x.v.descricao&&x.v.descricao!==x.v.id?x.v.descricao:`Votação ${x.v.data?.slice(0,10)||x.v.id}`).slice(0,60))}</span>
-      </div>`).join('')}${sim.length>6?`<div style="font-family:var(--fc);font-size:9px;color:var(--cin);padding:4px 10px">... e mais ${sim.length-6} votações</div>`:''}</div>`:''}
-    ${nao.length?`<div style="margin-bottom:11px">
-      <div style="font-family:var(--fc);font-size:9px;color:var(--verm);text-transform:uppercase;font-weight:700;margin-bottom:6px">❌ Votou CONTRA em (${nao.length} votações):</div>
-      ${nao.slice(0,6).map(x=>`<div style="padding:6px 10px;background:var(--rbg);border-radius:7px;margin-bottom:3px;font-size:11px;display:flex;gap:9px">
-        <span style="font-family:var(--fc);font-size:9px;color:var(--cin);min-width:32px;font-weight:700">${x.v.ano}</span>
-        <span style="flex:1;font-weight:600">${h((x.v.descricao&&x.v.descricao!==x.v.id?x.v.descricao:`Votação ${x.v.data?.slice(0,10)||x.v.id}`).slice(0,60))}</span>
-      </div>`).join('')}${nao.length>6?`<div style="font-family:var(--fc);font-size:9px;color:var(--cin);padding:4px 10px">... e mais ${nao.length-6} votações</div>`:''}</div>`:''}
-    ${props.length?`<div style="margin-top:12px;padding-top:12px;border-top:2px solid var(--cbg)">
-      <div style="font-family:var(--fc);font-size:9px;text-transform:uppercase;font-weight:700;color:var(--cin);margin-bottom:7px">📋 Proposições de ${h(sigla)} (${props.length} nesta sessão)</div>
-      ${props.slice(0,5).map(p=>`<div style="padding:6px 10px;background:var(--cbg);border-radius:7px;margin-bottom:3px;font-size:11px;display:flex;gap:9px">
-        <span style="font-family:var(--fc);font-size:9px;color:var(--cin);min-width:32px;font-weight:700">${p.ano}</span>
-        <span style="flex:1;font-weight:600">${h((p.ementa||p.numero||'—').slice(0,60))}</span>
-      </div>`).join('')}${props.length>5?`<div style="font-family:var(--fc);font-size:9px;color:var(--cin);padding:4px 10px">... e mais ${props.length-5} proposições</div>`:''}</div>`:''}
-  `;
+  const info=infoPartido(sigla), vps=ST.vots.map(v=>({v,vt:v.votos?.[sigla]})).filter(x=>x.vt), props=ST.proj.filter(p=>(p.partido||'').toUpperCase()===sigla.toUpperCase());
+  const sim=vps.filter(x=>x.vt==='S'),nao=vps.filter(x=>x.vt==='N'),div=vps.filter(x=>x.vt==='D');
+  document.getElementById('mBd').innerHTML=`<div style="margin-bottom:16px"><div style="font-family:var(--ff);font-size:32px;font-style:italic;font-weight:900;color:${info.c}">${h(sigla)}</div><div style="font-size:12px;color:var(--cin)">${h(info.n)}</div></div><div class="al al-i"><span>ℹ️</span><div>Sem rótulo ideológico nesta versão. Os números abaixo são contagens dos registros disponíveis no banco.</div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px"><div class="sc vd"><div class="sc-l">Maioria SIM</div><div class="sc-v">${sim.length}</div></div><div class="sc vm"><div class="sc-l">Maioria NÃO</div><div class="sc-v">${nao.length}</div></div><div class="sc am"><div class="sc-l">Sem maioria</div><div class="sc-v">${div.length}</div></div></div><div style="font-family:var(--fc);font-size:9px;color:var(--cin);font-weight:700;margin-bottom:7px">PROPOSIÇÕES DISPONÍVEIS (${props.length})</div>${props.slice(0,10).map(p=>`<div style="padding:7px 10px;background:var(--cbg);border-radius:7px;margin-bottom:4px;font-size:11px"><strong>${p.ano||'—'}</strong> · ${h((p.numero||'')+' '+(p.ementa||'')).slice(0,90)}</div>`).join('')}${props.length>10?`<div style="font-size:10px;color:var(--cin)">... e mais ${props.length-10}</div>`:''}`;
   abrirModal();
 }
 
-// ══════════════════════════════════════════════
+
 // GRÁFICOS
 // ══════════════════════════════════════════════
 function renderGraf(){
   const cont=document.getElementById('grafConteudo');
   if(!ST.carregado){cont.innerHTML='<div class="ldg"><div class="spin"></div><div class="ldg-t">Aguardando dados...</div></div>';return;}
-
   const tm=gv('gTema'),an=gv('gAno');
-  let vds=ST.vots,pds=ST.proj;
+  let pds=[...ST.proj];
   if(tm) pds=pds.filter(p=>(p.tema||'Outro')===tm);
-  if(an){vds=vds.filter(v=>String(v.ano)===an);pds=pds.filter(p=>String(p.ano)===an);}
-
-  const eixos={ee:0,e:0,ce:0,c:0,cd:0,d:0,ed:0};
-  const temas={};
+  if(an) pds=pds.filter(p=>String(p.ano)===an);
+  const anos=Array.from({length:CURRENT_YEAR-START_YEAR+1},(_,i)=>START_YEAR+i);
+  const temas={},partidos={},sits={};
   pds.forEach(p=>{
-    const e=p.eixo||'c';if(eixos[e]!==undefined)eixos[e]++;
     const t=p.tema||'Outro';temas[t]=(temas[t]||0)+1;
+    const pt=p.partido||'Não identificado';partidos[pt]=(partidos[pt]||0)+1;
+    const sg=statusGroup(p);sits[sg]=(sits[sg]||0)+1;
   });
-  const totalE=Object.values(eixos).reduce((a,b)=>a+b,0)||1;
-  const eoAtivos=['ee','e','ce','c','cd','d','ed'].filter(e=>eixos[e]>0);
-
-  const PE=['PSOL','PCdoB','PT','PV','Rede','PSB','PDT'];
-  const PD=['MDB','PP','PSD','União Brasil','Republicanos','PL','Novo'];
-  const pctSim=ps=>ps.map(s=>{
-    const vs=vds.filter(v=>v.votos?.[s]);
-    return vs.length?+(vs.filter(v=>v.votos[s]==='S').length/vs.length*100).toFixed(0):0;
-  });
-
-  const TC={'Trabalho':'#ea580c','Economia':'#d97706','Meio Ambiente':'#16a34a','Saúde':'#2563eb','Direitos':'#7c3aed','Social':'#db2777','Segurança':'#dc2626','Educação':'#5b21b6','Infraestrutura':'#0369a1','Outro':'#94a3b8'};
-
-  cont.innerHTML=`
-    <div class="bx" style="border-color:var(--verde2)">
-      <div class="bxh">🔴🔵 Quem propôs mais? — Esquerda vs Direita vs Centro</div>
-      <div class="al al-g"><span>📊</span><div>Baseado nas <strong>${pds.length} proposições</strong> carregadas${tm?' no tema "'+tm+'"':''}${an?' de '+an:''}. Eixo calculado pelo partido do autor (Power & Zucco, 2021).</div></div>
-      ${eoAtivos.length?eoAtivos.map(e=>`
-        <div class="eixo-barra">
-          <div class="eb-label">
-            <span style="color:${CE[e]};font-weight:700">${LEF[e]}</span>
-            <span style="font-family:var(--fc);font-size:10px;color:var(--cin)">${eixos[e].toLocaleString('pt-BR')} projetos — ${(eixos[e]/totalE*100).toFixed(1)}%</span>
-          </div>
-          <div class="eb-track"><div class="eb-fill" style="width:${(eixos[e]/totalE*100).toFixed(1)}%;background:${CE[e]}"></div></div>
-        </div>`).join(''):`<p style="color:var(--cin);font-family:var(--fc);font-size:11px">Nenhuma proposição com partido identificado.</p>`}
-    </div>
-    <div class="cgrd">
-      <div class="cc"><div class="ct">📅 Proposições por Ano</div><canvas id="gAnos" height="300"></canvas></div>
-      <div class="cc"><div class="ct">🗳 % A FAVOR — partidos de esquerda (${vds.length} votações)</div><canvas id="gVE" height="300"></canvas></div>
-      <div class="cc"><div class="ct">🗳 % A FAVOR — partidos de direita/centro</div><canvas id="gVD" height="300"></canvas></div>
-      <div class="cc"><div class="ct">📁 Temas mais legislados</div><canvas id="gTemas" height="300"></canvas></div>
-    </div>
-  `;
-
-  // Renderizar charts
-  const anos=Array.from({length:23},(_,i)=>2003+i);
-  mkC('gAnos','line',anos,anos.map(a=>ST.proj.filter(p=>p.ano===a).length),['#2563eb'],{
-    plugins:{legend:{display:false}},
-    scales:{x:{ticks:{font:{size:9}}},y:{ticks:{font:{size:9}},beginAtZero:true}},
-    extra:{borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,.08)',tension:.4,fill:true,pointRadius:4}
-  });
-
-  const simE=pctSim(PE),simD=pctSim(PD);
-  if(simE.some(v=>v>0))
-    mkC('gVE','bar',PE,simE,PE.map(s=>infoEixo(s).c),{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}},max:100,beginAtZero:true},y:{ticks:{font:{size:10}}}}});
-  if(simD.some(v=>v>0))
-    mkC('gVD','bar',PD,simD,PD.map(s=>infoEixo(s).c),{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}},max:100,beginAtZero:true},y:{ticks:{font:{size:10}}}}});
-
-  const sorted=Object.entries(temas).sort((a,b)=>b[1]-a[1]);
-  if(sorted.length)
-    mkC('gTemas','bar',sorted.map(x=>x[0]),sorted.map(x=>x[1]),sorted.map(x=>TC[x[0]]||'#94a3b8'),{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}},beginAtZero:true},y:{ticks:{font:{size:9}}}}});
+  const topPart=Object.entries(partidos).sort((a,b)=>b[1]-a[1]).slice(0,15);
+  cont.innerHTML=`<div class="bx" style="border-color:var(--verde2)"><div class="bxh">📊 Universo desta análise</div><div class="al al-g"><span>✅</span><div><strong>${pds.length} proposições disponíveis</strong>${tm?' · tema: '+h(tm):''}${an?' · ano: '+h(an):''}. Todos os gráficos abaixo usam exatamente este mesmo conjunto filtrado.</div></div></div><div class="cgrd"><div class="cc"><div class="ct">📅 Registros por ano</div><canvas id="gAnos" height="300"></canvas></div><div class="cc"><div class="ct">🏛 Registros por partido</div><canvas id="gPart" height="300"></canvas></div><div class="cc"><div class="ct">📁 Temas</div><canvas id="gTemas" height="300"></canvas></div><div class="cc"><div class="ct">📌 Situação agrupada</div><canvas id="gSit" height="300"></canvas></div></div>`;
+  mkC('gAnos','line',anos,anos.map(a=>pds.filter(p=>Number(p.ano)===a).length),['#2563eb'],{plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}}},y:{beginAtZero:true}},extra:{borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,.08)',tension:.25,fill:true,pointRadius:3}});
+  if(topPart.length) mkC('gPart','bar',topPart.map(x=>x[0]),topPart.map(x=>x[1]),topPart.map(x=>infoPartido(x[0]).c),{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true},y:{ticks:{font:{size:9}}}}});
+  const sorted=Object.entries(temas).sort((a,b)=>b[1]-a[1]); if(sorted.length) mkC('gTemas','bar',sorted.map(x=>x[0]),sorted.map(x=>x[1]),sorted.map(()=> '#94a3b8'),{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}});
+  const ss=Object.entries(sits); if(ss.length) mkC('gSit','doughnut',ss.map(x=>x[0]),ss.map(x=>x[1]),['#00875a','#dc2626','#7c3aed','#94a3b8'],{cutout:'55%'});
 }
 
-// ══════════════════════════════════════════════
+
 // BUSCA
 // ══════════════════════════════════════════════
 let sTimer;
 function debS(){clearTimeout(sTimer);sTimer=setTimeout(execBusca,280);}
 function limpaS(){document.getElementById('gs').value='';document.getElementById('sRes').innerHTML='';}
 function execBusca(){
-  const q=(gv('gs')||'').toLowerCase().trim();
-  const box=document.getElementById('sRes');
+  const q=(gv('gs')||'').toLowerCase().trim(), box=document.getElementById('sRes');
   if(q.length<2){box.innerHTML='';return;}
-  if(!ST.carregado){box.innerHTML='<div class="al al-w"><span>⏳</span><div>Aguardando carregamento dos dados...</div></div>';return;}
-  const resP=ST.proj.filter(p=>[p.ementa,p.numero,p.autor,p.partido,p.lei||''].join(' ').toLowerCase().includes(q)).slice(0,8);
-  const resV=ST.vots.filter(v=>(v.descricao||'').toLowerCase().includes(q)).slice(0,5);
-  if(!resP.length&&!resV.length){box.innerHTML=`<div style="padding:13px;font-family:var(--fc);font-size:11px;color:var(--cin)">Nenhum resultado para "${h(q)}"</div>`;return;}
-  box.innerHTML=`
-    ${resP.length?`<div style="font-family:var(--fc);font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--cin);padding:9px 0 5px;font-weight:700">📋 Proposições (${resP.length})</div>
-    <div class="tw"><table><thead><tr><th>Número</th><th>Ementa</th><th>Partido</th><th>Eixo</th><th>Tema</th><th>Situação</th></tr></thead><tbody>
-    ${resP.map(p=>{const ei=infoEixo(p.partido);const tema=p.tema||'Outro';const stCls=p.status?.includes('Lei')?'s-lei':p.status?.includes('Arquiv')?'s-arq':'s-trm';return`<tr>
-      <td style="font-family:var(--fc);font-size:9px;color:var(--cin)">${h(p.numero||'—')}</td>
-      <td><button onclick="abrirProj('${p.id}')" style="background:none;border:none;color:var(--azul2);font-family:var(--fg);font-size:11px;cursor:pointer;font-weight:700;text-align:left">${h((p.ementa||'—').slice(0,50)+'…')}</button></td>
-      <td style="font-family:var(--fc);font-weight:700;font-size:10px;color:${ei.c}">${h(p.partido||'—')}</td>
-      <td><span class="ei ei-${ei.e}" style="font-size:8px">${LE[ei.e]||'—'}</span></td>
-      <td><span class="tag t-${tagKey(tema)}" style="font-size:8px">${h(tema)}</span></td>
-      <td><span class="sts ${stCls}" style="font-size:8px">${p.status?.includes('Lei')?'Lei':p.status?.includes('Arquiv')?'Arq.':'Tram.'}</span></td>
-    </tr>`}).join('')}
-    </tbody></table></div>`:''}
-    ${resV.length?`<div style="font-family:var(--fc);font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--cin);padding:9px 0 5px;font-weight:700">🗳 Votações (${resV.length})</div>
-    ${resV.map(v=>{const desc=v.descricao&&v.descricao!==v.id?v.descricao:`Votação ${v.data?.slice(0,10)||v.ano||v.id}`;return`<div style="padding:8px 11px;background:var(--cbg);border-radius:8px;margin-bottom:4px;display:flex;align-items:center;gap:10px;border:1px solid var(--brd)">
-      <span style="font-family:var(--fc);font-size:9px;color:var(--cin);min-width:32px;font-weight:700">${v.ano||'—'}</span>
-      <button onclick="abrirVot('${v.id}')" style="background:none;border:none;color:var(--azul2);font-family:var(--fg);font-size:12px;cursor:pointer;font-weight:700;flex:1;text-align:left">${h(desc.slice(0,65))}</button>
-    </div>`;}).join('')}`:''}
-  `;
+  const resP=ST.proj.filter(p=>[p.ementa,p.numero,p.autor,p.partido,p.lei||'',p.tema||''].join(' ').toLowerCase().includes(q)).slice(0,10);
+  const resV=ST.vots.filter(v=>(v.descricao||'').toLowerCase().includes(q)).slice(0,6);
+  if(!resP.length&&!resV.length){box.innerHTML=`<div style="padding:13px;color:var(--cin)">Nenhum resultado para “${h(q)}”.</div>`;return;}
+  box.innerHTML=`${resP.length?`<div style="font-family:var(--fc);font-size:9px;color:var(--cin);padding:9px 0 5px;font-weight:700">📋 PROPOSIÇÕES</div>${resP.map(p=>`<div style="padding:8px 11px;background:var(--cbg);border-radius:8px;margin-bottom:4px"><button onclick="abrirProj('${p.id}')" style="background:none;border:none;color:var(--azul2);font-family:var(--fg);font-size:12px;cursor:pointer;font-weight:700;text-align:left">${h(p.numero||'—')} · ${h((p.ementa||'').slice(0,90))}</button><div style="font-size:9px;color:var(--cin)">${p.ano||'—'} · ${h(p.partido||'sem partido')} · ${h(p.tema||'Outro')}</div></div>`).join('')}`:''}${resV.length?`<div style="font-family:var(--fc);font-size:9px;color:var(--cin);padding:9px 0 5px;font-weight:700">🗳 VOTAÇÕES</div>${resV.map(v=>`<div style="padding:8px 11px;background:var(--cbg);border-radius:8px;margin-bottom:4px"><button onclick="abrirVot('${v.id}')" style="background:none;border:none;color:var(--azul2);font-family:var(--fg);font-size:12px;cursor:pointer;font-weight:700;text-align:left">${h((v.descricao||v.id).slice(0,100))}</button></div>`).join('')}`:''}`;
 }
 
+
+// SELECTS + AUDITORIA
 // ══════════════════════════════════════════════
-// SELECTS
-// ══════════════════════════════════════════════
+function auditarDados(){
+  const ids=ST.proj.map(x=>String(x.id)), dup=ids.length-new Set(ids).size;
+  const ys=ST.proj.map(p=>Number(p.ano)).filter(Number.isFinite), yearCounts={}; ys.forEach(y=>yearCounts[y]=(yearCounts[y]||0)+1);
+  const years=Object.keys(yearCounts).map(Number).sort((a,b)=>a-b);
+  const missingParty=ST.proj.filter(p=>!p.partido).length;
+  const missingAuthor=ST.proj.filter(p=>!p.autor).length;
+  const heuristicTheme=ST.proj.filter(p=>String(p.temaOrigem||'').includes('heurística')).length;
+  const otherStatus=ST.proj.filter(p=>statusGroup(p)==='Outra / não classificada').length;
+  const newest=years.length?years[years.length-1]:null, newestCount=newest?yearCounts[newest]:0;
+  const warnings=[];
+  if(ST.loadMeta.projTrunc) warnings.push('A leitura de proposições atingiu o limite de segurança de 10.000 registros; o conjunto exibido é parcial.');
+  if(ST.loadMeta.votTrunc) warnings.push('A leitura de votações atingiu o limite de segurança de 10.000 registros; o conjunto exibido é parcial.');
+  if(years.length && years.length<(CURRENT_YEAR-START_YEAR+1)) warnings.push(`Há registros de proposições em ${years.length} de ${CURRENT_YEAR-START_YEAR+1} anos possíveis (${START_YEAR}–${CURRENT_YEAR}).`);
+  if(ST.proj.length && newestCount/ST.proj.length>.60) warnings.push(`${newest} concentra ${(newestCount/ST.proj.length*100).toFixed(1)}% das proposições carregadas; isso pode indicar coleta parcial ou viés para registros recentes.`);
+  if(ST.proj.length===500 && newestCount>=450) warnings.push('A coleção tem exatamente 500 registros e quase todos são do ano mais recente — padrão compatível com uma importação limitada, não com uma série histórica completa.');
+  if(dup) warnings.push(`Foram detectados ${dup} IDs duplicados antes da deduplicação.`);
+  if(heuristicTheme) warnings.push(`${heuristicTheme} proposições receberam tema por palavras-chave, e não por uma classificação temática oficial confirmada.`);
+  return {warnings,yearCounts,yearsWithProps:years.length,minYear:years[0]||null,maxYear:newest,missingParty,missingAuthor,heuristicTheme,otherStatus,newestCount};
+}
+function renderAuditoria(){
+  const el=document.getElementById('auditConteudo'); if(!el||!ST.carregado)return;
+  const a=auditarDados();
+  const yc=Object.entries(a.yearCounts).sort((x,y)=>Number(y[0])-Number(x[0]));
+  el.innerHTML=`
+    <div class="sg"><div class="sc az"><div class="sc-l">Proposições lidas</div><div class="sc-v">${ST.proj.length.toLocaleString('pt-BR')}</div></div><div class="sc rx"><div class="sc-l">Votações lidas</div><div class="sc-v">${ST.vots.length.toLocaleString('pt-BR')}</div></div><div class="sc am"><div class="sc-l">Sem partido</div><div class="sc-v">${a.missingParty}</div></div><div class="sc lr"><div class="sc-l">Sem autor</div><div class="sc-v">${a.missingAuthor}</div></div><div class="sc vd"><div class="sc-l">Tema heurístico</div><div class="sc-v">${a.heuristicTheme}</div></div><div class="sc vm"><div class="sc-l">Status “outro”</div><div class="sc-v">${a.otherStatus}</div></div></div>
+    <div class="bx"><div class="bxh">🚨 Alertas automáticos</div>${a.warnings.length?a.warnings.map(w=>`<div class="al al-w"><span>⚠️</span><div>${h(w)}</div></div>`).join(''):'<div class="al al-g"><span>✅</span><div>Nenhum alerta automático disparado com as regras atuais. Isso não substitui validação externa da coleta.</div></div>'}</div>
+    <div class="bx"><div class="bxh">📅 Cobertura por ano</div><div class="tw"><table><thead><tr><th>Ano</th><th>Proposições disponíveis</th><th>% do conjunto carregado</th></tr></thead><tbody>${yc.map(([y,n])=>`<tr><td><strong>${y}</strong></td><td>${Number(n).toLocaleString('pt-BR')}</td><td>${(n/Math.max(ST.proj.length,1)*100).toFixed(1)}%</td></tr>`).join('')}</tbody></table></div></div>
+    <div class="bx"><div class="bxh">📐 Regras metodológicas desta versão</div><div class="al al-i"><span>1</span><div><strong>Sem ideologia automática:</strong> partido sem classificação não é convertido em “centro”. A camada ideológica anterior foi desativada.</div></div><div class="al al-i"><span>2</span><div><strong>Sem falsa completude:</strong> gráficos são rotulados como registros disponíveis, e não como total histórico, salvo quando houver pipeline auditado que comprove cobertura.</div></div><div class="al al-i"><span>3</span><div><strong>Mesmo filtro, mesmo universo:</strong> todos os gráficos da aba Gráficos usam o mesmo conjunto filtrado.</div></div><div class="al al-i"><span>4</span><div><strong>Voto agregado ≠ orientação oficial:</strong> a interface diferencia a agregação do projeto de uma orientação oficial da liderança.</div></div><div class="al al-i"><span>5</span><div><strong>Temas heurísticos são identificados:</strong> quando o tema vem de palavras-chave, o usuário vê essa origem.</div></div></div>`;
+}
 function popSelects(){
-  const parts=Object.keys(EP).sort();
-  ['vSim','vNao'].forEach(id=>{
-    const s=document.getElementById(id);if(!s)return;
-    parts.forEach(p=>{const o=document.createElement('option');o.value=o.textContent=p;s.appendChild(o);});
-  });
-  const partsProj=[...new Set(ST.proj.map(p=>p.partido).filter(Boolean))].sort();
-  const sp=document.getElementById('pPart');if(!sp)return;
-  partsProj.forEach(p=>{const o=document.createElement('option');o.value=o.textContent=p;sp.appendChild(o);});
+  const parts=[...new Set(ST.proj.map(p=>p.partido).filter(Boolean))].sort();
+  ['vSim','vNao'].forEach(id=>{const s=document.getElementById(id);if(!s)return;parts.forEach(p=>{const o=document.createElement('option');o.value=o.textContent=p;s.appendChild(o);});});
+  const sp=document.getElementById('pPart');if(sp)parts.forEach(p=>{const o=document.createElement('option');o.value=o.textContent=p;sp.appendChild(o);});
 }
 
-// ══════════════════════════════════════════════
+
 // UTILS
 // ══════════════════════════════════════════════
 function mkC(id,type,labels,data,colors,opts){
@@ -1089,6 +846,7 @@ function showSec(id,el){
   if(id==='proposicoes') renderTabProj();
   if(id==='partidos') renderPart();
   if(id==='graficos') setTimeout(renderGraf,80);
+  if(id==='auditoria') renderAuditoria();
 }
 function abrirModal(){document.getElementById('modal').classList.add('on');}
 function fechaModal(e){if(!e||e.target.id==='modal'||e.target.classList.contains('mx'))document.getElementById('modal').classList.remove('on');}
