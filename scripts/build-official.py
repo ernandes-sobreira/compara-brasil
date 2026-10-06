@@ -46,27 +46,39 @@ def vote_code(v):
 def process_year(year):
     print("INÍCIO",year,flush=True)
     props={}
+    all_prop_min={}
     for r in rows(f"proposicoes/csv/proposicoes-{year}.csv"):
         tp=(r.get("siglaTipo") or "").strip()
-        if tp not in TARGET_TYPES: continue
         pid=(r.get("id") or "").strip()
         if not pid: continue
-        props[pid]={
+        mini={
           "id":pid,
           "siglaTipo":tp,
           "numero":(r.get("numero") or "").strip(),
           "ano":int(r.get("ano") or year),
-          "descricaoTipo":(r.get("descricaoTipo") or "").strip(),
           "ementa":(r.get("ementa") or "").strip(),
+          "uri":(r.get("uri") or "").strip(),
+          "situacao":(r.get("ultimoStatus_descricaoSituacao") or "").strip(),
+          "temas":[]
+        }
+        all_prop_min[pid]=mini
+        if tp not in TARGET_TYPES: continue
+        props[pid]={
+          "id":pid,
+          "siglaTipo":tp,
+          "numero":mini["numero"],
+          "ano":mini["ano"],
+          "descricaoTipo":(r.get("descricaoTipo") or "").strip(),
+          "ementa":mini["ementa"],
           "dataApresentacao":(r.get("dataApresentacao") or "").strip(),
           "urlInteiroTeor":(r.get("urlInteiroTeor") or "").strip(),
-          "uri":(r.get("uri") or "").strip(),
+          "uri":mini["uri"],
           "status":{
             "dataHora":(r.get("ultimoStatus_dataHora") or "").strip(),
             "orgao":(r.get("ultimoStatus_siglaOrgao") or "").strip(),
             "regime":(r.get("ultimoStatus_regime") or "").strip(),
             "tramitacao":(r.get("ultimoStatus_descricaoTramitacao") or "").strip(),
-            "situacao":(r.get("ultimoStatus_descricaoSituacao") or "").strip(),
+            "situacao":mini["situacao"],
             "despacho":(r.get("ultimoStatus_despacho") or "").strip(),
             "apreciacao":(r.get("ultimoStatus_apreciacao") or "").strip()
           },
@@ -95,12 +107,15 @@ def process_year(year):
 
     for r in safe_rows(f"proposicoesTemas/csv/proposicoesTemas-{year}.csv"):
         pid=pid_from_uri(r.get("uriProposicao"))
+        item={
+          "codigo":(r.get("codTema") or "").strip(),
+          "tema":(r.get("tema") or "").strip(),
+          "relevancia":(r.get("relevancia") or "").strip()
+        }
+        if pid in all_prop_min:
+            all_prop_min[pid]["temas"].append(item)
         if pid in props:
-            props[pid]["temas"].append({
-              "codigo":(r.get("codTema") or "").strip(),
-              "tema":(r.get("tema") or "").strip(),
-              "relevancia":(r.get("relevancia") or "").strip()
-            })
+            props[pid]["temas"].append(item)
 
     # Votação nominal = existe pelo menos um voto individual no arquivo oficial.
     pcounts=defaultdict(lambda:defaultdict(Counter))
@@ -115,6 +130,11 @@ def process_year(year):
     for r in safe_rows(f"votacoes/csv/votacoes-{year}.csv"):
         vid=(r.get("id") or "").strip()
         if vid not in nominal_ids: continue
+        pid=(r.get("ultimaApresentacaoProposicao_idProposicao") or "").strip()
+        if pid not in all_prop_min:
+            pref=vid.split("-")[0]
+            if pref in all_prop_min: pid=pref
+        subject=all_prop_min.get(pid)
         votes[vid]={
           "id":vid,
           "data":(r.get("data") or "").strip(),
@@ -125,7 +145,8 @@ def process_year(year):
           "votosNao":int(r.get("votosNao") or 0),
           "votosOutros":int(r.get("votosOutros") or 0),
           "descricao":(r.get("descricao") or "").strip(),
-          "idProposicao":(r.get("ultimaApresentacaoProposicao_idProposicao") or "").strip(),
+          "idProposicao":pid,
+          "assunto":subject,
           "orientacoes":[],
           "partidos":{}
         }
