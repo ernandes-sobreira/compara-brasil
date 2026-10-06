@@ -10,28 +10,31 @@ def key(s):
     return re.sub(r"[^A-Z0-9]+","",s.upper())
 
 ALIASES={
-  "PMDB":"MDB","MBD":"MDB",
+  "PMDB":"MDB","MBD":"MDB","PMBD":"MDB",
   "PR":"PL",
   "PFL":"DEM",
   "PPB":"PP",
-  "PRB":"REPUBLICANOS","REPUBLIC":"REPUBLICANOS","REPUB":"REPUBLICANOS","REPUBLICA":"REPUBLICANOS",
-  "PMR":"REPUBLICANOS",
-  "PTN":"PODEMOS","PODE":"PODEMOS",
-  "PPS":"CIDADANIA",
-  "PTDOB":"AVANTE",
-  "PEN":"PATRIOTA",
-  "SD":"SOLIDARIEDADE","SOLIDARI":"SOLIDARIEDADE",
+  "PRB":"Republicanos","REPUBLIC":"Republicanos","REPUB":"Republicanos","REPUBLICA":"Republicanos",
+  "REPUBLICANOS":"Republicanos","REPUBLI":"Republicanos",
+  "PMR":"Republicanos",
+  "PTN":"Podemos","PODE":"Podemos","PODEMOS":"Podemos",
+  "PPS":"Cidadania","CIDADANIA":"Cidadania",
+  "PTDOB":"Avante","AVANTE":"Avante",
+  "PEN":"Patriota","PATRIOTA":"Patriota","PATRI":"Patriota",
+  "SD":"Solidariedade","SDD":"Solidariedade","SOLIDARI":"Solidariedade","SOLIDARIED":"Solidariedade","SOLIDARIEDADE":"Solidariedade",
   "PCDOB":"PCdoB","PCDB":"PCdoB",
   "PSBD":"PSDB","PSBB":"PSDB",
+  "PSDC":"DC",
   "UNIAO":"UNIÃO",
   "REDE":"REDE",
-  "SPART":"SEM PARTIDO","SPARTIDO":"SEM PARTIDO","SEMPARTIDO":"SEM PARTIDO"
+  "MISSAO":"MISSÃO",
+  "SPART":"Sem partido","SPARTIDO":"Sem partido","SEMPARTIDO":"Sem partido"
 }
 
 DISPLAY={
  "PCDOB":"PCdoB","UNIAO":"UNIÃO","REPUBLICANOS":"Republicanos","SOLIDARIEDADE":"Solidariedade",
  "CIDADANIA":"Cidadania","PODEMOS":"Podemos","PATRIOTA":"Patriota","AVANTE":"Avante",
- "SEM PARTIDO":"Sem partido"
+ "SEMPARTIDO":"Sem partido","MISSAO":"MISSÃO"
 }
 
 def canon(raw):
