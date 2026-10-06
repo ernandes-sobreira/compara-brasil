@@ -116,7 +116,7 @@ tbody td{padding:10px 13px;vertical-align:middle}
 .er td{text-align:center;padding:36px;color:var(--cin);font-family:var(--fc);font-size:11px}
 
 /* TAGS */
-.tag{display:inline-block;padding:3px 9px;border-radius:6px;font-family:var(--fc);font-size:9px;font-weight:700;border:1px solid transparent}
+.tag{display:inline-block;padding:3px 9px;border-radius:6px;font-family:var(--fc);font-size:9px;font-weight:700;border:1px solid var(--brd);background:var(--cbg);color:var(--txt)}
 .t-trabalho{background:var(--lbg);color:var(--lrj);border-color:var(--lbd)}
 .t-economia{background:var(--ybg);color:var(--amar);border-color:var(--ybd)}
 .t-meio-ambiente,.t-ambiente{background:var(--vbg);color:var(--verde);border-color:var(--vbd)}
@@ -1220,7 +1220,7 @@ function renderAuditoria(){
       <div class="al al-i"><span>4</span><div>“Orientação de bancada” e “votos dos deputados” são campos separados; o sistema não trata um como sinônimo do outro.</div></div>
       <div class="al al-i"><span>5</span><div>O painel não converte ausência de partido em posição ideológica e não produz ranking ou recomendação política.</div></div>
     </div>
-    ${ST.insights?`<div class="bx"><div class="bxh">🧹 Siglas consolidadas</div><div class="al al-i"><span>ℹ️</span><div>Grafias equivalentes foram unificadas para não criar “partidos” duplicados. Exemplos: PMDB→MDB, PR→PL, PFL→DEM, PRB→Republicanos, PPS→Cidadania, PTdoB→Avante e variações de caixa/acentuação.</div></div>${Object.entries(ST.insights.anomalousRawParties||{}).length?`<div class="small-note"><strong>Registros raros/inconsistentes preservados só na auditoria:</strong> ${Object.entries(ST.insights.anomalousRawParties).map(([p,n])=>h(p)+' ('+n+')').join(' · ')}</div>`:''}</div>`:''}
+    ${ST.insights?`<div class="bx"><div class="bxh">🧹 Siglas consolidadas</div><div class="al al-i"><span>ℹ️</span><div>Grafias equivalentes e renomeações inequívocas foram unificadas para não criar “partidos” duplicados. Exemplos: PMDB→MDB, PR→PL, PFL→DEM, PRB→Republicanos, PPS→Cidadania, PTdoB→Avante e variações de caixa/acentuação. Fusões partidárias posteriores não são somadas automaticamente.</div></div>${Object.entries(ST.insights.anomalousRawParties||{}).length?`<div class="small-note"><strong>Registros raros/inconsistentes preservados só na auditoria:</strong> ${Object.entries(ST.insights.anomalousRawParties).map(([p,n])=>h(p)+' ('+n+')').join(' · ')}</div>`:''}</div>`:''}
     <div class="bx"><div class="bxh">📅 Cobertura por ano</div><div class="tw"><table><thead><tr><th>Ano</th><th>Proposições</th><th>Votações nominais</th></tr></thead><tbody>${rows.map(([y,v])=>`<tr><td><strong>${y}</strong></td><td>${fmt(v.proposicoes)}</td><td>${fmt(v.votacoes||0)}</td></tr>`).join('')}</tbody></table></div></div>`;
 }
 
