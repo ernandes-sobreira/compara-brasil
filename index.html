@@ -22,7 +22,7 @@
   --ff:'Fraunces',serif;--fg:'Plus Jakarta Sans',sans-serif;--fc:'JetBrains Mono',monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--fg);background:var(--branco);color:var(--txt);font-size:14px;line-height:1.6}
+body{font-family:var(--fg);background:#f6f8fb;color:var(--txt);font-size:14px;line-height:1.6}
 
 /* HEADER */
 .hdr{background:var(--preto);position:sticky;top:0;z-index:300;box-shadow:0 2px 16px rgba(0,0,0,.25)}
@@ -72,7 +72,7 @@ main{max-width:1400px;margin:0 auto;padding:24px 20px 90px}
 
 /* STAT CARDS */
 .sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin-bottom:24px}
-.sc{background:var(--branco);border-radius:14px;padding:18px 16px;border:2px solid var(--brd);position:relative;overflow:hidden;transition:all .15s}
+.sc{background:var(--branco);border-radius:16px;padding:18px 16px;border:1px solid var(--brd);position:relative;overflow:hidden;transition:all .15s;box-shadow:0 4px 16px rgba(15,23,42,.035)}
 .sc:hover{box-shadow:0 4px 20px rgba(0,0,0,.08);transform:translateY(-2px)}
 .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
 .sc.az::before{background:var(--azul2)}.sc.vd::before{background:var(--verde2)}
@@ -83,7 +83,7 @@ main{max-width:1400px;margin:0 auto;padding:24px 20px 90px}
 .sc-s{font-size:10px;color:var(--cin);margin-top:3px}
 
 /* BOX */
-.bx{background:var(--branco);border-radius:14px;padding:22px;margin-bottom:20px;border:2px solid var(--brd)}
+.bx{background:var(--branco);border-radius:18px;padding:22px;margin-bottom:20px;border:1px solid var(--brd);box-shadow:0 7px 24px rgba(15,23,42,.045)}
 .bxh{font-size:15px;font-weight:800;color:var(--preto);margin-bottom:16px;display:flex;align-items:center;gap:8px}
 
 /* ALERTS */
@@ -170,7 +170,7 @@ tbody td{padding:10px 13px;vertical-align:middle}
 
 /* CHARTS */
 .cgrd{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:22px}
-.cc{background:var(--branco);border-radius:14px;padding:20px;border:2px solid var(--brd)}
+.cc{background:var(--branco);border-radius:18px;padding:20px;border:1px solid var(--brd);box-shadow:0 7px 24px rgba(15,23,42,.04)}
 .ct{font-family:var(--fc);font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--cin);margin-bottom:14px;font-weight:700}
 
 /* EIXO BARRA */
