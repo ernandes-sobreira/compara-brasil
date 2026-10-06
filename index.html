@@ -730,11 +730,77 @@ function abrirVot(id){
   const v=ST.vots.find(x=>String(x.id)===String(id));if(!v)return;
   const parts=Object.entries(v.partidos||{}).sort((a,b)=>(b[1].total||0)-(a[1].total||0));
   document.getElementById('mBd').innerHTML=`
-    <div style="margin-bottom:14px"><div style="font-family:var(--fc);font-size:9px;color:var(--cin)">${h(v.data||'—')} · ${h(v.orgao||'—')}</div><h2 style="font-size:16px;line-height:1.45;margin-top:6px">${h(v.descricao||v.id)}</h2></div>
-    <div class="sg"><div class="sc vd"><div class="sc-l">SIM</div><div class="sc-v">${fmt(v.votosSim)}</div></div><div class="sc vm"><div class="sc-l">NÃO</div><div class="sc-v">${fmt(v.votosNao)}</div></div><div class="sc am"><div class="sc-l">OUTROS</div><div class="sc-v">${fmt(v.votosOutros)}</div></div></div>
-    <div class="bx" style="padding:14px"><div class="bxh">🏛 Orientação oficial de bancada</div>${(v.orientacoes||[]).length?(v.orientacoes||[]).map(o=>`<div style="padding:6px 0;border-bottom:1px solid var(--brd)"><strong>${h(o.bancada||'—')}</strong>: ${h(o.orientacao||'—')}</div>`).join(''):'<div class="al al-i"><span>ℹ️</span><div>Sem orientação registrada para esta votação.</div></div>'}</div>
-    <div class="bx" style="padding:14px"><div class="bxh">👥 Votos individuais agregados por partido</div>${parts.length?`<div class="tw"><table><thead><tr><th>Partido</th><th>Sim</th><th>Não</th><th>Abst.</th><th>Obstr.</th><th>Total</th></tr></thead><tbody>${parts.map(([p,x])=>`<tr><td><strong>${h(p)}</strong></td><td>${fmt(x.S)}</td><td>${fmt(x.N)}</td><td>${fmt(x.A)}</td><td>${fmt(x.O)}</td><td>${fmt(x.total)}</td></tr>`).join('')}</tbody></table></div>`:'—'}</div>`;
+    <div style="margin-bottom:14px">
+      <div style="font-family:var(--fc);font-size:9px;color:var(--cin)">${h(v.data||'—')} · ${h(v.orgao||'—')}</div>
+      <h2 style="font-size:16px;line-height:1.45;margin-top:6px">${h(v.descricao||v.id)}</h2>
+    </div>
+    <div class="sg">
+      <div class="sc vd"><div class="sc-l">SIM</div><div class="sc-v">${fmt(v.votosSim)}</div></div>
+      <div class="sc vm"><div class="sc-l">NÃO</div><div class="sc-v">${fmt(v.votosNao)}</div></div>
+      <div class="sc am"><div class="sc-l">OUTROS</div><div class="sc-v">${fmt(v.votosOutros)}</div></div>
+    </div>
+
+    <div class="bx" style="padding:14px">
+      <div class="bxh">🏛 Orientação oficial de bancada</div>
+      ${(v.orientacoes||[]).length
+        ?(v.orientacoes||[]).map(o=>`<div style="padding:6px 0;border-bottom:1px solid var(--brd)"><strong>${h(o.bancada||'—')}</strong>: ${h(o.orientacao||'—')}</div>`).join('')
+        :'<div class="al al-i"><span>ℹ️</span><div>Sem orientação registrada para esta votação.</div></div>'}
+    </div>
+
+    <div class="bx" style="padding:14px">
+      <div class="bxh">👥 Votos individuais agregados por partido</div>
+      ${parts.length
+        ?`<div class="tw"><table><thead><tr><th>Partido</th><th>Sim</th><th>Não</th><th>Abst.</th><th>Obstr.</th><th>Total</th></tr></thead><tbody>${parts.map(([p,x])=>`<tr><td><strong>${h(p)}</strong></td><td>${fmt(x.S)}</td><td>${fmt(x.N)}</td><td>${fmt(x.A)}</td><td>${fmt(x.O)}</td><td>${fmt(x.total)}</td></tr>`).join('')}</tbody></table></div>`
+        :'—'}
+    </div>
+
+    <div class="bx" style="padding:14px">
+      <div class="bxh">🧑‍⚖️ Como cada deputado votou</div>
+      <div id="votosInd-${h(v.id)}">
+        <button class="btn btn-p" onclick="loadIndividualVotes('${h(v.id)}')">Carregar votos individuais oficiais</button>
+        <div style="font-size:10px;color:var(--cin);margin-top:6px">Consulta feita sob demanda diretamente na API da Câmara.</div>
+      </div>
+    </div>
+  `;
   abrirModal();
+}
+
+async function fetchAllCamaraPages(baseUrl){
+  const all=[];
+  for(let page=1;page<=20;page++){
+    const sep=baseUrl.includes('?')?'&':'?';
+    const url=`${baseUrl}${sep}pagina=${page}&itens=100`;
+    const r=await fetch(url,{headers:{Accept:'application/json'}});
+    if(!r.ok)throw new Error(`API da Câmara respondeu ${r.status}`);
+    const j=await r.json();
+    const data=Array.isArray(j?.dados)?j.dados:[];
+    all.push(...data);
+    if(data.length<100)break;
+  }
+  return all;
+}
+
+async function loadIndividualVotes(id){
+  const box=document.getElementById('votosInd-'+id);if(!box)return;
+  box.innerHTML='<div class="ldg" style="padding:24px"><div class="spin"></div><div class="ldg-t">Buscando votos individuais oficiais...</div></div>';
+  try{
+    const url=`https://dadosabertos.camara.leg.br/api/v2/votacoes/${encodeURIComponent(id)}/votos`;
+    const rows=await fetchAllCamaraPages(url);
+    if(!rows.length){
+      box.innerHTML='<div class="al al-i"><span>ℹ️</span><div>Não há votos individuais disponíveis para esta votação na API.</div></div>';
+      return;
+    }
+    box.innerHTML=`<div class="al al-g"><span>✅</span><div><strong>${fmt(rows.length)} votos individuais oficiais</strong> carregados diretamente da Câmara.</div></div>
+      <div class="tw"><table><thead><tr><th>Deputado(a)</th><th>Partido</th><th>UF</th><th>Voto</th><th>Data/hora</th></tr></thead><tbody>
+      ${rows.map(r=>{
+        const d=r.deputado||{};
+        return `<tr><td><strong>${h(d.nome||'—')}</strong></td><td>${h(d.siglaPartido||'—')}</td><td>${h(d.siglaUf||'—')}</td><td><span class="sts">${h(r.voto||'—')}</span></td><td style="font-size:10px">${h(r.dataHoraVoto||'—')}</td></tr>`;
+      }).join('')}
+      </tbody></table></div>`;
+  }catch(e){
+    console.error(e);
+    box.innerHTML=`<div class="erro"><h3>⚠️ Não foi possível carregar os votos individuais</h3><p>${h(e.message)}</p><button class="btn btn-s" onclick="loadIndividualVotes('${h(id)}')">Tentar novamente</button></div>`;
+  }
 }
 
 // ══════════════════════════════════════════════
