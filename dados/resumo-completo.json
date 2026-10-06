@@ -1,0 +1,1223 @@
+{
+  "generatedAt": "2026-10-06T21:45:03.931Z",
+  "source": "Firestore profagua-unemat / coleções existentes do COMPARA BRASIL",
+  "period": {
+    "start": 2003,
+    "end": 2025
+  },
+  "totals": {
+    "proposicoes": 80280,
+    "votacoes": 3715
+  },
+  "years": {
+    "2003": {
+      "proposicoes": 3264,
+      "temas": {
+        "Outro": 1773,
+        "Economia": 410,
+        "Trabalho": 212,
+        "Segurança": 203,
+        "Direitos": 146,
+        "Saúde": 144,
+        "Educação": 137,
+        "Infraestrutura": 94,
+        "Social": 92,
+        "Meio Ambiente": 53
+      },
+      "partidos": {
+        "PR": 467,
+        "PT": 404,
+        "PSDB": 317,
+        "PP**": 254,
+        "Não identificado": 230,
+        "PMDB": 204,
+        "PTB": 180,
+        "PDT": 125,
+        "DEM": 110,
+        "MDB": 97,
+        "PSD": 96,
+        "PSB": 95,
+        "S.PART.": 94,
+        "PP": 75,
+        "PL": 73,
+        "PFL": 67,
+        "PV": 61,
+        "PSOL": 60,
+        "UNIÃO": 58,
+        "PCdoB": 44,
+        "PSC": 31,
+        "PODE": 23,
+        "PROS": 20,
+        "SOLIDARIEDADE": 17,
+        "PPS": 16,
+        "REPUBLICANOS": 12,
+        "PL*": 11,
+        "SDD": 10,
+        "PRB": 6,
+        "PSL": 4,
+        "AVANTE": 3
+      },
+      "status": {
+        "Em tramitação": 3264
+      },
+      "tipos": {
+        "PL": 2858,
+        "PEC": 226,
+        "PLP": 122,
+        "MPV": 58
+      },
+      "missing": {
+        "autor": 3,
+        "partido": 230,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2004": {
+      "proposicoes": 2196,
+      "temas": {
+        "Outro": 1112,
+        "Economia": 318,
+        "Segurança": 148,
+        "Trabalho": 135,
+        "Educação": 131,
+        "Saúde": 105,
+        "Direitos": 89,
+        "Infraestrutura": 69,
+        "Social": 61,
+        "Meio Ambiente": 28
+      },
+      "partidos": {
+        "Não identificado": 1988,
+        "PR": 37,
+        "PMDB": 28,
+        "PT": 27,
+        "PL": 19,
+        "PSDB": 16,
+        "PP**": 13,
+        "PTB": 13,
+        "PSB": 7,
+        "PV": 7,
+        "PDT": 7,
+        "S.PART.": 6,
+        "PP": 5,
+        "PSC": 4,
+        "PSOL": 4,
+        "MDB": 4,
+        "PFL": 3,
+        "DEM": 2,
+        "PSD": 2,
+        "PSL": 1,
+        "PODE": 1,
+        "PCdoB": 1,
+        "SOLIDARIEDADE": 1
+      },
+      "status": {
+        "Em tramitação": 2196
+      },
+      "tipos": {
+        "PL": 1885,
+        "PEC": 131,
+        "PLP": 107,
+        "MPV": 73
+      },
+      "missing": {
+        "autor": 1970,
+        "partido": 1988,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2005": {
+      "proposicoes": 1995,
+      "temas": {
+        "Outro": 966,
+        "Economia": 282,
+        "Trabalho": 140,
+        "Educação": 132,
+        "Segurança": 128,
+        "Direitos": 95,
+        "Saúde": 81,
+        "Infraestrutura": 81,
+        "Social": 62,
+        "Meio Ambiente": 28
+      },
+      "partidos": {
+        "Não identificado": 1995
+      },
+      "status": {
+        "Em tramitação": 1995
+      },
+      "tipos": {
+        "PL": 1723,
+        "PEC": 134,
+        "PLP": 96,
+        "MPV": 42
+      },
+      "missing": {
+        "autor": 1995,
+        "partido": 1995,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2006": {
+      "proposicoes": 1466,
+      "temas": {
+        "Outro": 680,
+        "Economia": 227,
+        "Segurança": 120,
+        "Trabalho": 107,
+        "Educação": 106,
+        "Saúde": 57,
+        "Direitos": 55,
+        "Infraestrutura": 49,
+        "Social": 49,
+        "Meio Ambiente": 16
+      },
+      "partidos": {
+        "Não identificado": 1466
+      },
+      "status": {
+        "Em tramitação": 1466
+      },
+      "tipos": {
+        "PL": 1238,
+        "PEC": 99,
+        "MPV": 67,
+        "PLP": 61,
+        "PDL": 1
+      },
+      "missing": {
+        "autor": 1466,
+        "partido": 1466,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2007": {
+      "proposicoes": 3284,
+      "temas": {
+        "Outro": 1520,
+        "Economia": 465,
+        "Trabalho": 308,
+        "Segurança": 252,
+        "Educação": 186,
+        "Direitos": 146,
+        "Infraestrutura": 144,
+        "Saúde": 119,
+        "Social": 84,
+        "Meio Ambiente": 60
+      },
+      "partidos": {
+        "Não identificado": 3284
+      },
+      "status": {
+        "Em tramitação": 3284
+      },
+      "tipos": {
+        "PL": 2732,
+        "PLP": 266,
+        "PEC": 216,
+        "MPV": 70
+      },
+      "missing": {
+        "autor": 3284,
+        "partido": 3284,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2008": {
+      "proposicoes": 2161,
+      "temas": {
+        "Outro": 1015,
+        "Economia": 313,
+        "Segurança": 149,
+        "Educação": 144,
+        "Trabalho": 138,
+        "Infraestrutura": 100,
+        "Direitos": 94,
+        "Saúde": 89,
+        "Social": 69,
+        "Meio Ambiente": 50
+      },
+      "partidos": {
+        "Não identificado": 2161
+      },
+      "status": {
+        "Em tramitação": 2161
+      },
+      "tipos": {
+        "PL": 1841,
+        "PLP": 176,
+        "PEC": 104,
+        "MPV": 40
+      },
+      "missing": {
+        "autor": 2161,
+        "partido": 2161,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2009": {
+      "proposicoes": 2415,
+      "temas": {
+        "Outro": 1171,
+        "Economia": 328,
+        "Segurança": 178,
+        "Trabalho": 154,
+        "Educação": 149,
+        "Direitos": 116,
+        "Infraestrutura": 106,
+        "Saúde": 97,
+        "Social": 70,
+        "Meio Ambiente": 46
+      },
+      "partidos": {
+        "Não identificado": 2415
+      },
+      "status": {
+        "Em tramitação": 2415
+      },
+      "tipos": {
+        "PL": 2146,
+        "PEC": 134,
+        "PLP": 108,
+        "MPV": 27
+      },
+      "missing": {
+        "autor": 2415,
+        "partido": 2415,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2010": {
+      "proposicoes": 1507,
+      "temas": {
+        "Outro": 725,
+        "Economia": 224,
+        "Trabalho": 108,
+        "Segurança": 90,
+        "Direitos": 77,
+        "Educação": 74,
+        "Saúde": 73,
+        "Infraestrutura": 67,
+        "Social": 53,
+        "Meio Ambiente": 16
+      },
+      "partidos": {
+        "Não identificado": 1507
+      },
+      "status": {
+        "Em tramitação": 1507
+      },
+      "tipos": {
+        "PL": 1331,
+        "PEC": 77,
+        "PLP": 57,
+        "MPV": 42
+      },
+      "missing": {
+        "autor": 1507,
+        "partido": 1507,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2011": {
+      "proposicoes": 3433,
+      "temas": {
+        "Outro": 1560,
+        "Economia": 541,
+        "Segurança": 240,
+        "Trabalho": 230,
+        "Educação": 205,
+        "Direitos": 186,
+        "Saúde": 168,
+        "Infraestrutura": 138,
+        "Social": 110,
+        "Meio Ambiente": 55
+      },
+      "partidos": {
+        "Não identificado": 3433
+      },
+      "status": {
+        "Em tramitação": 3433
+      },
+      "tipos": {
+        "PL": 3138,
+        "PEC": 135,
+        "PLP": 124,
+        "MPV": 36
+      },
+      "missing": {
+        "autor": 3433,
+        "partido": 3433,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2012": {
+      "proposicoes": 2101,
+      "temas": {
+        "Outro": 1003,
+        "Economia": 364,
+        "Trabalho": 136,
+        "Segurança": 129,
+        "Saúde": 124,
+        "Direitos": 98,
+        "Educação": 82,
+        "Infraestrutura": 73,
+        "Social": 63,
+        "Meio Ambiente": 29
+      },
+      "partidos": {
+        "Não identificado": 2101
+      },
+      "status": {
+        "Em tramitação": 2101
+      },
+      "tipos": {
+        "PL": 1836,
+        "PLP": 115,
+        "PEC": 105,
+        "MPV": 45
+      },
+      "missing": {
+        "autor": 2101,
+        "partido": 2101,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2013": {
+      "proposicoes": 2409,
+      "temas": {
+        "Outro": 1056,
+        "Economia": 419,
+        "Trabalho": 185,
+        "Segurança": 156,
+        "Saúde": 141,
+        "Direitos": 135,
+        "Infraestrutura": 102,
+        "Educação": 94,
+        "Social": 83,
+        "Meio Ambiente": 38
+      },
+      "partidos": {
+        "Não identificado": 2409
+      },
+      "status": {
+        "Em tramitação": 2409
+      },
+      "tipos": {
+        "PL": 2102,
+        "PEC": 140,
+        "PLP": 132,
+        "MPV": 35
+      },
+      "missing": {
+        "autor": 2409,
+        "partido": 2409,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2014": {
+      "proposicoes": 1487,
+      "temas": {
+        "Outro": 664,
+        "Economia": 235,
+        "Segurança": 128,
+        "Trabalho": 102,
+        "Direitos": 97,
+        "Infraestrutura": 85,
+        "Educação": 67,
+        "Saúde": 64,
+        "Social": 34,
+        "Meio Ambiente": 11
+      },
+      "partidos": {
+        "Não identificado": 1487
+      },
+      "status": {
+        "Em tramitação": 1487
+      },
+      "tipos": {
+        "PL": 1296,
+        "PLP": 86,
+        "PEC": 75,
+        "MPV": 29,
+        "PDL": 1
+      },
+      "missing": {
+        "autor": 1487,
+        "partido": 1487,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2015": {
+      "proposicoes": 4688,
+      "temas": {
+        "Outro": 1917,
+        "Economia": 722,
+        "Segurança": 503,
+        "Trabalho": 321,
+        "Direitos": 304,
+        "Saúde": 278,
+        "Educação": 229,
+        "Infraestrutura": 191,
+        "Social": 157,
+        "Meio Ambiente": 66
+      },
+      "partidos": {
+        "Não identificado": 3098,
+        "PSD": 199,
+        "MDB": 183,
+        "PP": 181,
+        "PL": 125,
+        "PSDB": 120,
+        "PSB": 92,
+        "PT": 80,
+        "UNIÃO": 69,
+        "PR": 67,
+        "REPUBLICANOS": 60,
+        "PDT": 48,
+        "PSL": 45,
+        "DEM": 37,
+        "PODE": 36,
+        "PCdoB": 35,
+        "SOLIDARIEDADE": 33,
+        "PTB": 26,
+        "PROS": 25,
+        "PV": 22,
+        "AVANTE": 21,
+        "PPS": 20,
+        "CIDADANIA": 19,
+        "PSC": 17,
+        "PSOL": 11,
+        "PATRI": 6,
+        "PRB": 5,
+        "PHS": 4,
+        "REDE": 3,
+        "PMDB": 1
+      },
+      "status": {
+        "Em tramitação": 4688
+      },
+      "tipos": {
+        "PL": 4242,
+        "PLP": 215,
+        "PEC": 185,
+        "MPV": 43,
+        "PDL": 3
+      },
+      "missing": {
+        "autor": 3043,
+        "partido": 3098,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2016": {
+      "proposicoes": 2819,
+      "temas": {
+        "Outro": 1241,
+        "Economia": 401,
+        "Segurança": 285,
+        "Direitos": 190,
+        "Trabalho": 190,
+        "Saúde": 189,
+        "Educação": 111,
+        "Infraestrutura": 99,
+        "Social": 79,
+        "Meio Ambiente": 34
+      },
+      "partidos": {
+        "Não identificado": 2819
+      },
+      "status": {
+        "Em tramitação": 2819
+      },
+      "tipos": {
+        "PL": 2523,
+        "PLP": 121,
+        "PEC": 116,
+        "MPV": 56,
+        "PDL": 3
+      },
+      "missing": {
+        "autor": 2819,
+        "partido": 2819,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2017": {
+      "proposicoes": 2949,
+      "temas": {
+        "Outro": 1270,
+        "Economia": 440,
+        "Segurança": 376,
+        "Direitos": 199,
+        "Saúde": 158,
+        "Trabalho": 155,
+        "Educação": 114,
+        "Infraestrutura": 102,
+        "Social": 98,
+        "Meio Ambiente": 37
+      },
+      "partidos": {
+        "Não identificado": 2949
+      },
+      "status": {
+        "Em tramitação": 2949
+      },
+      "tipos": {
+        "PL": 2664,
+        "PLP": 132,
+        "PEC": 97,
+        "MPV": 51,
+        "PDL": 5
+      },
+      "missing": {
+        "autor": 2949,
+        "partido": 2949,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2018": {
+      "proposicoes": 2015,
+      "temas": {
+        "Outro": 798,
+        "Economia": 310,
+        "Segurança": 219,
+        "Saúde": 151,
+        "Trabalho": 138,
+        "Direitos": 138,
+        "Educação": 78,
+        "Infraestrutura": 77,
+        "Social": 75,
+        "Meio Ambiente": 31
+      },
+      "partidos": {
+        "Não identificado": 2015
+      },
+      "status": {
+        "Em tramitação": 2015
+      },
+      "tipos": {
+        "PL": 1809,
+        "PLP": 93,
+        "PEC": 57,
+        "MPV": 53,
+        "PDL": 3
+      },
+      "missing": {
+        "autor": 2015,
+        "partido": 2015,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 0
+    },
+    "2019": {
+      "proposicoes": 6437,
+      "temas": {
+        "Outro": 2422,
+        "Economia": 864,
+        "Saúde": 725,
+        "Segurança": 632,
+        "Direitos": 582,
+        "Trabalho": 350,
+        "Educação": 308,
+        "Infraestrutura": 240,
+        "Social": 190,
+        "Meio Ambiente": 124
+      },
+      "partidos": {
+        "Não identificado": 6434,
+        "PSD": 1,
+        "REPUBLICANOS": 1,
+        "PP": 1
+      },
+      "status": {
+        "Em tramitação": 6437
+      },
+      "tipos": {
+        "PL": 5515,
+        "PDL": 553,
+        "PLP": 205,
+        "PEC": 116,
+        "MPV": 48
+      },
+      "missing": {
+        "autor": 6434,
+        "partido": 6434,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 333
+    },
+    "2020": {
+      "proposicoes": 5533,
+      "temas": {
+        "Saúde": 1555,
+        "Outro": 1365,
+        "Economia": 991,
+        "Trabalho": 392,
+        "Segurança": 351,
+        "Direitos": 328,
+        "Educação": 173,
+        "Social": 167,
+        "Infraestrutura": 134,
+        "Meio Ambiente": 77
+      },
+      "partidos": {
+        "Não identificado": 5533
+      },
+      "status": {
+        "Em tramitação": 5533
+      },
+      "tipos": {
+        "PL": 4735,
+        "PDL": 469,
+        "PLP": 211,
+        "MPV": 108,
+        "PEC": 10
+      },
+      "missing": {
+        "autor": 5533,
+        "partido": 5533,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 393
+    },
+    "2021": {
+      "proposicoes": 5326,
+      "temas": {
+        "Outro": 2082,
+        "Saúde": 884,
+        "Economia": 725,
+        "Direitos": 374,
+        "Segurança": 354,
+        "Trabalho": 283,
+        "Social": 202,
+        "Educação": 178,
+        "Infraestrutura": 153,
+        "Meio Ambiente": 91
+      },
+      "partidos": {
+        "Não identificado": 5325,
+        "PSB": 1
+      },
+      "status": {
+        "Em tramitação": 5326
+      },
+      "tipos": {
+        "PL": 3992,
+        "PDL": 1075,
+        "PLP": 169,
+        "MPV": 70,
+        "PEC": 20
+      },
+      "missing": {
+        "autor": 5325,
+        "partido": 5325,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 958
+    },
+    "2022": {
+      "proposicoes": 3140,
+      "temas": {
+        "Outro": 1093,
+        "Economia": 517,
+        "Saúde": 478,
+        "Direitos": 255,
+        "Segurança": 235,
+        "Trabalho": 160,
+        "Infraestrutura": 119,
+        "Educação": 115,
+        "Social": 109,
+        "Meio Ambiente": 59
+      },
+      "partidos": {
+        "Não identificado": 3140
+      },
+      "status": {
+        "Em tramitação": 3140
+      },
+      "tipos": {
+        "PL": 2524,
+        "PDL": 421,
+        "PLP": 124,
+        "MPV": 58,
+        "PEC": 13
+      },
+      "missing": {
+        "autor": 3140,
+        "partido": 3140,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 586
+    },
+    "2023": {
+      "proposicoes": 6280,
+      "temas": {
+        "Outro": 2189,
+        "Economia": 945,
+        "Saúde": 679,
+        "Segurança": 652,
+        "Direitos": 617,
+        "Trabalho": 343,
+        "Educação": 306,
+        "Social": 220,
+        "Infraestrutura": 218,
+        "Meio Ambiente": 111
+      },
+      "partidos": {
+        "Não identificado": 6278,
+        "PP": 1,
+        "UNIÃO": 1
+      },
+      "status": {
+        "Em tramitação": 6280
+      },
+      "tipos": {
+        "PL": 5471,
+        "PDL": 512,
+        "PLP": 222,
+        "MPV": 52,
+        "PEC": 23
+      },
+      "missing": {
+        "autor": 6278,
+        "partido": 6278,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 447
+    },
+    "2024": {
+      "proposicoes": 5420,
+      "temas": {
+        "Outro": 1919,
+        "Economia": 1008,
+        "Saúde": 635,
+        "Direitos": 467,
+        "Segurança": 451,
+        "Trabalho": 244,
+        "Social": 218,
+        "Educação": 176,
+        "Infraestrutura": 174,
+        "Meio Ambiente": 128
+      },
+      "partidos": {
+        "Não identificado": 5419,
+        "PROS": 1
+      },
+      "status": {
+        "Em tramitação": 5420
+      },
+      "tipos": {
+        "PL": 4416,
+        "PDL": 696,
+        "PLP": 209,
+        "MPV": 81,
+        "PEC": 18
+      },
+      "missing": {
+        "autor": 5419,
+        "partido": 5419,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 448
+    },
+    "2025": {
+      "proposicoes": 7955,
+      "temas": {
+        "Outro": 2482,
+        "Economia": 1471,
+        "Saúde": 1069,
+        "Direitos": 761,
+        "Segurança": 725,
+        "Trabalho": 445,
+        "Social": 297,
+        "Meio Ambiente": 277,
+        "Educação": 267,
+        "Infraestrutura": 161
+      },
+      "partidos": {
+        "Não identificado": 7955
+      },
+      "status": {
+        "Em tramitação": 7955
+      },
+      "tipos": {
+        "PL": 6507,
+        "PDL": 1147,
+        "PLP": 232,
+        "MPV": 46,
+        "PEC": 23
+      },
+      "missing": {
+        "autor": 7955,
+        "partido": 7955,
+        "tema": 0,
+        "status": 0
+      },
+      "votacoes": 550
+    }
+  },
+  "themes": {
+    "Outro": 32023,
+    "Economia": 12520,
+    "Saúde": 8063,
+    "Segurança": 6704,
+    "Direitos": 5549,
+    "Trabalho": 4976,
+    "Educação": 3562,
+    "Infraestrutura": 2776,
+    "Social": 2642,
+    "Meio Ambiente": 1465
+  },
+  "parties": {
+    "Não identificado": 75441,
+    "PR": 571,
+    "PT": 511,
+    "PSDB": 453,
+    "PSD": 298,
+    "MDB": 284,
+    "PP**": 267,
+    "PP": 263,
+    "PMDB": 233,
+    "PTB": 219,
+    "PL": 217,
+    "PSB": 195,
+    "PDT": 180,
+    "DEM": 149,
+    "UNIÃO": 128,
+    "S.PART.": 100,
+    "PV": 90,
+    "PCdoB": 80,
+    "PSOL": 75,
+    "REPUBLICANOS": 73,
+    "PFL": 70,
+    "PODE": 60,
+    "PSC": 52,
+    "SOLIDARIEDADE": 51,
+    "PSL": 50,
+    "PROS": 46,
+    "PPS": 36,
+    "AVANTE": 24,
+    "CIDADANIA": 19,
+    "PRB": 11,
+    "PL*": 11,
+    "SDD": 10,
+    "PATRI": 6,
+    "PHS": 4,
+    "REDE": 3
+  },
+  "status": {
+    "Em tramitação": 80280
+  },
+  "types": {
+    "PL": 68524,
+    "PDL": 4889,
+    "PLP": 3383,
+    "PEC": 2254,
+    "MPV": 1230
+  },
+  "missing": {
+    "autor": 75141,
+    "partido": 75441,
+    "tema": 0,
+    "status": 0
+  },
+  "partyVotes": {
+    "AVANTE": {
+      "S": 1518,
+      "N": 1159,
+      "D": 554,
+      "A": 33,
+      "total": 3264
+    },
+    "MDB": {
+      "S": 1762,
+      "N": 1473,
+      "D": 275,
+      "A": 23,
+      "total": 3533
+    },
+    "PROS": {
+      "S": 935,
+      "N": 871,
+      "D": 274,
+      "A": 7,
+      "total": 2087
+    },
+    "PSL": {
+      "S": 826,
+      "N": 834,
+      "D": 60,
+      "A": 10,
+      "total": 1730
+    },
+    "PCdoB": {
+      "S": 1767,
+      "N": 1312,
+      "D": 18,
+      "A": 175,
+      "total": 3272
+    },
+    "DEM": {
+      "S": 849,
+      "N": 791,
+      "D": 73,
+      "A": 8,
+      "total": 1721
+    },
+    "NOVO": {
+      "S": 1505,
+      "N": 1692,
+      "D": 19,
+      "A": 143,
+      "total": 3359
+    },
+    "PL": {
+      "S": 1759,
+      "N": 1561,
+      "D": 142,
+      "A": 97,
+      "total": 3559
+    },
+    "PV": {
+      "S": 1511,
+      "N": 1144,
+      "D": 553,
+      "A": 57,
+      "total": 3265
+    },
+    "PSD": {
+      "S": 1765,
+      "N": 1533,
+      "D": 260,
+      "A": 9,
+      "total": 3567
+    },
+    "PRB": {
+      "S": 87,
+      "N": 86,
+      "D": 5,
+      "A": 0,
+      "total": 178
+    },
+    "PDT": {
+      "S": 1795,
+      "N": 1362,
+      "D": 182,
+      "A": 130,
+      "total": 3469
+    },
+    "PTB": {
+      "S": 1033,
+      "N": 963,
+      "D": 96,
+      "A": 7,
+      "total": 2099
+    },
+    "CIDADANIA": {
+      "S": 1419,
+      "N": 1092,
+      "D": 572,
+      "A": 25,
+      "total": 3108
+    },
+    "PATRIOTA": {
+      "S": 1071,
+      "N": 937,
+      "D": 244,
+      "A": 4,
+      "total": 2256
+    },
+    "PODE": {
+      "S": 1682,
+      "N": 1306,
+      "D": 407,
+      "A": 24,
+      "total": 3419
+    },
+    "PMN": {
+      "S": 98,
+      "N": 126,
+      "D": 32,
+      "A": 8,
+      "total": 264
+    },
+    "PSDB": {
+      "S": 1706,
+      "N": 1300,
+      "D": 378,
+      "A": 11,
+      "total": 3395
+    },
+    "PP": {
+      "S": 1794,
+      "N": 1584,
+      "D": 218,
+      "A": 10,
+      "total": 3606
+    },
+    "REDE": {
+      "S": 1465,
+      "N": 1119,
+      "D": 23,
+      "A": 84,
+      "total": 2691
+    },
+    "PSOL": {
+      "S": 1644,
+      "N": 1515,
+      "D": 27,
+      "A": 256,
+      "total": 3442
+    },
+    "PSC": {
+      "S": 1125,
+      "N": 992,
+      "D": 100,
+      "A": 7,
+      "total": 2224
+    },
+    "PSB": {
+      "S": 1698,
+      "N": 1317,
+      "D": 367,
+      "A": 130,
+      "total": 3512
+    },
+    "SOLIDARIEDADE": {
+      "S": 1661,
+      "N": 1272,
+      "D": 323,
+      "A": 17,
+      "total": 3273
+    },
+    "PHS": {
+      "S": 53,
+      "N": 57,
+      "D": 2,
+      "A": 0,
+      "total": 112
+    },
+    "PT": {
+      "S": 1834,
+      "N": 1488,
+      "D": 39,
+      "A": 239,
+      "total": 3600
+    },
+    "REPUBLICANOS": {
+      "S": 1789,
+      "N": 1524,
+      "D": 128,
+      "A": 8,
+      "total": 3449
+    },
+    "PATRI": {
+      "S": 41,
+      "N": 47,
+      "D": 6,
+      "A": 2,
+      "total": 96
+    },
+    "PR": {
+      "S": 25,
+      "N": 38,
+      "D": 3,
+      "A": 0,
+      "total": 66
+    },
+    "PPS": {
+      "S": 17,
+      "N": 25,
+      "D": 2,
+      "A": 0,
+      "total": 44
+    },
+    "PPL": {
+      "S": 13,
+      "N": 20,
+      "D": 0,
+      "A": 0,
+      "total": 33
+    },
+    "PRP": {
+      "S": 19,
+      "N": 33,
+      "D": 5,
+      "A": 0,
+      "total": 57
+    },
+    "S.PART.": {
+      "S": 225,
+      "N": 165,
+      "D": 0,
+      "A": 48,
+      "total": 438
+    },
+    "PTC": {
+      "S": 6,
+      "N": 8,
+      "D": 5,
+      "A": 0,
+      "total": 19
+    },
+    "DC": {
+      "S": 7,
+      "N": 13,
+      "D": 0,
+      "A": 0,
+      "total": 20
+    },
+    "UNIÃO": {
+      "S": 870,
+      "N": 684,
+      "D": 380,
+      "A": 5,
+      "total": 1939
+    },
+    "PRD": {
+      "S": 298,
+      "N": 194,
+      "D": 283,
+      "A": 3,
+      "total": 778
+    }
+  }
+}
