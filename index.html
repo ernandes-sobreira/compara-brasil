@@ -6,6 +6,7 @@
 <title>COMPARA BRASIL — Câmara dos Deputados 2003–2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700;1,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <style>
@@ -195,15 +196,91 @@ tbody td{padding:10px 13px;vertical-align:middle}
 .tb-bar{flex:1;height:9px;background:var(--cbg);border-radius:5px;overflow:hidden}
 .tb-fill{height:100%;border-radius:5px}
 
+
+/* EXPLORADOR PARA LEIGOS */
+.explorer-intro{background:linear-gradient(135deg,#0f172a,#172554);color:#fff;border:none}
+.explorer-intro .bxh{color:#fff;font-size:22px;margin-bottom:8px}
+.explorer-intro p{color:rgba(255,255,255,.72);max-width:850px}
+.qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0 0}
+.qcard{background:#fff;border:1px solid var(--brd);border-radius:16px;padding:16px;cursor:pointer;transition:.15s;min-height:112px}
+.qcard:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(15,23,42,.09)}
+.qcard strong{display:block;font-size:15px;margin-bottom:5px}
+.qcard span{font-size:11px;color:var(--cin)}
+.kicker{font-family:var(--fc);font-size:9px;letter-spacing:.9px;text-transform:uppercase;font-weight:700;color:var(--verde2);margin-bottom:6px}
+.metric-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}
+.metric{border:1px solid var(--brd);border-radius:14px;padding:13px;background:#fff}
+.metric b{font-size:24px;display:block;line-height:1.1;color:var(--preto)}
+.metric span{font-size:10px;color:var(--cin)}
+.topic-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.topic-row{border:1px solid var(--brd);border-radius:12px;padding:11px;background:#fff;cursor:pointer}
+.topic-row:hover{border-color:var(--azul2)}
+.topic-name{font-weight:800;font-size:12px;margin-bottom:6px}
+.topic-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-size:10px;color:var(--cin)}
+.topic-stats b{display:block;font-size:14px;color:var(--txt)}
+.compare-table td:first-child{font-weight:800;white-space:nowrap}
+.mini-bar{height:7px;border-radius:999px;background:var(--cbg);overflow:hidden;min-width:80px}
+.mini-bar > i{display:block;height:100%;background:var(--azul2);border-radius:999px}
+.vote-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
+.vote-card{border:1px solid var(--brd);border-radius:16px;padding:16px;background:#fff;box-shadow:0 4px 14px rgba(15,23,42,.04)}
+.vote-card .vtop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:8px}
+.vote-card .vlabel{font-family:var(--fc);font-size:9px;color:var(--cin);font-weight:700}
+.vote-card h3{font-size:15px;line-height:1.35;margin:4px 0 8px;color:var(--preto)}
+.vote-card .plain{font-size:12px;line-height:1.55;color:var(--txt);background:var(--cbg);padding:10px 12px;border-radius:10px;margin-bottom:10px}
+.vote-card .motion{font-size:10px;color:var(--cin);line-height:1.45;margin:8px 0}
+.vnums{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.vnum{font-family:var(--fc);font-size:9px;padding:4px 8px;border-radius:7px;background:var(--cbg)}
+.badge-ok{background:var(--vbg);color:var(--verde);border:1px solid var(--vbd)}
+.badge-no{background:var(--rbg);color:var(--verm);border:1px solid var(--rbd)}
+.party-dashboard-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
+.party-summary{border:1px solid var(--brd);border-radius:16px;padding:18px;background:#fff}
+.party-summary h2{font-size:28px;line-height:1.1;margin-bottom:4px}
+.party-summary .sub{font-size:11px;color:var(--cin)}
+.theme-compare{border:1px solid var(--brd);border-radius:16px;padding:18px;background:#fff}
+.matrix-wrap{overflow:auto;max-height:560px;border:1px solid var(--brd);border-radius:14px}
+.matrix{border-collapse:separate;border-spacing:0;min-width:800px}
+.matrix th{position:sticky;top:0;z-index:2}
+.matrix td{padding:8px 10px}
+.cell-btn{width:100%;border:0;border-radius:8px;padding:6px;background:var(--cbg);cursor:pointer;text-align:center;font-family:var(--fc);font-size:9px}
+.cell-btn:hover{background:var(--abg);color:var(--azul2)}
+.plot3d{height:620px;border:1px solid var(--brd);border-radius:16px;overflow:hidden;background:#fff}
+.detail-panel{margin-top:12px;border:1px solid var(--brd);border-radius:14px;padding:14px;background:#fff}
+.inline-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.small-note{font-size:10px;color:var(--cin);line-height:1.55}
+@media(max-width:900px){
+  .party-dashboard-grid{grid-template-columns:1fr}
+  .metric-grid{grid-template-columns:repeat(3,1fr)}
+}
+
 footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padding:22px;font-family:var(--fc);font-size:9px;letter-spacing:.4px;line-height:2.2}
 
 @media(max-width:640px){
-  main{padding:14px 12px 70px}
+  body{background:#f7f8fb}
+  main{padding:14px 10px 70px}
+  .hdr{position:sticky}
+  .hd{height:auto;min-height:54px;padding:7px 10px;display:grid;grid-template-columns:1fr auto;gap:6px 8px}
+  .logo{min-width:0}
+  .logo-nm{font-size:14px}
+  .logo-tg{display:none}
+  .hdot{display:none}
+  .hnav{grid-column:1/-1;margin-left:0;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:4px;padding-bottom:2px;scrollbar-width:none}
+  .hnav::-webkit-scrollbar{display:none}
+  .hnav .nb{padding:6px 9px;font-size:10px;background:rgba(255,255,255,.04)}
+  .hero{padding:24px 14px 22px}
+  .hero h1{font-size:38px}
+  .hero-sub{font-size:12px}
   .sg{grid-template-columns:1fr 1fr}
   .si{min-width:100%}
+  .fr>.fg{flex:1 1 145px}
+  .fr select,.fr input{width:100%}
   .cgrd{grid-template-columns:1fr}
   .pgrd{grid-template-columns:1fr}
-  .hnav .nb{padding:4px 7px;font-size:10px}
+  .bx{padding:16px;border-radius:16px}
+  .qgrid{grid-template-columns:1fr}
+  .metric-grid{grid-template-columns:1fr 1fr}
+  .topic-list{grid-template-columns:1fr}
+  .vote-cards{grid-template-columns:1fr}
+  .plot3d{height:520px}
+  .mc{padding:20px 14px}
 }
 </style>
 </head>
@@ -222,8 +299,8 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
       <button class="nb on" onclick="showSec('painel',this)">📊 Painel</button>
       <button class="nb" onclick="showSec('proposicoes',this)">📋 Proposições</button>
       <button class="nb" onclick="showSec('votacoes',this)">🗳 Votações</button>
-      <button class="nb" onclick="showSec('partidos',this)">🏛 Partidos</button>
-      <button class="nb" onclick="showSec('graficos',this)">📈 Gráficos</button>
+      <button class="nb" onclick="showSec('partidos',this)">🏛 Partidos & temas</button>
+      <button class="nb" onclick="showSec('graficos',this)">🧊 Mapa 3D</button>
       <button class="nb" onclick="showSec('auditoria',this)">🧪 Auditoria</button><button class="nb" onclick="showSec('sobre',this)">ℹ️ Sobre</button>
     </nav>
     <div class="hdot"><div class="dot" id="dot"></div><span id="dbst">conectando...</span></div>
@@ -286,9 +363,10 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
     <div class="fr">
       <div class="fg"><label>Busca</label><input type="text" id="vk" class="si" placeholder="Buscar nas votações..." oninput="fVots()"></div>
       <div class="fg"><label>Ano</label><select id="vAno" onchange="mudaAnoVot()"><option value="">Escolha um ano</option></select></div>
-      <div class="fg"><label>Resultado da votação</label><select id="vRes" onchange="fVots()"><option value="">Todos</option><option value="1">Aprovada</option><option value="0">Não aprovada / sem marcação</option></select></div>
-      <div class="fg"><label>Maioria dos votos SIM</label><select id="vSim" onchange="fVots()"><option value="">Qualquer</option></select></div>
-      <div class="fg"><label>Maioria dos votos NÃO</label><select id="vNao" onchange="fVots()"><option value="">Qualquer</option></select></div>
+      <div class="fg"><label>Tema oficial</label><select id="vTema" onchange="fVots()"><option value="">Todos</option></select></div>
+      <div class="fg"><label>Resultado</label><select id="vRes" onchange="fVots()"><option value="">Todos</option><option value="1">Aprovada</option><option value="0">Não aprovada</option></select></div>
+      <div class="fg"><label>Partido</label><select id="vPartido" onchange="fVots()"><option value="">Qualquer</option></select></div>
+      <div class="fg"><label>Posição agregada</label><select id="vPosicao" onchange="fVots()"><option value="">Qualquer</option><option value="S">Maioria SIM</option><option value="N">Maioria NÃO</option><option value="D">Equilibrado</option></select></div>
       <button class="btn btn-s" onclick="resetVots()">Limpar</button>
     </div>
     <div id="votsConteudo">
@@ -300,27 +378,37 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
 
 <!-- PARTIDOS -->
 <div id="sec-partidos" class="sec">
-  <div class="bx">
-    <div class="bxh">🏛 Partidos — autoria e comportamento legislativo</div>
-    <div class="al al-i"><span>ℹ️</span><div>Contagens de autoria vêm dos arquivos oficiais de autores. As votações distinguem votos individuais agregados e orientação oficial de bancada.</div></div>
-    <div class="fr">
-      <div class="fg"><label>Buscar</label><input type="text" id="pFsq" placeholder="Sigla ou nome..." oninput="fPart()"></div>
+  <div class="bx explorer-intro">
+    <div class="kicker">ENTENDA SEM JARGÃO</div>
+    <div class="bxh">🏛 O que cada partido propõe e como vota?</div>
+    <p>Escolha um partido, um tema ou um ano. A plataforma mostra autoria de projetos e comportamento nas votações nominais sem transformar isso em nota ou recomendação.</p>
+    <div class="fr" style="margin-top:16px;margin-bottom:0">
+      <div class="fg"><label style="color:rgba(255,255,255,.6)">Partido</label><select id="partyFocus" onchange="renderPartyExplorer()"><option value="">Escolha um partido</option></select></div>
+      <div class="fg"><label style="color:rgba(255,255,255,.6)">Tema</label><select id="partyThemeFocus" onchange="renderPartyExplorer()"><option value="">Todos os temas</option></select></div>
+      <div class="fg"><label style="color:rgba(255,255,255,.6)">Período</label><select id="partyYearFocus" onchange="renderPartyExplorer()"><option value="">2003–2026</option></select></div>
     </div>
-    <div class="pgrd" id="partGrid">
-      <div class="ldg" style="grid-column:1/-1"><div class="spin"></div><div class="ldg-t">Carregando partidos...</div></div>
-    </div>
+  </div>
+  <div id="partyDashboard">
+    <div class="ldg"><div class="spin"></div><div class="ldg-t">Preparando comparação temática...</div></div>
   </div>
 </div>
 
 <!-- GRÁFICOS -->
 <div id="sec-graficos" class="sec">
   <div class="bx">
-    <div class="bxh">📈 Análise Visual — Dados Reais</div>
-    <div class="al al-i"><span>ℹ️</span><div>Os gráficos usam os resumos anuais produzidos diretamente dos arquivos oficiais da Câmara e preservam o universo usado em cada comparação.</div></div>
+    <div class="kicker">VISUAL INTERATIVO</div>
+    <div class="bxh">📈 Partido × Tema × Votação</div>
+    <div class="al al-i"><span>ℹ️</span><div>No gráfico 3D: <strong>X = partido</strong>, <strong>Y = tema oficial</strong> e <strong>Z = número de votações nominais ligadas ao tema</strong>. O tamanho do ponto representa proposições com autoria principal do partido. Toque em um ponto para abrir os números.</div></div>
     <div class="fr">
       <div class="fg"><label>Período</label><select id="gAno" onchange="renderGraf()"><option value="">Todos (2003–2026)</option></select></div>
       <div class="fg"><label>Tema oficial</label><select id="gTema" onchange="renderGraf()"><option value="">Todos</option></select></div>
+      <div class="fg"><label>Partido</label><select id="gPartido" onchange="renderGraf()"><option value="">Todos os principais</option></select></div>
     </div>
+  </div>
+  <div class="bx">
+    <div class="bxh">🧊 Mapa 3D de atuação legislativa</div>
+    <div id="g3d" class="plot3d"></div>
+    <div id="g3dDetail" class="detail-panel small-note">Toque em um ponto do gráfico para ver propostas, votações, maioria dos votos e aprovações relacionadas.</div>
   </div>
   <div id="grafConteudo">
     <div class="ldg"><div class="spin"></div><div class="ldg-t">Carregando gráficos...</div></div>
