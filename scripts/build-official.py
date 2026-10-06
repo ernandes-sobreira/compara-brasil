@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 
 BASE="https://dadosabertos.camara.leg.br/arquivos"
 YEARS=list(range(2003,2027))
+TARGET_TYPES={"PL","PDL","PLP","PEC","MPV"}
 OUT="dados/oficial"
 os.makedirs(OUT,exist_ok=True)
 
@@ -13,7 +14,7 @@ def open_url(path,tries=4):
     last=None
     for k in range(tries):
         try:
-            req=urllib.request.Request(url,headers={"User-Agent":"compara-brasil/2.0"})
+            req=urllib.request.Request(url,headers={"User-Agent":"compara-brasil/3.0"})
             return urllib.request.urlopen(req,timeout=240)
         except Exception as e:
             last=e
@@ -46,11 +47,13 @@ def process_year(year):
     print("INÍCIO",year,flush=True)
     props={}
     for r in rows(f"proposicoes/csv/proposicoes-{year}.csv"):
+        tp=(r.get("siglaTipo") or "").strip()
+        if tp not in TARGET_TYPES: continue
         pid=(r.get("id") or "").strip()
         if not pid: continue
         props[pid]={
           "id":pid,
-          "siglaTipo":(r.get("siglaTipo") or "").strip(),
+          "siglaTipo":tp,
           "numero":(r.get("numero") or "").strip(),
           "ano":int(r.get("ano") or year),
           "descricaoTipo":(r.get("descricaoTipo") or "").strip(),
@@ -71,7 +74,6 @@ def process_year(year):
           "temas":[]
         }
 
-    # Apenas autoria principal/proponente no índice anual.
     candidates=defaultdict(list)
     for r in safe_rows(f"proposicoesAutores/csv/proposicoesAutores-{year}.csv"):
         pid=(r.get("idProposicao") or "").strip()
@@ -100,10 +102,19 @@ def process_year(year):
               "relevancia":(r.get("relevancia") or "").strip()
             })
 
+    # Votação nominal = existe pelo menos um voto individual no arquivo oficial.
+    pcounts=defaultdict(lambda:defaultdict(Counter))
+    for r in safe_rows(f"votacoesVotos/csv/votacoesVotos-{year}.csv"):
+        vid=(r.get("idVotacao") or "").strip()
+        if not vid: continue
+        party=(r.get("deputado_siglaPartido") or "").strip() or "Sem partido"
+        pcounts[vid][party][vote_code(r.get("voto"))]+=1
+    nominal_ids=set(pcounts)
+
     votes={}
     for r in safe_rows(f"votacoes/csv/votacoes-{year}.csv"):
         vid=(r.get("id") or "").strip()
-        if not vid: continue
+        if vid not in nominal_ids: continue
         votes[vid]={
           "id":vid,
           "data":(r.get("data") or "").strip(),
@@ -119,13 +130,8 @@ def process_year(year):
           "partidos":{}
         }
 
-    pcounts=defaultdict(lambda:defaultdict(Counter))
-    for r in safe_rows(f"votacoesVotos/csv/votacoesVotos-{year}.csv"):
-        vid=(r.get("idVotacao") or "").strip()
-        if vid not in votes: continue
-        party=(r.get("deputado_siglaPartido") or "").strip() or "Sem partido"
-        pcounts[vid][party][vote_code(r.get("voto"))]+=1
     for vid,pm in pcounts.items():
+        if vid not in votes: continue
         for party,c in pm.items():
             votes[vid]["partidos"][party]={
               "S":c["S"],"N":c["N"],"A":c["A"],"O":c["O"],"outros":c["X"],"total":sum(c.values())
@@ -143,16 +149,16 @@ def process_year(year):
     q={"semAutorPrincipal":0,"semPartidoAutorPrincipal":0,"semTemaOficial":0,"semStatusOficial":0}
     for p in props.values():
         a=p["autores"][0] if p["autores"] else None
-        if not a or not a["nome"]:q["semAutorPrincipal"]+=1
-        if not a or not a["partido"]:q["semPartidoAutorPrincipal"]+=1
-        elif a["partido"]:parties[a["partido"]]+=1
-        if not p["temas"]:q["semTemaOficial"]+=1
+        if not a or not a["nome"]: q["semAutorPrincipal"]+=1
+        if not a or not a["partido"]: q["semPartidoAutorPrincipal"]+=1
+        else: parties[a["partido"]]+=1
+        if not p["temas"]: q["semTemaOficial"]+=1
         for t in p["temas"]:
-            if t["tema"]:themes[t["tema"]]+=1
+            if t["tema"]: themes[t["tema"]]+=1
         st=p["status"]["situacao"]
         if not st:q["semStatusOficial"]+=1
         statuses[st or "Não identificado"]+=1
-        types[p["siglaTipo"] or "Não identificado"]+=1
+        types[p["siglaTipo"]]+=1
 
     party_votes=defaultdict(Counter);orientation=defaultdict(Counter)
     for v in votes.values():
@@ -161,7 +167,14 @@ def process_year(year):
         for o in v["orientacoes"]:
             if o["bancada"] and o["orientacao"]:orientation[o["bancada"]][o["orientacao"]]+=1
 
-    obj={"generatedAt":datetime.now(timezone.utc).isoformat(),"year":year,"source":"Câmara dos Deputados — arquivos anuais oficiais","proposicoes":list(props.values()),"votacoes":list(votes.values())}
+    obj={
+      "generatedAt":datetime.now(timezone.utc).isoformat(),
+      "year":year,
+      "scope":{"types":sorted(TARGET_TYPES),"votacoes":"nominais (com voto individual registrado)"},
+      "source":"Câmara dos Deputados — arquivos anuais oficiais",
+      "proposicoes":list(props.values()),
+      "votacoes":list(votes.values())
+    }
     path=f"{OUT}/dados-{year}.json"
     with open(path,"w",encoding="utf-8") as fh:json.dump(obj,fh,ensure_ascii=False,separators=(",",":"))
 
@@ -173,7 +186,7 @@ def process_year(year):
       "orientations":{k:dict(v) for k,v in orientation.items()},
       "bytes":os.path.getsize(path)
     }
-    print("FIM",year,len(props),len(votes),"bytes",result["bytes"],flush=True)
+    print("FIM",year,"props",len(props),"vots_nominais",len(votes),"bytes",result["bytes"],flush=True)
     return result
 
 def main():
@@ -184,14 +197,14 @@ def main():
             y=futs[fut]
             try:results.append(fut.result())
             except Exception as e:
-                print("ERRO ANO",y,repr(e),flush=True)
-                raise
+                print("ERRO ANO",y,repr(e),flush=True);raise
 
     results.sort(key=lambda x:x["year"])
     summary={
       "generatedAt":datetime.now(timezone.utc).isoformat(),
       "source":"Câmara dos Deputados — arquivos anuais oficiais",
       "sourceBase":BASE,
+      "scope":{"types":sorted(TARGET_TYPES),"votacoes":"nominais (com voto individual registrado)"},
       "period":{"start":min(x["year"] for x in results),"end":max(x["year"] for x in results)},
       "totals":{"proposicoes":0,"votacoes":0},
       "years":{},
@@ -209,7 +222,6 @@ def main():
         for k,v in x["quality"].items():summary["quality"][k]+=v
         for p,c in x["partyVotes"].items():summary["partyVotes"][p].update(c)
         for p,c in x["orientations"].items():summary["orientations"][p].update(c)
-
     for k in ("themes","parties","types","status"):summary[k]=dict(summary[k].most_common())
     summary["partyVotes"]={k:dict(v) for k,v in sorted(summary["partyVotes"].items())}
     summary["orientations"]={k:dict(v) for k,v in sorted(summary["orientations"].items())}
