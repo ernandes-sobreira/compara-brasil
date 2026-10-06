@@ -454,7 +454,7 @@ function uniqById(arr){
 // ESTADO — base oficial anual + carregamento sob demanda
 // ══════════════════════════════════════════════
 const ST={
-  summary:null, analytics:null, sourceMode:null,
+  summary:null, analytics:null, legacySummary:null, sourceMode:null,
   proj:[],vots:[],yearData:null,
   pFil:[],vFil:[], pPg:1,vPg:1,PS:15,
   pSort:{c:'numero',d:'asc'},CH:{},
@@ -528,6 +528,7 @@ async function initApp(){
     try{
       ST.summary=await fetchJSON('dados/oficial/resumo-oficial.json');
       ST.sourceMode='official';
+      try{ST.legacySummary=await fetchJSON('dados/resumo-completo.json');}catch(_){}
       try{ST.analytics=await fetchJSON('dados/oficial/analitica.json');}catch(_){}
     }catch(e){
       console.warn('Base oficial ainda não publicada; usando resumo legado',e);
@@ -868,7 +869,7 @@ function fPart(){
   if(!ST.summary)return;
   const q=(gv('pFsq')||'').toLowerCase();
   const authors=ST.analytics?.partidosAutores||ST.summary?.parties||{};
-  const votes=ST.analytics?.votosPartidos||{};
+  const votes=ST.analytics?.votosPartidos||ST.summary?.partyVotes||{};
   const all=[...new Set([...Object.keys(authors),...Object.keys(votes)])].filter(p=>p.toLowerCase().includes(q));
   renderPartGrid(all.map(p=>[p,{autorias:Number(authors[p]||0),votos:votes[p]||null}]).sort((a,b)=>b[1].autorias-a[1].autorias));
 }
@@ -878,7 +879,7 @@ function renderPartGrid(list){
   g.innerHTML=list.map(([p,x])=>`<div class="pcard" onclick="abrirPartido('${h(p)}')"><div class="pc-top" style="background:#64748b"></div><div class="pc-sig">${h(p)}</div><div class="pc-nm">${fmt(x.autorias)} proposições com autoria principal</div>${x.votos?`<div class="pc-bar"><div class="pc-row"><span style="min-width:65px">SIM</span><strong>${fmt(x.votos.S)}</strong></div><div class="pc-row"><span style="min-width:65px">NÃO</span><strong>${fmt(x.votos.N)}</strong></div></div>`:''}</div>`).join('')||'<div class="al al-i" style="grid-column:1/-1"><span>ℹ️</span><div>Nenhum partido encontrado.</div></div>';
 }
 function abrirPartido(p){
-  const authors=ST.analytics?.partidosAutores||ST.summary?.parties||{},votes=ST.analytics?.votosPartidos||{},ori=ST.analytics?.orientacoesBancadas||{};
+  const authors=ST.analytics?.partidosAutores||ST.summary?.parties||{},votes=ST.analytics?.votosPartidos||ST.summary?.partyVotes||{},ori=ST.analytics?.orientacoesBancadas||ST.summary?.orientations||{};
   const years=Object.entries(ST.summary?.years||{}).map(([y,v])=>[y,Number((v.partidosAutores||v.partidos||{})[p]||0)]).filter(x=>x[1]>0);
   document.getElementById('mBd').innerHTML=`<h2 style="font-family:var(--ff);font-size:30px;margin-bottom:6px">${h(p)}</h2><div class="al al-i"><span>ℹ️</span><div>Dados descritivos dos arquivos oficiais. Não constituem avaliação, ranking ou recomendação.</div></div><div class="sg"><div class="sc az"><div class="sc-l">Autoria principal</div><div class="sc-v">${fmt(authors[p])}</div></div><div class="sc vd"><div class="sc-l">Votos SIM</div><div class="sc-v">${fmt(votes[p]?.S)}</div></div><div class="sc vm"><div class="sc-l">Votos NÃO</div><div class="sc-v">${fmt(votes[p]?.N)}</div></div></div>${years.length?`<div class="bx" style="padding:14px"><div class="bxh">📅 Proposições por ano</div>${years.map(([y,n])=>`<div class="tb-row"><span class="tb-l">${y}</span><div class="tb-bar"><div class="tb-fill" style="width:${Math.min(100,n/Math.max(...years.map(z=>z[1]))*100)}%;background:#64748b"></div></div><strong>${n}</strong></div>`).join('')}</div>`:''}${ori[p]?`<div class="bx" style="padding:14px"><div class="bxh">🏛 Orientações registradas</div>${Object.entries(ori[p]).sort((a,b)=>b[1]-a[1]).map(([o,n])=>`<div style="padding:6px 0;border-bottom:1px solid var(--brd)"><strong>${h(o)}</strong>: ${fmt(n)}</div>`).join('')}</div>`:''}`;abrirModal();
 }
@@ -908,11 +909,40 @@ function renderGraf(){
 function renderAuditoria(){
   const el=document.getElementById('auditConteudo');if(!el||!ST.summary)return;
   const s=ST.summary,q=qualityInfo(),rows=Object.entries(s.years||{}).sort((a,b)=>Number(b[0])-Number(a[0]));
+  let comparison='';
+  if(ST.sourceMode==='official'&&ST.legacySummary){
+    const legacy=ST.legacySummary;
+    const officialPre2026=Object.entries(s.years||{}).filter(([y])=>Number(y)<=2025).reduce((acc,[,v])=>acc+Number(v.proposicoes||0),0);
+    const officialVotes1925=Object.entries(s.years||{}).filter(([y])=>Number(y)>=2019&&Number(y)<=2025).reduce((acc,[,v])=>acc+Number(v.votacoes||0),0);
+    const legacyProps=Number(legacy.totals?.proposicoes||0),legacyVotes=Number(legacy.totals?.votacoes||0);
+    comparison=`
+      <div class="bx">
+        <div class="bxh">🔬 Conferência com a extração antiga</div>
+        <div class="al al-g"><span>✅</span><div><strong>Proposições 2003–2025:</strong> base antiga = ${fmt(legacyProps)} · fonte oficial atual = ${fmt(officialPre2026)} · diferença = ${officialPre2026-legacyProps>=0?'+':''}${fmt(officialPre2026-legacyProps)}.</div></div>
+        <div class="al al-g"><span>✅</span><div><strong>Votações nominais 2019–2025:</strong> base antiga = ${fmt(legacyVotes)} · fonte oficial atual = ${fmt(officialVotes1925)} · diferença = ${officialVotes1925-legacyVotes>=0?'+':''}${fmt(officialVotes1925-legacyVotes)}.</div></div>
+        <div class="al al-i"><span>ℹ️</span><div>As diferenças pequenas mostram que a extração anterior estava muito próxima do universo oficial. A plataforma passa a usar a reconstrução atual, preservando a fonte e o critério: <strong>PL, PDL, PLP, PEC e MPV; votações nominais com voto individual registrado</strong>.</div></div>
+      </div>`;
+  }
   el.innerHTML=`
     <div class="al ${ST.sourceMode==='official'?'al-g':'al-w'}"><span>${ST.sourceMode==='official'?'✅':'⚠️'}</span><div><strong>${ST.sourceMode==='official'?'Fonte oficial ativa.':'Fallback legado ativo.'}</strong> ${h(s.source||'')}</div></div>
-    <div class="sg"><div class="sc az"><div class="sc-l">Proposições</div><div class="sc-v">${fmt(s.totals.proposicoes)}</div></div><div class="sc rx"><div class="sc-l">Votações</div><div class="sc-v">${fmt(s.totals.votacoes)}</div></div><div class="sc vd"><div class="sc-l">Sem autor principal</div><div class="sc-v">${fmt(q.missingAuthor)}</div></div><div class="sc lr"><div class="sc-l">Sem partido</div><div class="sc-v">${fmt(q.missingParty)}</div></div><div class="sc am"><div class="sc-l">Sem tema oficial</div><div class="sc-v">${fmt(q.missingTheme)}</div></div><div class="sc vm"><div class="sc-l">Sem situação</div><div class="sc-v">${fmt(q.missingStatus)}</div></div></div>
-    <div class="bx"><div class="bxh">📐 Regras de integridade</div><div class="al al-i"><span>1</span><div>Proposições, autores, temas, votações, votos e orientações vêm de arquivos anuais separados e são ligados pelos identificadores oficiais.</div></div><div class="al al-i"><span>2</span><div>“Orientação de bancada” e “votos dos deputados” aparecem separadamente.</div></div><div class="al al-i"><span>3</span><div>O painel não transforma ausência de partido em posição ideológica e não produz ranking político.</div></div><div class="al al-i"><span>4</span><div>Os detalhes são carregados por ano; os gráficos gerais usam o resumo de todo o período.</div></div></div>
-    <div class="bx"><div class="bxh">📅 Cobertura por ano</div><div class="tw"><table><thead><tr><th>Ano</th><th>Proposições</th><th>Votações</th></tr></thead><tbody>${rows.map(([y,v])=>`<tr><td><strong>${y}</strong></td><td>${fmt(v.proposicoes)}</td><td>${fmt(v.votacoes||0)}</td></tr>`).join('')}</tbody></table></div></div>`;
+    <div class="sg">
+      <div class="sc az"><div class="sc-l">Proposições</div><div class="sc-v">${fmt(s.totals.proposicoes)}</div><div class="sc-s">${START_YEAR}–${END_YEAR}</div></div>
+      <div class="sc rx"><div class="sc-l">Votações nominais</div><div class="sc-v">${fmt(s.totals.votacoes)}</div></div>
+      <div class="sc vd"><div class="sc-l">Sem autor principal</div><div class="sc-v">${fmt(q.missingAuthor)}</div></div>
+      <div class="sc lr"><div class="sc-l">Sem partido</div><div class="sc-v">${fmt(q.missingParty)}</div></div>
+      <div class="sc am"><div class="sc-l">Sem tema oficial</div><div class="sc-v">${fmt(q.missingTheme)}</div></div>
+      <div class="sc vm"><div class="sc-l">Sem situação</div><div class="sc-v">${fmt(q.missingStatus)}</div></div>
+    </div>
+    ${comparison}
+    <div class="bx">
+      <div class="bxh">📐 Universo e regras</div>
+      <div class="al al-i"><span>1</span><div><strong>Proposições:</strong> PL, PDL, PLP, PEC e MPV.</div></div>
+      <div class="al al-i"><span>2</span><div><strong>Votações nominais:</strong> somente votações que possuem voto individual registrado nos arquivos oficiais.</div></div>
+      <div class="al al-i"><span>3</span><div>Proposição, autor principal, partido, tema e situação são ligados pelos identificadores oficiais da Câmara.</div></div>
+      <div class="al al-i"><span>4</span><div>“Orientação de bancada” e “votos dos deputados” são campos separados; o sistema não trata um como sinônimo do outro.</div></div>
+      <div class="al al-i"><span>5</span><div>O painel não converte ausência de partido em posição ideológica e não produz ranking ou recomendação política.</div></div>
+    </div>
+    <div class="bx"><div class="bxh">📅 Cobertura por ano</div><div class="tw"><table><thead><tr><th>Ano</th><th>Proposições</th><th>Votações nominais</th></tr></thead><tbody>${rows.map(([y,v])=>`<tr><td><strong>${y}</strong></td><td>${fmt(v.proposicoes)}</td><td>${fmt(v.votacoes||0)}</td></tr>`).join('')}</tbody></table></div></div>`;
 }
 
 // ══════════════════════════════════════════════
