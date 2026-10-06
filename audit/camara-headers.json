@@ -1,0 +1,153 @@
+{
+  "generatedAt": "2026-10-06T21:50:15.842541Z",
+  "years": {
+    "2025": {
+      "proposicoes": {
+        "url": "https://dadosabertos.camara.leg.br/arquivos/proposicoes/csv/proposicoes-2025.csv",
+        "status": 200,
+        "bytes": 90186706,
+        "content_type": "application/octet-stream",
+        "header": [
+          "id;\"uri\";\"siglaTipo\";\"numero\";\"ano\";\"codTipo\";\"descricaoTipo\";\"ementa\";\"ementaDetalhada\";\"keywords\";\"dataApresentacao\";\"uriOrgaoNumerador\";\"uriPropAnterior\";\"uriPropPrincipal\";\"uriPropPosterior\";\"urlInteiroTeor\";\"urnFinal\";\"ultimoStatus_dataHora\";\"ultimoStatus_sequencia\";\"ultimoStatus_uriRelator\";\"ultimoStatus_idOrgao\";\"ultimoStatus_siglaOrgao\";\"ultimoStatus_uriOrgao\";\"ultimoStatus_regime\";\"ultimoStatus_descricaoTramitacao\";\"ultimoStatus_idTipoTramitacao\";\"ultimoStatus_descricaoSituacao\";\"ultimoStatus_idSituacao\";\"ultimoStatus_despacho\";\"ultimoStatus_apreciacao\";\"ultimoStatus_url\""
+        ],
+        "first_row": [
+          "106701;\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/106701\";\"PL\";\"5809\";\"2025\";\"139\";\"Projeto de Lei\";\"Altera a Lei nº 9.605"
+        ]
+      },
+      "proposicoesAutores": {
+        "url": "https://dadosabertos.camara.leg.br/arquivos/proposicoesAutores/csv/proposicoesAutores-2025.csv",
+        "status": 200,
+        "bytes": 38939258,
+        "content_type": "application/octet-stream",
+        "header": [
+          "idProposicao;\"uriProposicao\";\"idDeputadoAutor\";\"uriAutor\";\"codTipoAutor\";\"tipoAutor\";\"nomeAutor\";\"siglaPartidoAutor\";\"uriPartidoAutor\";\"siglaUFAutor\";\"ordemAssinatura\";\"proponente\""
+        ],
+        "first_row": [
+          "2646600;\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2646600\";\"\";\"https://dadosabertos.camara.leg.br/api/v2/orgaos/78\";\"40000\";\"Órgão do Poder Legislativo\";\"Senado Federal - Rogério Carvalho\";\"PT\";\"\";\"SE\";\"1\";\"1\""
+        ]
+      },
+      "proposicoesTemas": {
+        "url": "https://dadosabertos.camara.leg.br/arquivos/proposicoesTemas/csv/proposicoesTemas-2025.csv",
+        "status": 200,
+        "bytes": 4977501,
+        "content_type": "application/octet-stream",
+        "header": [
+          "uriProposicao;\"siglaTipo\";\"numero\";\"ano\";\"codTema\";\"tema\";\"relevancia\""
+        ],
+        "first_row": [
+          "https://dadosabertos.camara.leg.br/api/v2/proposicoes/2592007;\"MSC\";\"1797\";\"2025\";\"34\";\"Administração Pública\";\"0\""
+        ]
+      },
+      "votacoes": {
+        "url": "https://dadosabertos.camara.leg.br/arquivos/votacoes/csv/votacoes-2025.csv",
+        "status": 200,
+        "bytes": 8765235,
+        "content_type": "application/octet-stream",
+        "header": [
+          "id;\"uri\";\"data\";\"dataHoraRegistro\";\"idOrgao\";\"uriOrgao\";\"siglaOrgao\";\"idEvento\";\"uriEvento\";\"aprovacao\";\"votosSim\";\"votosNao\";\"votosOutros\";\"descricao\";\"ultimaAberturaVotacao_dataHoraRegistro\";\"ultimaAberturaVotacao_descricao\";\"ultimaApresentacaoProposicao_dataHoraRegistro\";\"ultimaApresentacaoProposicao_descricao\";\"ultimaApresentacaoProposicao_idProposicao\";\"ultimaApresentacaoProposicao_uriProposicao\""
+        ],
+        "first_row": [
+          "2458405-38;\"https://dadosabertos.camara.leg.br/api/v2/votacoes/2458405-38\";\"2025-02-04\";\"2025-02-04T17:09:33\";\"180\";\"https://dadosabertos.camara.leg.br/api/v2/orgaos/180\";\"PLEN\";\"75386\";\"https://dadosabertos.camara.leg.br/api/v2/eventos/75386\";\"1\";\"0\";\"0\";\"0\";\"Aprovado"
+        ]
+      },
+      "votacoesVotos": {
+        "url": "https://dadosabertos.camara.leg.br/arquivos/votacoesVotos/csv/votacoesVotos-2025.csv",
+        "status": 200,
+        "bytes": 58235213,
+        "content_type": "application/octet-stream",
+        "header": [
+          "idVotacao;\"uriVotacao\";\"dataHoraVoto\";\"voto\";\"deputado_id\";\"deputado_uri\";\"deputado_nome\";\"deputado_siglaPartido\";\"deputado_uriPartido\";\"deputado_siglaUf\";\"deputado_idLegislatura\";\"deputado_urlFoto\""
+        ],
+        "first_row": [
+          "106701-223;\"https://dadosabertos.camara.leg.br/api/v2/votacoes/106701-223\";\"2025-11-05T12:41:17\";\"Sim\";\"204379\";\"https://dadosabertos.camara.leg.br/api/v2/deputados/204379\";\"Acácio Favacho\";\"MDB\";\"https://dadosabertos.camara.leg.br/api/v2/partidos/36899\";\"AP\";\"57\";\"https://www.camara.leg.br/internet/deputado/bandep/204379.jpg\""
+        ]
+      },
+      "votacoesOrientacoes": {
+        "url": "https://dadosabertos.camara.leg.br/arquivos/votacoesOrientacoes/csv/votacoesOrientacoes-2025.csv",
+        "status": 200,
+        "bytes": 1095383,
+        "content_type": "application/octet-stream",
+        "header": [
+          "idVotacao;\"uriVotacao\";\"siglaOrgao\";\"descricao\";\"siglaBancada\";\"uriBancada\";\"orientacao\""
+        ],
+        "first_row": [
+          "1302214-131;\"https://dadosabertos.camara.leg.br/api/v2/votacoes/1302214-131\";\"CCJC\";\"Aprovada a matéria destacada. Fica mantido o texto do Relator. Resultado:  44 votos \"\"Sim\"\""
+        ]
+      }
+    },
+    "2026": {
+      "proposicoes": {
+        "url": "https://dadosabertos.camara.leg.br/arquivos/proposicoes/csv/proposicoes-2026.csv",
+        "status": 200,
+        "bytes": 39662800,
+        "content_type": "application/octet-stream",
+        "header": [
+          "id;\"uri\";\"siglaTipo\";\"numero\";\"ano\";\"codTipo\";\"descricaoTipo\";\"ementa\";\"ementaDetalhada\";\"keywords\";\"dataApresentacao\";\"uriOrgaoNumerador\";\"uriPropAnterior\";\"uriPropPrincipal\";\"uriPropPosterior\";\"urlInteiroTeor\";\"urnFinal\";\"ultimoStatus_dataHora\";\"ultimoStatus_sequencia\";\"ultimoStatus_uriRelator\";\"ultimoStatus_idOrgao\";\"ultimoStatus_siglaOrgao\";\"ultimoStatus_uriOrgao\";\"ultimoStatus_regime\";\"ultimoStatus_descricaoTramitacao\";\"ultimoStatus_idTipoTramitacao\";\"ultimoStatus_descricaoSituacao\";\"ultimoStatus_idSituacao\";\"ultimoStatus_despacho\";\"ultimoStatus_apreciacao\";\"ultimoStatus_url\""
+        ],
+        "first_row": [
+          "281460;\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/281460\";\"PL\";\"1051\";\"2026\";\"139\";\"Projeto de Lei\";\"Altera o Decreto-Lei nº 667"
+        ]
+      },
+      "proposicoesAutores": {
+        "url": "https://dadosabertos.camara.leg.br/arquivos/proposicoesAutores/csv/proposicoesAutores-2026.csv",
+        "status": 200,
+        "bytes": 14190862,
+        "content_type": "application/octet-stream",
+        "header": [
+          "idProposicao;\"uriProposicao\";\"idDeputadoAutor\";\"uriAutor\";\"codTipoAutor\";\"tipoAutor\";\"nomeAutor\";\"siglaPartidoAutor\";\"uriPartidoAutor\";\"siglaUFAutor\";\"ordemAssinatura\";\"proponente\""
+        ],
+        "first_row": [
+          "2647304;\"https://dadosabertos.camara.leg.br/api/v2/proposicoes/2647304\";\"160673\";\"https://dadosabertos.camara.leg.br/api/v2/deputados/160673\";\"10000\";\"Deputado(a)\";\"Giovani Cherini\";\"PL\";\"https://dadosabertos.camara.leg.br/api/v2/partidos/37906\";\"RS\";\"1\";\"1\""
+        ]
+      },
+      "proposicoesTemas": {
+        "url": "https://dadosabertos.camara.leg.br/arquivos/proposicoesTemas/csv/proposicoesTemas-2026.csv",
+        "status": 200,
+        "bytes": 2978906,
+        "content_type": "application/octet-stream",
+        "header": [
+          "uriProposicao;\"siglaTipo\";\"numero\";\"ano\";\"codTema\";\"tema\";\"relevancia\""
+        ],
+        "first_row": [
+          "https://dadosabertos.camara.leg.br/api/v2/proposicoes/2640273;\"EMS\";\"1242\";\"2026\";\"42\";\"Direito Civil e Processual Civil\";\"1\""
+        ]
+      },
+      "votacoes": {
+        "url": "https://dadosabertos.camara.leg.br/arquivos/votacoes/csv/votacoes-2026.csv",
+        "status": 200,
+        "bytes": 4492642,
+        "content_type": "application/octet-stream",
+        "header": [
+          "id;\"uri\";\"data\";\"dataHoraRegistro\";\"idOrgao\";\"uriOrgao\";\"siglaOrgao\";\"idEvento\";\"uriEvento\";\"aprovacao\";\"votosSim\";\"votosNao\";\"votosOutros\";\"descricao\";\"ultimaAberturaVotacao_dataHoraRegistro\";\"ultimaAberturaVotacao_descricao\";\"ultimaApresentacaoProposicao_dataHoraRegistro\";\"ultimaApresentacaoProposicao_descricao\";\"ultimaApresentacaoProposicao_idProposicao\";\"ultimaApresentacaoProposicao_uriProposicao\""
+        ],
+        "first_row": [
+          "2585316-23;\"https://dadosabertos.camara.leg.br/api/v2/votacoes/2585316-23\";\"2026-02-02\";\"2026-02-02T14:38:11\";\"186\";\"https://dadosabertos.camara.leg.br/api/v2/orgaos/186\";\"CCP\";\"0\";\"\";\"1\";\"0\";\"0\";\"0\";\"Realizar o encaminhamento do PL-5874/2025 à CCJC (tramitação simultânea)"
+        ]
+      },
+      "votacoesVotos": {
+        "url": "https://dadosabertos.camara.leg.br/arquivos/votacoesVotos/csv/votacoesVotos-2026.csv",
+        "status": 200,
+        "bytes": 17218936,
+        "content_type": "application/octet-stream",
+        "header": [
+          "idVotacao;\"uriVotacao\";\"dataHoraVoto\";\"voto\";\"deputado_id\";\"deputado_uri\";\"deputado_nome\";\"deputado_siglaPartido\";\"deputado_uriPartido\";\"deputado_siglaUf\";\"deputado_idLegislatura\";\"deputado_urlFoto\""
+        ],
+        "first_row": [
+          "1228863-102;\"https://dadosabertos.camara.leg.br/api/v2/votacoes/1228863-102\";\"2026-06-10T14:46:15\";\"Não\";\"204501\";\"https://dadosabertos.camara.leg.br/api/v2/deputados/204501\";\"Alencar Santana\";\"PT\";\"https://dadosabertos.camara.leg.br/api/v2/partidos/36844\";\"SP\";\"57\";\"https://www.camara.leg.br/internet/deputado/bandep/204501.jpg\""
+        ]
+      },
+      "votacoesOrientacoes": {
+        "url": "https://dadosabertos.camara.leg.br/arquivos/votacoesOrientacoes/csv/votacoesOrientacoes-2026.csv",
+        "status": 200,
+        "bytes": 434168,
+        "content_type": "application/octet-stream",
+        "header": [
+          "idVotacao;\"uriVotacao\";\"siglaOrgao\";\"descricao\";\"siglaBancada\";\"uriBancada\";\"orientacao\""
+        ],
+        "first_row": [
+          "2611313-31;\"https://dadosabertos.camara.leg.br/api/v2/votacoes/2611313-31\";\"PLEN\";\"Aprovada a Subemenda Substitutiva ao Projeto de Lei Complementar nº 74"
+        ]
+      }
+    }
+  }
+}
