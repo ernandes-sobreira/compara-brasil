@@ -1,0 +1,29 @@
+name: Audit Firestore coverage
+
+on:
+  push:
+    paths:
+      - ".github/workflows/audit-firestore.yml"
+      - "scripts/audit-firestore.mjs"
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm init -y
+      - run: npm install firebase@12
+      - run: node scripts/audit-firestore.mjs
+      - name: Commit audit result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add audit/firestore-audit.json
+          git commit -m "Audit Firestore coverage" || exit 0
+          git push
