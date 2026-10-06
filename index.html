@@ -488,19 +488,11 @@ ANOS.forEach(a=>{
 // ══════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════
-async function carregarColecaoCompleta(db,nome,campo='ano',maxDocs=10000,batch=750){
-  let out=[],last=null,truncated=false;
-  while(out.length<maxDocs){
-    let q=db.collection(nome).orderBy(campo,'desc').limit(Math.min(batch,maxDocs-out.length));
-    if(last) q=q.startAfter(last);
-    const snap=await q.get();
-    if(snap.empty) break;
-    out.push(...snap.docs.map(d=>({id:d.id,...d.data()})));
-    last=snap.docs[snap.docs.length-1];
-    if(snap.size<batch) break;
-  }
-  if(out.length>=maxDocs) truncated=true;
-  return {docs:uniqById(out),truncated};
+function timeoutPromise(p,ms,msg){
+  return Promise.race([
+    p,
+    new Promise((_,rej)=>setTimeout(()=>rej(new Error(msg||'Tempo limite excedido')),ms))
+  ]);
 }
 
 window.addEventListener('load',async()=>{
@@ -509,19 +501,30 @@ window.addEventListener('load',async()=>{
     mostraErro('painelConteudo','Firebase não configurado','Verifique as credenciais do Firebase no arquivo index.html.');
     return;
   }
-  setDB('','auditando banco...');
+
+  setDB('','carregando...');
   try{
     const db=window._db;
-    const [sdoc,vr,pr]=await Promise.all([
-      db.collection('estatisticas').doc('geral').get(),
-      carregarColecaoCompleta(db,'votacoes','ano',10000,750),
-      carregarColecaoCompleta(db,'proposicoes','ano',10000,750)
-    ]);
+
+    // Carregamento rápido e previsível.
+    // IMPORTANTE: estes limites são de interface, não representam o universo histórico.
+    const statsP=db.collection('estatisticas').doc('geral').get();
+    const votsP=db.collection('votacoes').orderBy('ano','desc').limit(1200).get();
+    const propsP=db.collection('proposicoes').orderBy('ano','desc').limit(800).get();
+
+    const [sdoc,vs,ps]=await timeoutPromise(
+      Promise.all([statsP,votsP,propsP]),
+      12000,
+      'O banco demorou demais para responder'
+    );
+
     if(sdoc.exists) ST.stats=sdoc.data();
-    ST.vots=vr.docs;
-    ST.loadMeta.votTrunc=vr.truncated;
-    ST.proj=pr.docs.map(x=>{
-      const y={...x};
+
+    ST.vots=vs.docs.map(d=>({id:d.id,...d.data()}));
+    ST.loadMeta.votTrunc=(vs.size===1200);
+
+    ST.proj=ps.docs.map(d=>{
+      const y={id:d.id,...d.data()};
       if(!y.tema||y.tema==='Outro'){
         const t=temaEmenta(y.ementa);
         y.tema=t;
@@ -531,23 +534,43 @@ window.addEventListener('load',async()=>{
       }
       return y;
     });
-    ST.loadMeta.projTrunc=pr.truncated;
-    ST.pFil=[...ST.proj]; ST.vFil=[...ST.vots]; ST.carregado=true;
+    ST.loadMeta.projTrunc=(ps.size===800);
+
+    ST.pFil=[...ST.proj];
+    ST.vFil=[...ST.vots];
+    ST.carregado=true;
+
     const avisos=auditarDados().warnings.length;
-    setDB(avisos?'warn':'ok',`${ST.proj.length.toLocaleString('pt-BR')} proposições · ${ST.vots.length.toLocaleString('pt-BR')} votações · ${avisos} alerta(s)`);
-    renderPainel(); renderTabProj(); renderTabVots(); renderPart(); popSelects(); renderAuditoria();
+    setDB(avisos?'warn':'ok',
+      `${ST.proj.length.toLocaleString('pt-BR')} proposições · ${ST.vots.length.toLocaleString('pt-BR')} votações · ${avisos} alerta(s)`
+    );
+
+    renderPainel();
+    renderTabProj();
+    renderTabVots();
+    renderPart();
+    popSelects();
+    renderAuditoria();
+
   }catch(e){
     console.error('Erro Firebase:',e);
-    setDB('warn','erro de conexão');
-    mostraErro('painelConteudo','Erro ao conectar ao Firebase',`${e.message}. Verifique conexão, índices e regras do Firestore.`);
+    setDB('warn','falha ao carregar');
+    mostraErro(
+      'painelConteudo',
+      'Não foi possível carregar os dados',
+      `${e.message}. Recarregue a página. Se persistir, a aba ainda pode ser corrigida no banco/Firebase sem alterar os dados.`
+    );
   }
 });
 
 function mostraErro(containerId,titulo,msg){
   const el=document.getElementById(containerId);
-  if(el) el.innerHTML=`<div class="erro"><h3>⚠️ ${h(titulo)}</h3><p>${h(msg)}</p></div>`;
+  if(el) el.innerHTML=`<div class="erro">
+    <h3>⚠️ ${h(titulo)}</h3>
+    <p>${h(msg)}</p>
+    <button class="btn btn-p" style="margin-top:14px" onclick="location.reload()">Tentar novamente</button>
+  </div>`;
 }
-
 
 // PAINEL
 // ══════════════════════════════════════════════
@@ -790,11 +813,11 @@ function auditarDados(){
   const otherStatus=ST.proj.filter(p=>statusGroup(p)==='Outra / não classificada').length;
   const newest=years.length?years[years.length-1]:null, newestCount=newest?yearCounts[newest]:0;
   const warnings=[];
-  if(ST.loadMeta.projTrunc) warnings.push('A leitura de proposições atingiu o limite de segurança de 10.000 registros; o conjunto exibido é parcial.');
-  if(ST.loadMeta.votTrunc) warnings.push('A leitura de votações atingiu o limite de segurança de 10.000 registros; o conjunto exibido é parcial.');
+  if(ST.loadMeta.projTrunc) warnings.push('A interface carregou o limite rápido de 800 proposições; o conjunto exibido é parcial e não representa o total histórico.');
+  if(ST.loadMeta.votTrunc) warnings.push('A interface carregou o limite rápido de 1.200 votações; o conjunto exibido é parcial e não representa o total histórico.');
   if(years.length && years.length<(CURRENT_YEAR-START_YEAR+1)) warnings.push(`Há registros de proposições em ${years.length} de ${CURRENT_YEAR-START_YEAR+1} anos possíveis (${START_YEAR}–${CURRENT_YEAR}).`);
   if(ST.proj.length && newestCount/ST.proj.length>.60) warnings.push(`${newest} concentra ${(newestCount/ST.proj.length*100).toFixed(1)}% das proposições carregadas; isso pode indicar coleta parcial ou viés para registros recentes.`);
-  if(ST.proj.length===500 && newestCount>=450) warnings.push('A coleção tem exatamente 500 registros e quase todos são do ano mais recente — padrão compatível com uma importação limitada, não com uma série histórica completa.');
+  if(ST.proj.length>=700 && newestCount/ST.proj.length>.60) warnings.push('A maior parte das proposições carregadas está concentrada no ano mais recente; trate a série como cobertura parcial até reconstruirmos a coleta oficial ano a ano.');
   if(dup) warnings.push(`Foram detectados ${dup} IDs duplicados antes da deduplicação.`);
   if(heuristicTheme) warnings.push(`${heuristicTheme} proposições receberam tema por palavras-chave, e não por uma classificação temática oficial confirmada.`);
   return {warnings,yearCounts,yearsWithProps:years.length,minYear:years[0]||null,maxYear:newest,missingParty,missingAuthor,heuristicTheme,otherStatus,newestCount};
