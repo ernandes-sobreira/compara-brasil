@@ -1,0 +1,34 @@
+name: Build official Camara dataset
+
+on:
+  push:
+    paths:
+      - ".github/workflows/build-official.yml"
+      - "scripts/build-official.py"
+  workflow_dispatch:
+  schedule:
+    - cron: "35 8 * * 1"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/build-official.py
+      - name: Commit official dataset
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dados/oficial
+          git commit -m "Update official Camara dataset" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
