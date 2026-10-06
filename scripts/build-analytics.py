@@ -64,6 +64,7 @@ out={
   "scope":{"types":["PL","PDL","PLP","PEC","MPV"],"votes":"nominais"},
   "aliases":defaultdict(Counter),
   "partyTotals":defaultdict(Counter),
+  "partyTotalsByYear":defaultdict(lambda:defaultdict(Counter)),
   "themeTotals":Counter(),
   "partyThemeByYear":{},
   "partyTheme":{},
@@ -89,6 +90,7 @@ for path in FILES:
         themes=[(x.get("tema") or "").strip() for x in (p.get("temas") or []) if (x.get("tema") or "").strip()]
         if not themes: themes=["Sem tema oficial"]
         out["partyTotals"][party]["propostas"]+=1
+        out["partyTotalsByYear"][str(year)][party]["propostas"]+=1
         for theme in themes:
             out["themeTotals"][theme]+=1
             add_metric(out["partyThemeByYear"],year,party,theme,"propostas",1)
@@ -119,6 +121,9 @@ for path in FILES:
             s=int(x.get("S") or 0);n=int(x.get("N") or 0);a=int(x.get("A") or 0);o=int(x.get("O") or 0);z=int(x.get("outros") or 0)
             out["partyTotals"][party]["votacoes"]+=1
             out["partyTotals"][party]["sim"]+=s;out["partyTotals"][party]["nao"]+=n
+            out["partyTotalsByYear"][str(year)][party]["votacoes"]+=1
+            out["partyTotalsByYear"][str(year)][party]["sim"]+=s
+            out["partyTotalsByYear"][str(year)][party]["nao"]+=n
             for theme in themes:
                 add_metric(out["partyThemeByYear"],year,party,theme,"votacoes",1)
                 add_metric(out["partyThemeByYear"],year,party,theme,"sim",s)
@@ -146,6 +151,7 @@ out["partyTheme"]=agg
 # Alias auditado: registra grafias, mas esconde ruído minúsculo da navegação principal.
 out["aliases"]={p:dict(c.most_common()) for p,c in out["aliases"].items()}
 out["partyTotals"]={p:dict(v) for p,v in out["partyTotals"].items()}
+out["partyTotalsByYear"]={y:{p:dict(v) for p,v in parties.items()} for y,parties in out["partyTotalsByYear"].items()}
 out["themeTotals"]=dict(out["themeTotals"].most_common())
 out["themeVoteTotals"]=dict(out["themeVoteTotals"].most_common())
 out["themeVoteByYear"]={y:dict(c) for y,c in out["themeVoteByYear"].items()}
