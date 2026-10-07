@@ -252,9 +252,20 @@ for (p1,p2),z in pair.items():
     sim[p1].append(item1);sim[p2].append(item2)
 out["similarParties"]={}
 out["divergentParties"]={}
+out["pairSimilarity"]={}
 for p,arr in sim.items():
     out["similarParties"][p]=sorted(arr,key=lambda x:(-x["coincidenciaPct"],-x["votacoesComuns"]))[:8]
     out["divergentParties"][p]=sorted(arr,key=lambda x:(x["coincidenciaPct"],-x["votacoesComuns"]))[:8]
+for (p1,p2),z in pair.items():
+    if z["comuns"]<1: continue
+    score=100*z["iguais"]/z["comuns"]
+    out["pairSimilarity"]["|".join(sorted([p1,p2]))]={
+      "partidos":sorted([p1,p2]),
+      "coincidenciaPct":round(score,1),
+      "votacoesComuns":z["comuns"],
+      "mesmaDirecao":z["iguais"],
+      "direcaoOposta":z["opostos"]
+    }
 
 for p,aliases in out["aliases"].items():
     total=sum(aliases.values())
