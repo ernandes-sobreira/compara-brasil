@@ -282,6 +282,42 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
   .plot3d{height:520px}
   .mc{padding:20px 14px}
 }
+
+/* PARTY INSIGHTS — compact, legible, mobile first */
+.insight-hero{background:linear-gradient(135deg,#0f172a 0%,#172554 100%);color:#fff;border-radius:18px;padding:20px;margin-bottom:14px}
+.insight-hero .kicker{color:#6ee7b7}
+.insight-hero h2{font-family:var(--ff);font-size:34px;font-style:italic;line-height:1;margin:4px 0 8px}
+.insight-hero p{color:rgba(255,255,255,.75);font-size:12px;max-width:900px}
+.analysis-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px}
+.analysis-card{background:#fff;border:1px solid var(--brd);border-radius:16px;padding:16px}
+.analysis-card .bxh{margin-bottom:8px}
+.wordcloud-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.wordcloud{min-height:225px;border:1px solid var(--brd);border-radius:16px;padding:18px;background:linear-gradient(180deg,#fff,#f8fafc);display:flex;flex-wrap:wrap;gap:5px 10px;align-content:center;justify-content:center}
+.wordcloud span{display:inline-block;line-height:1.05;font-weight:800;cursor:default;transition:.15s}
+.wordcloud span:hover{transform:scale(1.08);color:var(--azul2)}
+.reading-box{background:#f8fafc;border-left:5px solid var(--verde2);border-radius:12px;padding:14px 16px;font-size:12px;line-height:1.7;margin:12px 0}
+.deep-metric{border:1px solid var(--brd);border-radius:14px;padding:13px;background:#fff}
+.deep-metric b{font-size:23px;display:block;line-height:1.05}
+.deep-metric span{font-size:10px;color:var(--cin)}
+.deep-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0}
+.sim-list{display:grid;gap:7px}
+.sim-row{display:grid;grid-template-columns:minmax(90px,1fr) 2fr auto;align-items:center;gap:8px;border-bottom:1px solid var(--brd);padding:7px 0;font-size:11px}
+.sim-track{height:8px;background:var(--cbg);border-radius:999px;overflow:hidden}
+.sim-fill{height:100%;background:var(--azul2);border-radius:999px}
+.norm-list{display:grid;gap:7px}
+.norm-item{border:1px solid var(--brd);border-radius:12px;padding:10px;background:#fff}
+.norm-item strong{font-size:11px;color:var(--azul2)}
+.norm-item p{font-size:11px;line-height:1.45;margin-top:3px}
+.legend-note{font-size:10px;color:var(--cin);line-height:1.55;margin-top:6px}
+.type-note{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:11px 13px;font-size:11px;color:#9a3412;margin-top:10px}
+@media(max-width:760px){
+  .analysis-grid,.wordcloud-grid{grid-template-columns:1fr}
+  .deep-grid{grid-template-columns:repeat(2,1fr)}
+  .insight-hero{padding:16px}
+  .insight-hero h2{font-size:29px}
+  .wordcloud{min-height:190px;padding:14px}
+}
+
 </style>
 </head>
 <body>
@@ -398,7 +434,7 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
   <div class="bx">
     <div class="kicker">VISUAL INTERATIVO</div>
     <div class="bxh">📈 Partido × Tema × Votação</div>
-    <div class="al al-i"><span>ℹ️</span><div>No gráfico 3D: <strong>X = partido</strong>, <strong>Y = tema oficial</strong> e <strong>Z = número de votações nominais ligadas ao tema</strong>. O tamanho do ponto representa proposições com autoria principal do partido. Toque em um ponto para abrir os números.</div></div>
+    <div class="al al-i"><span>ℹ️</span><div>No gráfico 3D: <strong>X = partido</strong>, <strong>Y = tema oficial</strong> e <strong>Z = número de votações nominais</strong>. O <strong>tamanho</strong> do ponto representa propostas com autoria principal e a <strong>cor</strong> mostra a proporção de eventos em que a maioria dos deputados do partido votou SIM. Toque para abrir os números.</div></div>
     <div class="fr">
       <div class="fg"><label>Período</label><select id="gAno" onchange="renderGraf()"><option value="">Todos (2003–2026)</option></select></div>
       <div class="fg"><label>Tema oficial</label><select id="gTema" onchange="renderGraf()"><option value="">Todos</option></select></div>
@@ -756,12 +792,12 @@ function renderPainel(){
     <div class="bx"><div class="bxh">📅 Proposições e votações por ano</div><canvas id="cAnoFull" height="260"></canvas></div>
     <div class="cgrd">
       <div class="cc"><div class="ct">📁 Temas oficiais mais frequentes</div><canvas id="cTema" height="290"></canvas></div>
-      <div class="cc"><div class="ct">📋 Tipos de proposição</div><canvas id="cTipo" height="290"></canvas></div>
+      <div class="cc"><div class="ct">📋 Tipos de proposição — não são partidos</div><canvas id="cTipo" height="290"></canvas><div class="type-note"><strong>Atenção:</strong> “Projeto de Lei (PL)” é um tipo de documento legislativo. Não significa “Partido Liberal”.</div></div>
     </div>
     <div class="bx"><div class="bxh">🔎 Consulta completa sem travar o celular</div><div class="al al-i"><span>ℹ️</span><div>O resumo usa toda a base. Ao abrir Proposições ou Votações, o sistema baixa apenas o ano escolhido, preservando autores, temas, situação, orientações e agregações de votos daquele período.</div></div></div>`;
   mkCMulti('cAnoFull',yLabels,[{label:'Proposições',data:yProps,borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,.08)'},{label:'Votações',data:yVots,borderColor:'#7c3aed',backgroundColor:'rgba(124,58,237,.08)'}]);
   if(themes.length)mkC('cTema','bar',themes.map(x=>x[0]),themes.map(x=>x[1]),themes.map(()=> '#16a34a'),{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}});
-  if(types.length)mkC('cTipo','bar',types.map(x=>x[0]),types.map(x=>x[1]),types.map(()=> '#2563eb'),{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}});
+  if(types.length){const TL={PL:'Projeto de Lei (PL)',PDL:'Projeto de Decreto Legislativo (PDL)',PLP:'Projeto de Lei Complementar (PLP)',PEC:'Proposta de Emenda à Constituição (PEC)',MPV:'Medida Provisória (MPV)'};mkC('cTipo','bar',types.map(x=>TL[x[0]]||x[0]),types.map(x=>x[1]),types.map(()=> '#2563eb'),{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}});}
 }
 
 // ══════════════════════════════════════════════
@@ -1072,16 +1108,66 @@ function explorerToProps(){
     });
   }
 }
+
+function partyLineageNote(p){
+  const notes={
+    PL:'Inclui a sigla histórica PR na série consolidada.',
+    MDB:'Inclui a sigla histórica PMDB.',
+    DEM:'Inclui a sigla histórica PFL.',
+    Republicanos:'Inclui PRB/Republicanos.',
+    Cidadania:'Inclui PPS/Cidadania.',
+    Avante:'Inclui PTdoB/Avante.',
+    Podemos:'Inclui PTN/PODE/Podemos.'
+  };
+  return notes[p]||'';
+}
+function partyWordsFor(party,year,type){
+  const src=year?ST.insights?.partyWordsByYear?.[String(year)]?.[party]:ST.insights?.partyWords?.[party];
+  return src?.[type]||[];
+}
+function wordCloudHTML(items){
+  if(!items?.length)return '<div class="small-note">Ainda não há termos suficientes neste recorte.</div>';
+  const max=Math.max(...items.map(x=>Number(x[1]||0)),1),min=Math.min(...items.map(x=>Number(x[1]||0)),max);
+  return '<div class="wordcloud">'+items.slice(0,38).map(([w,n],i)=>{
+    const z=max===min?0.55:(Number(n)-min)/(max-min);
+    const fs=(12+z*23).toFixed(1),op=(.58+z*.42).toFixed(2);
+    const weight=z>.65?900:z>.3?800:700;
+    return '<span title="'+h(w)+' aparece em '+fmt(n)+' documentos" style="font-size:'+fs+'px;opacity:'+op+';font-weight:'+weight+'">'+h(w)+'</span>';
+  }).join('')+'</div>';
+}
+function topMetricTheme(party,year,field){
+  const e=Object.entries(insightThemesFor(party,year)||{}).filter(([,m])=>Number(m?.[field]||0)>0).sort((a,b)=>Number(b[1]?.[field]||0)-Number(a[1]?.[field]||0));
+  return e[0]||null;
+}
+function rate(n,d){return Number(d)>0?(100*Number(n||0)/Number(d)).toFixed(1):'—';}
+function similarityHTML(items,title){
+  if(!items?.length)return '<div class="small-note">Sem número suficiente de votações comuns para comparar.</div>';
+  return '<div class="sim-list">'+items.slice(0,6).map(x=>'<div class="sim-row"><strong>'+h(x.partido)+'</strong><div class="sim-track"><div class="sim-fill" style="width:'+Math.max(0,Math.min(100,Number(x.coincidenciaPct||0)))+'%"></div></div><span>'+Number(x.coincidenciaPct||0).toFixed(1)+'% · '+fmt(x.votacoesComuns)+' comuns</span></div>').join('')+'</div>';
+}
+function normExamplesHTML(party){
+  const items=ST.insights?.partyNormExamples?.[party]||[];
+  if(!items.length)return '<div class="small-note">Nenhum exemplo disponível neste recorte.</div>';
+  return '<div class="norm-list">'+items.slice(0,8).map(x=>'<div class="norm-item"><strong>'+h((x.tipo||'')+' '+(x.numero||'')+'/'+x.ano)+'</strong><p>'+h(plainEmenta(x.ementa||'Sem ementa'))+'</p><div class="small-note">'+(x.temas||[]).slice(0,2).map(h).join(' · ')+'</div></div>').join('')+'</div>';
+}
+function renderPartyTimeline(party,themes){
+  const el=document.getElementById('partyTimeline');if(!el||!ST.insights)return;
+  const years=Object.keys(ST.summary?.years||{}).sort((a,b)=>Number(a)-Number(b));
+  const ds=themes.slice(0,4).map(t=>({label:t,data:years.map(y=>Number(ST.insights?.partyThemeByYear?.[y]?.[party]?.[t]?.propostas||0)),borderWidth:2,tension:.2,fill:false,pointRadius:2}));
+  if(ST.CH.partyTimeline){ST.CH.partyTimeline.destroy();delete ST.CH.partyTimeline;}
+  ST.CH.partyTimeline=new Chart(el.getContext('2d'),{type:'line',data:{labels:years,datasets:ds},options:{responsive:true,plugins:{legend:{labels:{font:{size:9}}}},scales:{y:{beginAtZero:true},x:{ticks:{font:{size:9}}}}}});
+}
+
 function renderPartyExplorer(){
   const box=document.getElementById('partyDashboard');if(!box)return;
   if(!ST.insights){box.innerHTML='<div class="al al-w"><span>⏳</span><div>Preparando o cruzamento Partido × Tema × Votação. Recarregue em instantes se esta mensagem persistir.</div></div>';return;}
   const party=gv('partyFocus'),theme=gv('partyThemeFocus'),year=gv('partyYearFocus');
   const parties=ST.insights.mainParties||[];
   const themes=Object.keys(ST.insights.themeTotals||{});
+
   if(!party&&!theme){
     const shortcuts=['Meio Ambiente e Desenvolvimento Sustentável','Trabalho e Emprego','Saúde','Educação','Economia','Defesa e Segurança'].filter(t=>themes.includes(t));
-    box.innerHTML=`<div class="bx"><div class="bxh">Comece por uma pergunta</div><div class="qgrid">${shortcuts.map(t=>`<div class="qcard" onclick="openThemeShortcut('${h(t)}')"><strong>${h(t)}</strong><span>Compare, em ordem alfabética, quantas propostas e votações aparecem para cada partido neste tema.</span></div>`).join('')}</div></div>
-      <div class="bx"><div class="bxh">Como ler este painel</div><div class="al al-i"><span>1</span><div><strong>Propostas</strong> = proposições com autoria principal do partido naquele tema.</div></div><div class="al al-i"><span>2</span><div><strong>Votações</strong> = eventos nominais ligados a proposições daquele tema em que houve votos de deputados do partido.</div></div><div class="al al-i"><span>3</span><div><strong>Maioria SIM/NÃO</strong> compara apenas os votos individuais registrados dos deputados do partido naquela votação; orientação oficial é mostrada separadamente no detalhe.</div></div></div>`;
+    box.innerHTML=`<div class="bx"><div class="kicker">PERGUNTAS QUE A BASE RESPONDE</div><div class="bxh">Comece pelo assunto que interessa</div><div class="qgrid">${shortcuts.map(t=>`<div class="qcard" onclick="openThemeShortcut('${h(t)}')"><strong>${h(t)}</strong><span>Veja quem mais propõe, em quantas votações aparece e como a maioria dos deputados de cada partido vota.</span></div>`).join('')}</div></div>
+      <div class="bx"><div class="bxh">Como interpretar</div><div class="analysis-grid"><div class="analysis-card"><strong>📄 Propor</strong><div class="small-note">Conta proposições cuja autoria principal está associada ao partido. Volume não mede qualidade.</div></div><div class="analysis-card"><strong>🗳 Votar</strong><div class="small-note">Conta votações nominais em que deputados do partido participaram naquele assunto.</div></div><div class="analysis-card"><strong>✅ Virou norma</strong><div class="small-note">Propostas do partido cujo status oficial é “Transformado em Norma Jurídica”. Não atribui causalidade exclusiva ao partido.</div></div><div class="analysis-card"><strong>🤝 Coesão</strong><div class="small-note">Média da proporção de votos SIM ou NÃO concentrada na posição majoritária do partido.</div></div></div></div>`;
     return;
   }
 
@@ -1089,18 +1175,55 @@ function renderPartyExplorer(){
   if(theme){
     const rows=parties.map(p=>[p,insightMetric(p,theme,year)]).filter(([,m])=>m.propostas||m.votacoes);
     const maxP=Math.max(1,...rows.map(([,m])=>m.propostas)),maxV=Math.max(1,...rows.map(([,m])=>m.votacoes));
-    html+=`<div class="bx"><div class="bxh">🔎 Comparar partidos no tema: ${h(theme)}</div><div class="small-note" style="margin-bottom:10px">Partidos em ordem alfabética. As barras mostram magnitude, sem atribuir nota ou vencedor. “Aprovada com maioria SIM” significa que a votação foi aprovada pela Câmara e, naquele evento, mais deputados daquele partido votaram Sim do que Não — não significa que o partido aprovou a matéria sozinho.</div><div class="tw"><table class="compare-table"><thead><tr><th>Partido</th><th>Propostas</th><th>Votações</th><th>Maioria SIM</th><th>Maioria NÃO</th><th>Aprovadas em que a maioria foi SIM</th></tr></thead><tbody>${rows.map(([p,m])=>`<tr><td><button class="lnk" onclick="focusPartyTheme('${h(p)}','${h(theme)}')">${h(p)}</button></td><td>${fmt(m.propostas)}<div class="mini-bar"><i style="width:${m.propostas/maxP*100}%"></i></div></td><td>${fmt(m.votacoes)}<div class="mini-bar"><i style="width:${m.votacoes/maxV*100}%"></i></div></td><td>${fmt(m.maioriaSim)}</td><td>${fmt(m.maioriaNao)}</td><td>${fmt(m.maioriaSimEmAprovadas)}</td></tr>`).join('')}</tbody></table></div></div>`;
+    html+=`<div class="bx"><div class="kicker">COMPARAÇÃO TEMÁTICA</div><div class="bxh">🔎 ${h(theme)}</div><div class="small-note" style="margin-bottom:10px">Não há “vencedor”: são dimensões diferentes. Propostas medem autoria; votações medem participação e direção majoritária dos votos individuais.</div><div class="tw"><table class="compare-table"><thead><tr><th>Partido</th><th>Propostas</th><th>Viraram norma</th><th>Votações</th><th>Maioria SIM</th><th>Maioria NÃO</th><th>Coesão</th></tr></thead><tbody>${rows.map(([p,m])=>`<tr><td><button class="lnk" onclick="focusPartyTheme('${h(p)}','${h(theme)}')">${h(p)}</button></td><td>${fmt(m.propostas)}<div class="mini-bar"><i style="width:${m.propostas/maxP*100}%"></i></div></td><td>${fmt(m.normas||0)}</td><td>${fmt(m.votacoes)}<div class="mini-bar"><i style="width:${m.votacoes/maxV*100}%"></i></div></td><td>${fmt(m.maioriaSim)}</td><td>${fmt(m.maioriaNao)}</td><td>${m.coesaoN?rate(m.coesaoSoma,m.coesaoN)+'%':'—'}</td></tr>`).join('')}</tbody></table></div></div>`;
   }
+
   if(party){
-    const metrics=insightThemesFor(party,year),entries=Object.entries(metrics).filter(([,m])=>m.propostas||m.votacoes).sort((a,b)=>(b[1].propostas+b[1].votacoes)-(a[1].propostas+a[1].votacoes));
+    const metrics=insightThemesFor(party,year);
+    const entries=Object.entries(metrics).filter(([,m])=>m.propostas||m.votacoes).sort((a,b)=>(b[1].propostas+b[1].votacoes)-(a[1].propostas+a[1].votacoes));
     const totals=partyTotalsFor(party,year);
-    html+=`<div class="bx"><div class="party-dashboard-grid"><div class="party-summary"><div class="kicker">PARTIDO SELECIONADO</div><h2>${h(party)}</h2><div class="sub">${year?'Ano '+h(year):'Período completo'}${theme?' · '+h(theme):''}</div>
-      ${theme?(()=>{const m=insightMetric(party,theme,year);return `<div class="metric-grid"><div class="metric"><b>${fmt(m.propostas)}</b><span>propostas no tema</span></div><div class="metric"><b>${fmt(m.votacoes)}</b><span>votações nominais</span></div><div class="metric"><b>${fmt(m.maioriaSim)}</b><span>maioria SIM</span></div><div class="metric"><b>${fmt(m.maioriaNao)}</b><span>maioria NÃO</span></div><div class="metric"><b>${fmt(m.maioriaSimEmAprovadas)}</b><span>aprovadas com maioria SIM</span></div></div>`;})():`<div class="metric-grid"><div class="metric"><b>${fmt(totals.propostas)}</b><span>propostas no período</span></div><div class="metric"><b>${fmt(totals.votacoes)}</b><span>participações em votações</span></div><div class="metric"><b>${fmt(totals.sim)}</b><span>votos individuais SIM</span></div><div class="metric"><b>${fmt(totals.nao)}</b><span>votos individuais NÃO</span></div></div>`}
-      <div class="inline-actions">${year?'<button class="btn btn-p" onclick="explorerToVotes()">Ver votações explicadas</button><button class="btn btn-s" onclick="explorerToProps()">Ver propostas</button>':'<span class="small-note">Escolha um ano para abrir os documentos e votações individuais.</span>'}</div></div>
-      <div class="theme-compare"><div class="bxh">📁 Perfil temático do partido</div><div class="topic-list">${entries.slice(0,18).map(([t,m])=>`<div class="topic-row" onclick="focusPartyTheme('${h(party)}','${h(t)}')"><div class="topic-name">${h(t)}</div><div class="topic-stats"><span><b>${fmt(m.propostas)}</b>propostas</span><span><b>${fmt(m.votacoes)}</b>votações</span><span><b>${fmt(m.maioriaSimEmAprovadas)}</b>votações aprovadas c/ maioria SIM</span></div></div>`).join('')}</div></div></div></div>`;
+    const topProp=topMetricTheme(party,year,'propostas'),topVote=topMetricTheme(party,year,'votacoes'),topNorm=topMetricTheme(party,year,'normas');
+    const cloudProp=partyWordsFor(party,year,'propostas'),cloudVote=partyWordsFor(party,year,'votacoes');
+    const normas=Number(totals.normas||0),props=Number(totals.propostas||0),votes=Number(totals.votacoes||0);
+    const coesao=totals.coesaoPct??(totals.coesaoN?Number(totals.coesaoSoma||0)/Number(totals.coesaoN)*100:null);
+    const approved=Number(totals.aprovadas||0),supportApproved=Number(totals.maioriaSimEmAprovadas||0);
+    const sim=ST.insights.similarParties?.[party]||[],div=ST.insights.divergentParties?.[party]||[];
+    const note=partyLineageNote(party);
+
+    html+=`<div class="insight-hero"><div class="kicker">PARTIDO SELECIONADO</div><h2>${h(party)}</h2><p>${year?'Ano '+h(year):'Período completo'}${theme?' · '+h(theme):''}. ${h(note)}</p></div>
+      <div class="bx"><div class="bxh">🧭 Leitura rápida</div><div class="reading-box">${topProp?`<strong>Onde mais aparece na autoria:</strong> ${h(topProp[0])} (${fmt(topProp[1].propostas)} propostas). `:''}${topVote?`<strong>Onde mais participa de votações:</strong> ${h(topVote[0])} (${fmt(topVote[1].votacoes)} votações). `:''}${topNorm?`<strong>Onde há mais propostas transformadas em norma:</strong> ${h(topNorm[0])} (${fmt(topNorm[1].normas)}). `:''}</div>
+      <div class="deep-grid">
+        <div class="deep-metric"><b>${fmt(props)}</b><span>propostas com autoria principal</span></div>
+        <div class="deep-metric"><b>${fmt(normas)}</b><span>transformadas em norma (${rate(normas,props)}%)</span></div>
+        <div class="deep-metric"><b>${fmt(votes)}</b><span>votações nominais com participação</span></div>
+        <div class="deep-metric"><b>${coesao==null?'—':Number(coesao).toFixed(1)+'%'}</b><span>coesão média dos votos SIM/NÃO</span></div>
+        <div class="deep-metric"><b>${fmt(totals.maioriaSim||0)}</b><span>eventos com maioria SIM</span></div>
+        <div class="deep-metric"><b>${fmt(totals.maioriaNao||0)}</b><span>eventos com maioria NÃO</span></div>
+        <div class="deep-metric"><b>${approved?rate(supportApproved,approved)+'%':'—'}</b><span>das votações aprovadas tiveram maioria SIM do partido</span></div>
+        <div class="deep-metric"><b>${entries.length}</b><span>temas com atividade registrada</span></div>
+      </div></div>
+
+      <div class="bx"><div class="bxh">☁️ Nuvem de palavras — o que aparece no texto das propostas e votações</div><div class="wordcloud-grid"><div><div class="kicker">O QUE MAIS PROPÕE</div>${wordCloudHTML(cloudProp)}<div class="legend-note">Cada palavra conta no máximo uma vez por proposição, para uma ementa longa não dominar a nuvem.</div></div><div><div class="kicker">SOBRE O QUE MAIS VOTA</div>${wordCloudHTML(cloudVote)}<div class="legend-note">Termos extraídos do assunto ligado às votações nominais em que houve participação do partido.</div></div></div></div>
+
+      <div class="party-dashboard-grid"><div class="theme-compare"><div class="bxh">📁 Perfil temático</div><div class="topic-list">${entries.slice(0,18).map(([t,m])=>`<div class="topic-row" onclick="focusPartyTheme('${h(party)}','${h(t)}')"><div class="topic-name">${h(t)}</div><div class="topic-stats"><span><b>${fmt(m.propostas)}</b>propostas</span><span><b>${fmt(m.normas||0)}</b>viraram norma</span><span><b>${fmt(m.votacoes)}</b>votações</span></div></div>`).join('')}</div></div>
+      <div class="analysis-card"><div class="bxh">📈 Mudança ao longo do tempo</div><canvas id="partyTimeline" height="270"></canvas><div class="legend-note">Evolução das quatro áreas com mais propostas no recorte do partido.</div></div></div>
+
+      <div class="analysis-grid">
+        <div class="analysis-card"><div class="bxh">🤝 Quem costuma votar parecido?</div>${similarityHTML(sim,'parecidos')}<div class="legend-note">Coincidência da direção majoritária (SIM/NÃO) nas votações que ambos os partidos têm em comum. Não mede proximidade ideológica.</div></div>
+        <div class="analysis-card"><div class="bxh">↔️ Quem mais diverge nas votações comuns?</div>${similarityHTML(div,'divergentes')}<div class="legend-note">Menor coincidência de direção majoritária entre partidos com pelo menos 50 votações comparáveis.</div></div>
+      </div>
+
+      <div class="bx"><div class="bxh">📜 Exemplos recentes de propostas do partido transformadas em norma</div>${normExamplesHTML(party)}</div>
+      <div class="bx"><div class="inline-actions">${year?'<button class="btn btn-p" onclick="explorerToVotes()">Ver votações explicadas</button><button class="btn btn-s" onclick="explorerToProps()">Ver propostas</button>':'<span class="small-note">Escolha um ano acima para abrir os documentos e votações individuais daquele período.</span>'}</div></div>`;
   }
+
   box.innerHTML=html||'<div class="al al-i"><span>ℹ️</span><div>Sem dados para esta combinação.</div></div>';
+  if(party&&!year){
+    const topThemes=Object.entries(insightThemesFor(party,'')).sort((a,b)=>Number(b[1].propostas||0)-Number(a[1].propostas||0)).slice(0,4).map(x=>x[0]);
+    setTimeout(()=>renderPartyTimeline(party,topThemes),30);
+  }
 }
+
 function renderPart(){renderPartyExplorer();}
 
 
@@ -1130,7 +1253,7 @@ function render3D(){
     text:points.map(x=>`<b>${x.p}</b><br>${x.t}<br>Propostas: ${fmt(x.m.propostas)}<br>Votações: ${fmt(x.m.votacoes)}<br>Maioria SIM: ${fmt(x.m.maioriaSim)}<br>Maioria NÃO: ${fmt(x.m.maioriaNao)}`),
     customdata:points.map(x=>[x.p,x.t,x.m.propostas,x.m.votacoes,x.m.maioriaSim,x.m.maioriaNao,x.m.maioriaSimEmAprovadas,x.m.sim,x.m.nao]),
     hoverinfo:'text',
-    marker:{size:points.map(x=>Math.max(4,Math.min(16,4+Math.sqrt(Number(x.m.propostas||0))))),opacity:.78,color:points.map(x=>Number(x.m.propostas||0)),colorscale:'Viridis',showscale:true,colorbar:{title:'Propostas'}}
+    marker:{size:points.map(x=>Math.max(4,Math.min(17,4+Math.sqrt(Number(x.m.propostas||0))))),opacity:.8,color:points.map(x=>{const d=Number(x.m.maioriaSim||0)+Number(x.m.maioriaNao||0);return d?100*Number(x.m.maioriaSim||0)/d:50;}),cmin:0,cmax:100,colorscale:'Viridis',showscale:true,colorbar:{title:'% maioria SIM'}}
   };
   const layout={
     margin:{l:0,r:0,b:0,t:10},
