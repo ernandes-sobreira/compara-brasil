@@ -319,6 +319,7 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
 }
 
 </style>
+<link rel="stylesheet" href="compare.css">
 </head>
 <body>
 
@@ -336,6 +337,7 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
       <button class="nb" onclick="showSec('proposicoes',this)">📋 Proposições</button>
       <button class="nb" onclick="showSec('votacoes',this)">🗳 Votações</button>
       <button class="nb" onclick="showSec('partidos',this)">🏛 Partidos & temas</button>
+      <button class="nb" onclick="showSec('comparar',this)">⚖️ Comparar 2</button>
       <button class="nb" onclick="showSec('graficos',this)">🧊 Mapa 3D</button>
       <button class="nb" onclick="showSec('auditoria',this)">🧪 Auditoria</button><button class="nb" onclick="showSec('sobre',this)">ℹ️ Sobre</button>
     </nav>
@@ -426,6 +428,24 @@ footer{background:var(--preto);color:rgba(255,255,255,.3);text-align:center;padd
   </div>
   <div id="partyDashboard">
     <div class="ldg"><div class="spin"></div><div class="ldg-t">Preparando comparação temática...</div></div>
+  </div>
+</div>
+
+<!-- COMPARAR 2 PARTIDOS -->
+<div id="sec-comparar" class="sec">
+  <div class="bx compare-intro">
+    <div class="kicker">LADO A LADO</div>
+    <div class="bxh">⚖️ Compare dois partidos</div>
+    <p>Veja os dois no mesmo período: o que propõem, sobre o que votam, em quais temas aparecem e quando as maiorias dos seus deputados tomam a mesma direção ou direções opostas.</p>
+    <div class="fr" style="margin-top:16px;margin-bottom:0">
+      <div class="fg"><label>Partido A</label><select id="compPartyA" onchange="renderCompare()"><option value="">Escolha</option></select></div>
+      <button class="btn btn-s compare-swap" onclick="swapCompareParties()" title="Trocar lados">⇄</button>
+      <div class="fg"><label>Partido B</label><select id="compPartyB" onchange="renderCompare()"><option value="">Escolha</option></select></div>
+      <div class="fg"><label>Período</label><select id="compYear" onchange="renderCompare()"><option value="">2003–2026</option></select></div>
+    </div>
+  </div>
+  <div id="compareDashboard">
+    <div class="al al-i"><span>ℹ️</span><div>Escolha dois partidos para iniciar a comparação.</div></div>
   </div>
 </div>
 
@@ -1387,10 +1407,12 @@ function showSec(id,el){
   if(id==='proposicoes')renderTabProj();
   if(id==='votacoes')renderTabVots();
   if(id==='partidos')renderPartyExplorer();
+  if(id==='comparar'&&typeof renderCompare==='function')renderCompare();
   if(id==='graficos')setTimeout(renderGraf,60);
   if(id==='auditoria')renderAuditoria();
 }
 
 </script>
+<script src="compare.js"></script>
 </body>
 </html>
